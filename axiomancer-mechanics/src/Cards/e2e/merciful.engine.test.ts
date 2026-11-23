@@ -3,8 +3,8 @@
  * A11 of `plan/phases/phase_MF1_merciful_trial_set.md`).
  *
  * The set's own test (the only test that names its card ids). Pins:
- *   · the set: 29 cards (10 red / 10 blue / 9 purple) with the drafted names, one
- *     upgrade each as commons, every program opting into the sim's value witness;
+ *   · the set: 29 cards (10 red / 10 blue / 9 purple) with the drafted names,
+ *     upgrades by rank, every program opting into the sim's value witness;
  *   · the lane `merciful`: all 29 as its reward pool, and the sims' 20-card test
  *     deck (every Global and every Spell; 7 red, 6 blue, 7 purple);
  *   · the numbers T chose to ship on the faces, and "bursts" never "triggers";
@@ -21,7 +21,8 @@ import { Player } from '../../Character/characters.mock';
 import { FloatEye, GreenJelly, DeathBeholder, Sandbag_01 } from '../../Enemy/enemy.library';
 import { getCardById } from '../cards.library';
 import { CARD_LANES, getCardLane, laneRewardPool } from '../card.lanes';
-import { canUpgrade, upgradeLimit } from '../card-upgrades';
+import { canUpgrade, UPGRADE_LIMITS, upgradeLimit } from '../card-upgrades';
+import { rankToRarity } from '../types';
 import { MERCIFUL_SET } from '../library/merciful.cards';
 import { cardLinesText } from '../card-rules';
 import { relicLaneId } from '../../Items/relic-lanes';
@@ -117,12 +118,14 @@ describe('the Merciful set', () => {
         }
     });
 
-    it('takes one upgrade each, as commons', () => {
+    it('takes as many upgrades as its rank\'s rarity allows (common 1, uncommon 2, rare 3)', () => {
         for (const card of CARDS) {
-            expect(upgradeLimit(card), card.id).toBe(1);
+            const limit = UPGRADE_LIMITS[rankToRarity(card.rank)];
+            expect(upgradeLimit(card), card.id).toBe(limit);
             expect(canUpgrade(card), card.id).toBe(true);
-            expect(getCardById(`${card.id}+`)?.id).toBe(`${card.id}+`);
-            expect(getCardById(`${card.id}++`)).toBeUndefined();
+            const top = `${card.id}${'+'.repeat(limit)}`;
+            expect(getCardById(top)?.id).toBe(top);
+            expect(getCardById(`${top}+`)).toBeUndefined();
         }
     });
 

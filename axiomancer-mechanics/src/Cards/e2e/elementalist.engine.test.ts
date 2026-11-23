@@ -4,7 +4,7 @@
  *
  * The set's own test (the only test that names its card ids). Pins:
  *   · the set: 30 cards (9 red / 11 blue / 10 purple), each under its action
- *     name (phase CA3e), one upgrade each as commons;
+ *     name (phase CA3e), upgrades by rank (common 1, uncommon 2, rare 3);
  *   · the lane `elementalist`: all 30 as its reward pool, and T's 20-card
  *     test deck (the sims' best-played, 7 red / 7 blue / 6 purple);
  *   · the sims' adjusted numbers on the faces, and printed equals applied
@@ -23,7 +23,8 @@ import { FloatEye, GreenJelly, DeathBeholder, Sandbag_01 } from '../../Enemy/ene
 import type { BaseStats } from '../../Character/types';
 import { getCardById, cardLibrary } from '../cards.library';
 import { getCardLane, laneRewardPool } from '../card.lanes';
-import { canUpgrade, upgradeCard, upgradeLimit } from '../card-upgrades';
+import { canUpgrade, upgradeCard, UPGRADE_LIMITS, upgradeLimit } from '../card-upgrades';
+import { rankToRarity } from '../types';
 import { ELEMENTALIST_SET } from '../library/elementalist.cards';
 import { deepClone } from '../../Utils';
 import { dropUnknownCardIds } from '../../Game/game.migrate';
@@ -94,12 +95,14 @@ describe('the Elementalist set', () => {
         expect(idOf('M-10')).toBe('el-m-10n');
     });
 
-    it('takes one upgrade each, as commons', () => {
+    it('takes as many upgrades as its rank\'s rarity allows (common 1, uncommon 2, rare 3)', () => {
         for (const card of CARDS) {
-            expect(upgradeLimit(card), card.id).toBe(1);
+            const limit = UPGRADE_LIMITS[rankToRarity(card.rank)];
+            expect(upgradeLimit(card), card.id).toBe(limit);
             expect(canUpgrade(card), card.id).toBe(true);
-            expect(getCardById(`${card.id}+`)?.id).toBe(`${card.id}+`);
-            expect(getCardById(`${card.id}++`)).toBeUndefined();
+            const top = `${card.id}${'+'.repeat(limit)}`;
+            expect(getCardById(top)?.id).toBe(top);
+            expect(getCardById(`${top}+`)).toBeUndefined();
         }
     });
 
@@ -223,7 +226,7 @@ function printedEqualsApplied(stats: BaseStats): { checked: number; mismatches: 
             const before = fight([card.id], 100, stats);
             const hand = handCards(before).find(h => h.uid === 't0')!.card;
             const face = (paid ? hand.bottomActionText : hand.topActionText)
-                .replace(/^(FREE|PAID) — /, '').replace(/ \(Ash\)$/, '').replace(/ Costs 1 die\.$/, '')
+                .replace(/^(FREE|PAID) — /, '').replace(/ \((Ash|Tooth|Splinter|Rib|Skull|Saint)\)$/, '').replace(/ Costs 1 die\.$/, '')
                 // A Spell's PAID ends in EXILE: a lifecycle word, no number.
                 .replace(/ EXILE\.$/, '');
             if (!PLAIN.test(face)) continue;

@@ -20,6 +20,8 @@
  *   cardConditions(card)                its trigger and condition labels
  *   parseAtlasKeywords(markdown)        atlas rows with their Card / Rule kind
  *   checkComplexityBudget(cards, kws)   keywords and conditions by rank
+ *   rankForCard(card, kws, base?)       the rank a card's text earns by the same counts
+ *   checkRankFromText(cards, kws)       a non-Curse card whose rank is not the one its text earns
  *   checkScrapFloor(cards)              a line that only gains 1 Conviction
  *   checkGlobalTemplate(cards)          trigger first, no duration in its effect
  *   checkCarrierRule(input)             every atlas word carried; every printed word in the atlas
@@ -39,7 +41,7 @@ import { magnitudeStep, UPGRADE_INTENSITY_STEP } from './card-upgrade.scale';
 /** The rules this module checks; the exemptions fixture keys on these. */
 export type CardRuleId =
     | 'complexity-budget' | 'scrap-floor' | 'global-template' | 'carrier-rule' | 'spell-law' | 'discard-cost'
-    | 'face-grammar' | 'text-order';
+    | 'face-grammar' | 'text-order' | 'rank-from-text';
 
 /** One break of one rule. `id` is a card id, an atlas word, or `cardId:WORD`. */
 export interface CardRuleViolation {
@@ -202,6 +204,63 @@ export function checkComplexityBudget(cards: readonly Card[], cardKeywords: Read
         if (kws.length > band.keywords) over.push(`${kws.length} keywords (${kws.join(', ')}), max ${band.keywords}`);
         if (conds.length > band.conditions) over.push(`${conds.length} conditions (${conds.join('; ')}), max ${band.conditions}`);
         if (over.length) out.push({ rule: 'complexity-budget', id: card.id, detail: `rank ${card.rank}: ${over.join('; ')}` });
+    }
+    return out;
+}
+
+/** The keywords and conditions the complexity budget counts on one card. */
+function budgetCounts(card: Card, cardKeywords: ReadonlySet<string>): { keywords: number; conditions: number } {
+    const keywords = printedKeywords(card).filter(w => cardKeywords.has(w) && !BUDGET_FREE_VERBS.has(w)).length;
+    return { keywords, conditions: cardConditions(card).length };
+}
+
+/**
+ * The rank a card's printed text earns, by the counts `checkComplexityBudget`
+ * makes (k keywords beyond DEAL and GUARD, c conditions):
+ *   k 0, c 0 → 1 Ash · k 1, c 0 → 2 Tooth · k 2 or c 1 (not both, within
+ *   k ≤ 2, c ≤ 1) → 3 Splinter · k 2 and c 1 → 4 Rib · beyond → 5 Skull.
+ * Saint (6) is never derived; a card is Saint only when named by hand.
+ *
+ * An upgraded copy (an id ending in `+`) takes its base card's rank, so a
+ * copy whose text grew stays in its base's band.
+ *
+ * @param cardKeywords - The atlas's Card keywords (`parseAtlasKeywords`, kind `card`).
+ * @param base - The base card, required for an upgraded copy.
+ * @throws when an upgraded copy comes without its base card.
+ */
+export function rankForCard(card: Card, cardKeywords: ReadonlySet<string>, base?: Card): CardRank {
+    const baseId = card.id.replace(/\++$/, '');
+    if (baseId !== card.id) {
+        if (!base || base.id !== baseId) {
+            throw new Error(`rankForCard: ${card.id} is an upgraded copy; pass its base card ${baseId}`);
+        }
+        return rankForCard(base, cardKeywords);
+    }
+    const { keywords: k, conditions: c } = budgetCounts(card, cardKeywords);
+    if (k === 0 && c === 0) return 1;
+    if (k === 1 && c === 0) return 2;
+    if (k === 2 && c === 1) return 4;
+    if (k <= 2 && c <= 1) return 3;
+    return 5;
+}
+
+/**
+ * A card whose `rank` is not the one its text earns (`rankForCard`). Curses
+ * keep rank 1 and are not read. A Saint, or a rank T names by hand, breaks
+ * this and is pinned with its reason in the fence's fixture.
+ *
+ * @param cardKeywords - The atlas's Card keywords (`parseAtlasKeywords`, kind `card`).
+ */
+export function checkRankFromText(cards: readonly Card[], cardKeywords: ReadonlySet<string>): CardRuleViolation[] {
+    const out: CardRuleViolation[] = [];
+    for (const card of cards) {
+        if (card.cardType === 'curse') continue;
+        const earned = rankForCard(card, cardKeywords);
+        if (card.rank !== earned) {
+            const { keywords, conditions } = budgetCounts(card, cardKeywords);
+            out.push({ rule: 'rank-from-text', id: card.id,
+                detail: `rank ${card.rank}, its text earns ${earned} (${keywords} keywords, ${conditions} conditions)` });
+        }
     }
     return out;
 }

@@ -37,7 +37,7 @@
  * This file is data-only.
  */
 
-import type { Card, CardAspect, CardType } from '../types';
+import type { Card, CardAspect, CardRank, CardType } from '../types';
 import type { CardProgram, ProgramCtx, ProgramLine } from '../card-program.types';
 import type { CardLane, TrialSet } from '../card.lanes';
 import { spellPaidScale, upgradeScale, type UpgradeScale } from '../card-upgrade.scale';
@@ -66,6 +66,8 @@ interface Entry {
     type: CardType;
     color: CardAspect;
     program: (u: UpgradeScale) => CardProgram;
+    /** The card's rank when it is not Ash (1), as its text earns it (`rankForCard`). Rarity, and so its upgrade limit, derives from it. */
+    rank?: CardRank;
     /** A Spell's PAID payoffs before the Spell law raised them (`Card.spellLawBaseline`). */
     spellLaw?: Readonly<Record<string, number>>;
 }
@@ -79,82 +81,82 @@ const SUB_LANE: Record<string, string> = { P: 'Payoff', E: 'Engine', M: 'Misc' }
 
 const ENTRIES: Entry[] = [
     // ── PAYOFF: benefits for having the elements up ──────────────────────────
-    { slot: 'P-01', option: 'b', name: 'Strike the Burning', type: 'attack', color: RED, program: u => ({
+    { slot: 'P-01', option: 'b', name: 'Strike the Burning', type: 'attack', color: RED, rank: 3, program: u => ({
         free: L(`DEAL {deal:${u.m(3)}}`, c => { c.deal(u.m(3)); }),
         paid: L(`DEAL {deal:${u.m(4)}} or {deal:${2 * u.m(4)}} if the foe has INFERNO`, c => {
             c.deal(u.m(4) * (c.q.foeInferno > 0 ? 2 : 1));
         }) }) },
-    { slot: 'P-02', option: 'b', name: 'Burn Together', type: 'attack', color: RED, program: u => ({
+    { slot: 'P-02', option: 'b', name: 'Burn Together', type: 'attack', color: RED, rank: 2, program: u => ({
         free: L(`DEAL {deal:${u.m(3)}}`, c => { c.deal(u.m(3)); }),
         paid: L(`DEAL {deal:${u.m(9)}}, INFERNO ${u.i(4)}`, c => {
             c.deal(u.m(9)); c.inferno(u.i(4), 'both');
         }) }) },
     // T: no max on either line.
-    { slot: 'P-03', option: 'a', name: 'Raise the Drift', type: 'skill', color: BLUE, program: () => ({
+    { slot: 'P-03', option: 'a', name: 'Raise the Drift', type: 'skill', color: BLUE, rank: 2, program: () => ({
         free: L("GUARD = foe's BLIZZARD", c => { c.guard(0, { plus: c.q.blizzard }); }),
         paid: L("GUARD 2× foe's BLIZZARD", c => { c.guard(0, { plus: 2 * c.q.blizzard }); }) }) },
-    { slot: 'P-04', option: 'a', name: 'Shatter the Frost', type: 'attack', color: RED, program: u => ({
+    { slot: 'P-04', option: 'a', name: 'Shatter the Frost', type: 'attack', color: RED, rank: 2, program: u => ({
         free: L(`DEAL {deal:${u.m(2)}}, BLIZZARD ${u.i(2)}`, c => { c.deal(u.m(2)); c.blizzard(u.i(2)); }),
         paid: L(`Spend all the foe's BLIZZARD, DEAL {deal:${u.m(3)}} +2 for each spent`, c => {
             const b = c.spendBlizzard(); c.deal(u.m(3), { plus: 2 * b });
         }) }) },
     // The trigger does not grow the STORM (the sims' reading).
     // The Spell law (T, 2026-10-24): the STORM is triggered twice, not once.
-    { slot: 'P-05', option: 'b', name: 'Call Lightning Twice', type: 'spell', color: RED, spellLaw: { stormTick: 4 }, program: u => ({
+    { slot: 'P-05', option: 'b', name: 'Call Lightning Twice', type: 'spell', color: RED, rank: 2, spellLaw: { stormTick: 4 }, program: u => ({
         free: L(`STORM ${u.i(1)}, DEAL = foe's STORM`, c => {
             const s0 = c.q.storm; c.storm(u.i(1)); c.deal(0, { plus: s0 + u.i(1) });
         }),
         paid: L("The foe loses VITAE = foe's STORM, twice. EXILE", c => { c.triggerStorm(); c.triggerStorm(); }, EX) }) },
-    { slot: 'P-06', option: 'b', name: 'Ride the Gale', type: 'skill', color: BLUE, program: u => ({
+    { slot: 'P-06', option: 'b', name: 'Ride the Gale', type: 'skill', color: BLUE, rank: 3, program: u => ({
         free: L(`GUARD {guard:${u.m(3)}}, DRAW 1`, c => { c.guard(u.m(3)); c.draw(1); }),
         paid: L(`GUARD {guard:${u.m(5)}} + the foe's STORM, DRAW 1`, c => {
             c.guard(u.m(5), { plus: c.q.storm }); c.draw(1);
         }) }) },
-    { slot: 'P-07', option: 'a', name: 'Sear the Frozen', type: 'attack', color: RED, program: u => ({
+    { slot: 'P-07', option: 'a', name: 'Sear the Frozen', type: 'attack', color: RED, rank: 4, program: u => ({
         free: L(`DEAL {deal:${u.m(3)}}, INFERNO ${u.i(1)}`, c => { c.deal(u.m(3)); c.inferno(u.i(1), 'both'); }),
         paid: L(`DEAL {deal:${u.m(5)}}, INFERNO ${u.i(2)} or ${2 * u.i(2)} if the foe is FROZEN`, c => {
             const frozen = c.q.frozen;
             c.deal(u.m(5)); c.inferno(u.i(2) * (frozen ? 2 : 1), 'both');
         }) }) },
-    { slot: 'P-08', option: 'b', name: 'Stir the Thundersnow', type: 'skill', color: PURPLE, program: () => ({
+    { slot: 'P-08', option: 'b', name: 'Stir the Thundersnow', type: 'skill', color: PURPLE, rank: 3, program: () => ({
         free: L("GUARD = foe's BLIZZARD + STORM", c => { c.guard(0, { plus: c.q.blizzard + c.q.storm }); }),
         paid: L("2× foe's BLIZZARD, 2× foe's STORM", c => { c.doubleBlizzardAndStorm(); }) }) },
-    { slot: 'P-09', option: 'a', name: 'Hurl Your Fire', type: 'attack', color: RED, program: u => ({
+    { slot: 'P-09', option: 'a', name: 'Hurl Your Fire', type: 'attack', color: RED, rank: 3, program: u => ({
         free: L(`DEAL {deal:${u.m(2)}} + your INFERNO`, c => {
             c.deal(u.m(2), { plus: c.q.yourInferno });
         }),
         paid: L(`DEAL {deal:${u.m(4)}} + your INFERNO + the foe's STORM`, c => {
             c.deal(u.m(4), { plus: c.q.yourInferno + c.q.storm });
         }) }) },
-    { slot: 'P-10', option: 'b', name: 'Bind the Three', type: 'global', color: RED, program: u => turnGlobal(
+    { slot: 'P-10', option: 'b', name: 'Bind the Three', type: 'global', color: RED, rank: 5, program: u => turnGlobal(
         `DEAL {deal:${u.m(3)}} if the foe has 2 or more elements`,
         c => { if (c.q.elementsOnFoe >= 2) c.deal(u.m(3)); }) },
 
     // ── ENGINE: puts the elements up and makes them grow ─────────────────────
-    { slot: 'E-01', option: 'b', name: 'Wreathe in Flame', type: 'spell', color: PURPLE, spellLaw: { inferno: 4, guard: 5 }, program: u => ({
+    { slot: 'E-01', option: 'b', name: 'Wreathe in Flame', type: 'spell', color: PURPLE, rank: 2, spellLaw: { inferno: 4, guard: 5 }, program: u => ({
         free: L(`INFERNO ${u.i(2)}, GUARD {guard:${u.m(2)}}`, c => { c.inferno(u.i(2), 'both'); c.guard(u.m(2)); }),
         paid: L(`INFERNO ${S(u).w(4)}, GUARD {guard:${S(u).m(5)}}. EXILE`, c => { c.inferno(S(u).w(4), 'both'); c.guard(S(u).m(5)); }, EX) }) },
-    { slot: 'E-02', option: 'c', name: 'Ignite the Wound', type: 'attack', color: RED, program: u => ({
+    { slot: 'E-02', option: 'c', name: 'Ignite the Wound', type: 'attack', color: RED, rank: 2, program: u => ({
         free: L(`DEAL {deal:${u.m(3)}}`, c => { c.deal(u.m(3)); }),
         paid: L(`DEAL {deal:${u.m(4)}}, INFERNO half the damage dealt`, c => {
             const d = c.deal(u.m(4)); c.inferno(Math.floor(d / 2), 'both');
         }) }) },
-    { slot: 'E-03', option: 'b', name: 'Breathe Winter', type: 'spell', color: PURPLE, spellLaw: { blizzard: 6, draw: 1 }, program: u => ({
+    { slot: 'E-03', option: 'b', name: 'Breathe Winter', type: 'spell', color: PURPLE, rank: 3, spellLaw: { blizzard: 6, draw: 1 }, program: u => ({
         free: L(`BLIZZARD ${u.i(2)}, DRAW 1`, c => { c.blizzard(u.i(2)); c.draw(1); }),
         paid: L(`BLIZZARD ${S(u).w(6)}, DRAW 2. EXILE`, c => { c.blizzard(S(u).w(6)); c.draw(2); }, EX) }) },
-    { slot: 'E-04', option: 'c', name: 'Encase in Ice', type: 'skill', color: PURPLE, program: u => ({
+    { slot: 'E-04', option: 'c', name: 'Encase in Ice', type: 'skill', color: PURPLE, rank: 2, program: u => ({
         free: L(`BLIZZARD ${u.i(3)}`, c => { c.blizzard(u.i(3)); }),
         paid: L(`BLIZZARD ${u.i(5)}, GUARD = foe's BLIZZARD`, c => {
             const b0 = c.q.blizzard; c.blizzard(u.i(5)); c.guard(0, { plus: b0 + u.i(5) });
         }) }) },
-    { slot: 'E-05', option: 'b', name: 'Gather the Storm', type: 'spell', color: PURPLE, spellLaw: { storm: 2, draw: 2 }, program: u => ({
+    { slot: 'E-05', option: 'b', name: 'Gather the Storm', type: 'spell', color: PURPLE, rank: 3, spellLaw: { storm: 2, draw: 2 }, program: u => ({
         free: L(`STORM ${u.i(1)}, DRAW 1`, c => { c.storm(u.i(1)); c.draw(1); }),
         paid: L(`STORM ${S(u).w(2)}, DRAW 3. EXILE`, c => { c.storm(S(u).w(2)); c.draw(3); }, EX) }) },
     // T's note: a Global; while it is in play the STORM grows by 1 extra.
-    { slot: 'E-06', option: 'a', name: 'Draw the Lightning', type: 'global', color: RED, program: u => turnGlobal(
+    { slot: 'E-06', option: 'a', name: 'Draw the Lightning', type: 'global', color: RED, rank: 3, program: u => turnGlobal(
         `the foe's STORM grows +${u.i(1)} more`,
         c => { c.stormGrowthMarker(u.i(1)); }, u.i(1)) },
-    { slot: 'E-07', option: 'b', name: 'Scatter the Pages', type: 'skill', color: BLUE, program: () => ({
+    { slot: 'E-07', option: 'b', name: 'Scatter the Pages', type: 'skill', color: BLUE, rank: 3, program: () => ({
         free: L('DRAW 2', c => { c.draw(2); }),
         paid: L('DRAW 2, STORM = cards in your hand', c => {
             const h0 = c.q.handSize; c.draw(2);
@@ -163,62 +165,62 @@ const ENTRIES: Entry[] = [
             c.storm(h);
         }) }) },
     // The Spell law (T, 2026-10-24): twice your INFERNO comes back as BLIZZARD and INFERNO. T, 2026-11-01: the INFERNO is ordinary, burning both sides by its own rule.
-    { slot: 'E-08', option: 'c', name: 'Boil to Steam', type: 'spell', color: PURPLE, spellLaw: { blizzard: 4, inferno: 4 }, program: u => ({
+    { slot: 'E-08', option: 'c', name: 'Boil to Steam', type: 'spell', color: PURPLE, rank: 3, spellLaw: { blizzard: 4, inferno: 4 }, program: u => ({
         free: L(`BLIZZARD ${u.i(2)}, INFERNO ${u.i(1)}`, c => { c.blizzard(u.i(2)); c.inferno(u.i(1)); }),
         paid: L('Spend all your INFERNO. For each: BLIZZARD 2, INFERNO 2. EXILE', c => {
             const y = c.removeYourInferno(); c.blizzard(2 * y); c.inferno(2 * y);
         }, EX) }) },
-    { slot: 'E-09', option: 'b', name: 'Bring the Hail', type: 'global', color: PURPLE, program: () => turnGlobal(
+    { slot: 'E-09', option: 'b', name: 'Bring the Hail', type: 'global', color: PURPLE, rank: 4, program: () => turnGlobal(
         "BLIZZARD half the foe's STORM",
         c => { c.blizzard(Math.floor(c.q.storm / 2)); }) },
-    { slot: 'E-10', option: 'c', name: 'Trade Elements', type: 'spell', color: BLUE, spellLaw: { draw: 1 }, program: u => ({
+    { slot: 'E-10', option: 'c', name: 'Trade Elements', type: 'spell', color: BLUE, rank: 3, spellLaw: { draw: 1 }, program: u => ({
         free: L(`DRAW 1, STORM ${u.i(1)}`, c => { c.draw(1); c.storm(u.i(1)); }),
         paid: L("Swap 2 of the foe's elements, DRAW 2. EXILE", c => { c.swapElements(); c.draw(2); }, EX) }) },
 
     // ── MISC: related utility ────────────────────────────────────────────────
-    { slot: 'M-01', option: 'a', name: 'Douse the Flames', type: 'skill', color: BLUE, program: () => ({
+    { slot: 'M-01', option: 'a', name: 'Douse the Flames', type: 'skill', color: BLUE, rank: 3, program: () => ({
         free: L('Remove your INFERNO', c => { c.removeYourInferno(); }),
         paid: L('HEAL 2× your INFERNO, remove your INFERNO', c => {
             c.heal(0, { plus: 2 * c.q.yourInferno }); c.removeYourInferno();
         }) }) },
-    { slot: 'M-02', option: 'a', name: 'Cool the Burn', type: 'skill', color: BLUE, program: u => ({
+    { slot: 'M-02', option: 'a', name: 'Cool the Burn', type: 'skill', color: BLUE, rank: 3, program: u => ({
         free: L(`HEAL {heal:${u.m(2)}} + the foe's BLIZZARD`, c => { c.heal(u.m(2), { plus: c.q.blizzard }); }),
         paid: L(`HEAL {heal:${u.m(4)}} + 2× foe's BLIZZARD`, c => { c.heal(u.m(4), { plus: 2 * c.q.blizzard }); }) }) },
-    { slot: 'M-03', option: 'a', name: 'Study in Frost', type: 'skill', color: BLUE, program: u => ({
+    { slot: 'M-03', option: 'a', name: 'Study in Frost', type: 'skill', color: BLUE, rank: 3, program: u => ({
         free: L('DRAW 2', c => { c.draw(2); }),
         paid: L(`DRAW 2, BLIZZARD ${u.i(2)}, GUARD {guard:${u.m(2)}}`, c => {
             c.draw(2); c.blizzard(u.i(2)); c.guard(u.m(2));
         }) }) },
-    { slot: 'M-04', option: 'a', name: 'Weave the Three', type: 'spell', color: PURPLE, spellLaw: { inferno: 3, blizzard: 3, storm: 3 }, program: u => ({
+    { slot: 'M-04', option: 'a', name: 'Weave the Three', type: 'spell', color: PURPLE, rank: 5, spellLaw: { inferno: 3, blizzard: 3, storm: 3 }, program: u => ({
         free: L(`INFERNO ${u.i(1)}, BLIZZARD ${u.i(1)}, STORM ${u.i(1)}`, c => {
             const k = u.i(1); c.inferno(k, 'both'); c.blizzard(k); c.storm(k);
         }),
         paid: L(`INFERNO ${S(u).w(3)}, BLIZZARD ${S(u).w(3)}, STORM ${S(u).w(3)}. EXILE`, c => {
             const k = S(u).w(3); c.inferno(k, 'both'); c.blizzard(k); c.storm(k);
         }, EX) }) },
-    { slot: 'M-05', option: 'c', name: 'Read the Elements', type: 'skill', color: BLUE, program: u => ({
+    { slot: 'M-05', option: 'c', name: 'Read the Elements', type: 'skill', color: BLUE, rank: 2, program: u => ({
         free: L(`DRAW 1, CONVICTION ${u.i(1)}`, c => { c.draw(1); c.conviction(u.i(1)); }),
         paid: L(`DRAW 1, CONVICTION ${u.i(2)} for each element the foe has`, c => {
             c.draw(1); c.conviction(u.i(2) * c.q.elementsOnFoe);
         }) }) },
-    { slot: 'M-06', option: 'a', name: 'Brace in Rime', type: 'skill', color: BLUE, program: u => ({
+    { slot: 'M-06', option: 'a', name: 'Brace in Rime', type: 'skill', color: BLUE, rank: 3, program: u => ({
         free: L(`GUARD {guard:${u.m(4)}} or {guard:${2 * u.m(4)}} if the foe is FROZEN`, c => { c.guard(u.m(4) * (c.q.frozen ? 2 : 1)); }),
         paid: L(`GUARD {guard:${u.m(9)}} or {guard:${2 * u.m(9)}} if the foe is FROZEN`, c => { c.guard(u.m(9) * (c.q.frozen ? 2 : 1)); }) }) },
-    { slot: 'M-07', option: 'b', name: 'Pin with Lightning', type: 'spell', color: PURPLE, spellLaw: { vulnerable: 40 }, program: u => ({
+    { slot: 'M-07', option: 'b', name: 'Pin with Lightning', type: 'spell', color: PURPLE, rank: 3, spellLaw: { vulnerable: 40 }, program: u => ({
         free: L(`STORM ${u.i(1)}`, c => { c.storm(u.i(1)); }),
         paid: L(`VULNERABLE {vuln:${S(u).m(10)}}% for 2 turns, for each STORM the foe has. EXILE`, c => {
             c.vulnerable(S(u).m(10) * c.q.storm, 2);
         }, EX) }) },
-    { slot: 'M-08', option: 'c', name: 'Turn with the Wind', type: 'global', color: PURPLE, program: u => turnGlobal(
+    { slot: 'M-08', option: 'c', name: 'Turn with the Wind', type: 'global', color: PURPLE, rank: 4, program: u => turnGlobal(
         `STORM ${u.i(1)}, DRAW 1`,
         c => { c.storm(u.i(1)); c.draw(1); }) },
-    { slot: 'M-09', option: 'c', name: 'Spit Fire', type: 'skill', color: BLUE, program: () => ({
+    { slot: 'M-09', option: 'c', name: 'Spit Fire', type: 'skill', color: BLUE, rank: 3, program: () => ({
         free: L('Move half your INFERNO to the foe', c => { c.moveYourInferno('half'); }),
         paid: L('HEAL = your INFERNO, move all your INFERNO to the foe', c => {
             c.heal(0, { plus: c.q.yourInferno }); c.moveYourInferno('all');
         }) }) },
     // T's own card, written in sitting 3's general note.
-    { slot: 'M-10', option: 'new', name: 'Drink the Rain', type: 'global', color: BLUE, program: u => turnGlobal(
+    { slot: 'M-10', option: 'new', name: 'Drink the Rain', type: 'global', color: BLUE, rank: 4, program: u => turnGlobal(
         `STORM ${u.i(1)}, HEAL = foe's STORM`,
         c => { const s0 = c.q.storm; c.storm(u.i(1)); c.heal(0, { plus: s0 + u.i(1) }); }) },
 ];
@@ -232,7 +234,7 @@ function toCard(e: Entry): Card {
         name: e.name,
         color: e.color,
         description: `Elementalist trial card, ${SUB_LANE[e.slot[0]]} sub-lane.`,
-        tier: 1, rank: 1, cardType: e.type,
+        tier: 1, rank: e.rank ?? 1, cardType: e.type,
         targetType: e.color === BLUE ? 'self' : 'enemy',
         program: e.program(upgradeScale(0)),
         programAt: e.program,

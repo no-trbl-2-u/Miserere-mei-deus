@@ -443,8 +443,8 @@ describe('the revision 2 cards', () => {
         // Before UP1c: rank 1, FREE DEAL 6, PAID DEAL 2X.
         expect(card.program!.free!.text).toBe('SACRIFICE 3, DEAL {deal:9}');
         expect(card.program!.paid!.text).toBe('SACRIFICE X (max 12), DEAL 3× X');
-        // The only rare in the library today.
-        expect(cardLibrary.filter(c => rankToRarity(c.rank) === 'rare').map(c => c.id)).toEqual(['bp-e-08n']);
+        // A rare among the library's rares (the other Skulls earn theirs by text).
+        expect(cardLibrary.filter(c => rankToRarity(c.rank) === 'rare').map(c => c.id)).toContain('bp-e-08n');
 
         expect(upgradeLimit(card)).toBe(3);
         const ups = ['bp-e-08n+', 'bp-e-08n++', 'bp-e-08n+++'].map(id => getCardById(id));
@@ -622,7 +622,7 @@ function printedEqualsApplied(stats: BaseStats): { checked: number; mismatches: 
             const before = fight([card.id], 100, stats);
             const hand = handCards(before).find(h => h.uid === 't0')!.card;
             const face = (paid ? hand.bottomActionText : hand.topActionText)
-                .replace(/^(FREE|PAID) — /, '').replace(/ \(Ash\)$/, '').replace(/\. Costs 1 die\.$/, '');
+                .replace(/^(FREE|PAID) — /, '').replace(/ \((Ash|Tooth|Splinter|Rib|Skull|Saint)\)$/, '').replace(/\. Costs 1 die\.$/, '');
             if (!PLAIN.test(face)) continue;
             checked++;
             const sum = (re: RegExp): number => [...face.matchAll(re)].reduce((a, m) => a + Number(m[1]), 0);
@@ -766,10 +766,11 @@ describe('Blood Price upgrades (Phase UP1b)', () => {
         }
     });
 
-    it('every lane card but the rare is common and takes exactly one upgrade', () => {
-        for (const card of LANE_CARDS.filter(c => c.id !== 'bp-e-08n')) {
-            expect(getCardById(`${card.id}+`)?.id).toBe(`${card.id}+`);
-            expect(getCardById(`${card.id}++`)).toBeUndefined();
+    it('every lane card takes as many upgrades as its rank\'s rarity allows (common 1, uncommon 2, rare 3)', () => {
+        for (const card of LANE_CARDS) {
+            const top = `${card.id}${'+'.repeat(upgradeLimit(card))}`;
+            expect(getCardById(top)?.id).toBe(top);
+            expect(getCardById(`${top}+`)).toBeUndefined();
         }
     });
 });

@@ -187,9 +187,9 @@ describe('rank / rarity projection (spec 32 v3 §4)', () => {
     it('rank rides the card; rarity derives from it', () => {
         for (const id of ['grey-strike', 'grey-ward', 'grey-word']) {
             expect(getCard(id)!.rank).toBe(getCardById(id)!.rank);
-            expect(getCard(id)!.rank).toBe(1);
             expect(getCard(id)!.rarity).toBe('common');
         }
+        expect(['grey-strike', 'grey-ward', 'grey-word'].map(id => getCard(id)!.rank)).toEqual([1, 1, 2]);
     });
 });
 

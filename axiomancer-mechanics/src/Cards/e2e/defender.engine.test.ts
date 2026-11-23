@@ -3,8 +3,8 @@
  * `plan/phases/phase_DF1_defender_trial_set.md`).
  *
  * The set's own test (the only test that names its card ids). Pins:
- *   · the set: 30 cards (10 red / 10 blue / 10 purple) with T's names, one
- *     upgrade each as commons;
+ *   · the set: 30 cards (10 red / 10 blue / 10 purple) with T's names,
+ *     upgrades by rank (common 1, uncommon 2, rare 3);
  *   · the lane `defender`: all 30 as its reward pool, and T's 20-card test
  *     deck (every Global and every Spell; 7 red, 6 blue, 7 purple);
  *   · the numbers T chose to ship on the faces, and printed equals applied
@@ -22,7 +22,8 @@ import { FloatEye, GreenJelly, DeathBeholder, Sandbag_01 } from '../../Enemy/ene
 import type { BaseStats } from '../../Character/types';
 import { getCardById } from '../cards.library';
 import { getCardLane, laneRewardPool } from '../card.lanes';
-import { canUpgrade, upgradeLimit } from '../card-upgrades';
+import { canUpgrade, UPGRADE_LIMITS, upgradeLimit } from '../card-upgrades';
+import { rankToRarity } from '../types';
 import { DEFENDER_SET } from '../library/defender.cards';
 import { deepClone } from '../../Utils';
 import { dropUnknownCardIds } from '../../Game/game.migrate';
@@ -113,12 +114,14 @@ describe('the Defender set', () => {
         expect(idOf('M-10')).toBe('df-m-10n');
     });
 
-    it('takes one upgrade each, as commons', () => {
+    it('takes as many upgrades as its rank\'s rarity allows (common 1, uncommon 2, rare 3)', () => {
         for (const card of CARDS) {
-            expect(upgradeLimit(card), card.id).toBe(1);
+            const limit = UPGRADE_LIMITS[rankToRarity(card.rank)];
+            expect(upgradeLimit(card), card.id).toBe(limit);
             expect(canUpgrade(card), card.id).toBe(true);
-            expect(getCardById(`${card.id}+`)?.id).toBe(`${card.id}+`);
-            expect(getCardById(`${card.id}++`)).toBeUndefined();
+            const top = `${card.id}${'+'.repeat(limit)}`;
+            expect(getCardById(top)?.id).toBe(top);
+            expect(getCardById(`${top}+`)).toBeUndefined();
         }
     });
 
@@ -412,7 +415,7 @@ function printedEqualsApplied(stats: BaseStats): { checked: number; mismatches: 
             const before = fight([card.id, FILLER, FILLER], 100, stats);
             const hand = handCards(before).find(h => h.uid === 't0')!.card;
             const face = (paid ? hand.bottomActionText : hand.topActionText)
-                .replace(/^(FREE|PAID) — /, '').replace(/ \(Ash\)$/, '').replace(/ Costs 1 die\.$/, '')
+                .replace(/^(FREE|PAID) — /, '').replace(/ \((Ash|Tooth|Splinter|Rib|Skull|Saint)\)$/, '').replace(/ Costs 1 die\.$/, '')
                 .replace(/^Discard \d cards? at random\. /, '')
                 .replace(/ EXILE\.$/, '');
             if (!PLAIN.test(face)) continue;

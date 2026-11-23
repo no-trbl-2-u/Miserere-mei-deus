@@ -9,7 +9,7 @@
 import { describe, it, expect } from 'vitest';
 
 import { cardLibrary, getCardById } from '../cards.library';
-import { CARD_RANK_NAMES } from '../types';
+import { CARD_RANK_NAMES, rankToRarity } from '../types';
 import { COMBAT_REWARD_POOL, STARTING_CARD_IDS } from '../../Combat/combat.rewards';
 
 describe('profane canon — shape contract', () => {
@@ -78,7 +78,7 @@ describe('profane canon — id hygiene and provenance', () => {
         for (const id of STARTING_CARD_IDS) {
             const card = getCardById(id);
             expect(card, id).toBeDefined();
-            expect(card!.rank).toBe(1); // starters are Ash
+            expect(rankToRarity(card!.rank)).toBe('common'); // starters are common (Blow and Ward Ash, Word Tooth)
             expect(card!.tags).toContain('starter');
         }
         const aspects = new Set(STARTING_CARD_IDS.map(id => getCardById(id)!.color));

@@ -19,12 +19,21 @@ the Expo app (`axiomancer-mobile`) presents it.
   Elementalist, the Defender and the Merciful.** The
   grey office (`GREY_OFFICE_CARDS`, `Cards/library/starters.cards.ts`): A
   Blow (attack, DEAL), Ward (skill, GUARD), Word
-  (spell, VULNERABLE), all colour `any`, rank 1 (Ash), tier 1. The trial
+  (spell, VULNERABLE), all colour `any`, common (Blow and Ward rank 1 Ash,
+  Word rank 2 Tooth), tier 1. Every card's rank is the one its printed text
+  earns (`rankForCard`, `Cards/card-rules.ts`), by the complexity budget's
+  counts of keywords beyond DEAL and GUARD (k) and conditions (c): k 0 and c 0
+  Ash, k 1 Tooth, k 2 or c 1 Splinter, both Rib, beyond that Skull; Saint is
+  only named by hand, and Curses stay Ash. The fence
+  (`Cards/e2e/card-rules.engine.test.ts`, rule `rank-from-text`) fails on a
+  card whose rank differs, unless its fixture pins a hand rank with T's
+  reason. The trial
   set (`BLOOD_PRICE_SET`, `Cards/library/blood-price.cards.ts`, D80, D81):
-  30 cards (11 body, 8 mind, 11 heart, all rank 1 but one): 25 kept from the Blood
+  30 cards (11 body, 8 mind, 11 heart, ranked by their text): 25 kept from the Blood
   Price ballot and five SACRIFICE cards T added in revision 2 (Bloodletting,
   Open Vein, Blood for Blood, Crimson Pact, Transfusion). Blood for Blood
-  (`bp-e-08n`) is the library's one rare (rank 5, Skull; Phase UP1c): FREE
+  (`bp-e-08n`) is a rare named by hand (rank 5, Skull; Phase UP1c; its text
+  earns Tooth): FREE
   SACRIFICE 3, DEAL 9; PAID SACRIFICE X (max 12), DEAL 3X. Its upgrades
   raise X's cap by 3 each (15, 18, 21) and the third makes it 4X (T,
   2026-10-23). The grey Curse is
@@ -34,22 +43,22 @@ the Expo app (`axiomancer-mobile`) presents it.
   (D75); saves drop removed card ids on load (`dropUnknownCardIds`).
   The Elementalist trial set (`ELEMENTALIST_SET`,
   `Cards/library/elementalist.cards.ts`, Phase EL1c) is 30 cards (9 body,
-  11 mind, 10 heart, all rank 1, one upgrade each) at the sims' adjusted
+  11 mind, 10 heart, ranked by their text) at the sims' adjusted
   numbers, each under an action name ("Strike the Burning", CA3e): they put up and
   read the weather (INFERNO, BLIZZARD, FROZEN, STORM; `Combat/combat.elements.ts`)
   and DRAW. Its lane `elementalist` holds all 30 and deals T's 20-card test
   deck; it comes out the same way, by its file and its `TRIAL_SETS` line.
   The Defender trial set (`DEFENDER_SET`, `Cards/library/defender.cards.ts`,
-  Phase DF1d) is 30 cards (10 body, 10 mind, 10 heart, all rank 1, one upgrade
-  each) in T's names and colours at the numbers T chose to ship: they put up
+  Phase DF1d) is 30 cards (10 body, 10 mind, 10 heart, ranked by their text)
+  in T's names and colours at the numbers T chose to ship: they put up
   THORNS and REFLECT (`Combat/combat.spikes.ts`), pay for bigger payouts by
   discarding random cards from your own hand (a PAID-only cost the engine
   refuses when it cannot pay), and use RETRIEVE and "while GUARD holds". Its
   lane `defender` holds all 30 and deals T's 20-card test deck (every Global
   and every Spell); it comes out by its file and its `TRIAL_SETS` line.
   The Merciful trial set (`MERCIFUL_SET`, `Cards/library/merciful.cards.ts`,
-  Phase MF1d) is 29 cards (10 body, 10 mind, 9 purple, all rank 1, one upgrade
-  each) under drafted names at the numbers T chose to ship (the sims' fixes):
+  Phase MF1d) is 29 cards (10 body, 10 mind, 9 purple, ranked by their text)
+  under drafted names at the numbers T chose to ship (the sims' fixes):
   RADIANCE heals you and hits the foe for what it restored; MERCY heals the foe,
   adds to its MERCY total, and bursts for twice the total when its 3-turn clock
   runs out (`Combat/combat.mercy.ts`). Its lane `merciful` holds all 29 and deals the sims' 20-card test
@@ -666,8 +675,8 @@ without a ruling from T.
   grant card upgrades (Phases UP1d, UP1e), and so does an elite win (UP1f); the upgrade law (Phase UP1b, `Cards/card-upgrades.ts`):
   rarity limits upgrades (common 1, uncommon 2, rare 3) as `<id>+`, `++`,
   `+++`; each raises payoffs (Blood Price programs through `programAt`) and
-  never a cost; `REPLACE_CARD` swaps one owned copy. Blood for Blood, the
-  one rare, takes three (its FREE DEAL grows; PAID's X cap rises and the
+  never a cost; `REPLACE_CARD` swaps one owned copy. Blood for Blood, a
+  rare named by hand, takes three (its FREE DEAL grows; PAID's X cap rises and the
   third is 4X: the one cost an upgrade grows, by T's ruling).
 - No measured balance baseline (D57). A balance question gets "not
   measured".

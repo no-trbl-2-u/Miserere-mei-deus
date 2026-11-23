@@ -32,7 +32,7 @@ import { cardLibrary } from '../cards.library';
 import { upgradeCard } from '../card-upgrades';
 import {
     checkCarrierRule, checkComplexityBudget, checkDiscardCost, checkFaceGrammar, checkGlobalTemplate, checkScrapFloor,
-    checkSpellLaw, checkTextOrder, faceLines, parseAtlasKeywords, printedKeywords,
+    checkRankFromText, checkSpellLaw, checkTextOrder, faceLines, parseAtlasKeywords, printedKeywords, rankForCard,
     type CardRuleId, type CardRuleViolation,
 } from '../card-rules';
 import { programFaceText } from '../../Combat/combat.cards';
@@ -51,11 +51,13 @@ const PINNED_REASON = "pinned at CS1, awaits T's card session";
 const PINNED_REASONS: Partial<Record<CardRuleId, string>> = {
     'face-grammar': "pinned at CF1a: today's wording, rewritten to docs/card-voice.md by CF1b",
     'text-order': "pinned at CF1a: today's wording, rewritten to docs/card-voice.md by CF1b",
+    'rank-from-text': 'a rank named by hand: replace this with the reason T gave',
 };
 
 /** The rules the fence runs, each with its own fresh and stale check. */
 const FENCED_RULES = [
     'complexity-budget', 'scrap-floor', 'global-template', 'carrier-rule', 'spell-law', 'face-grammar', 'text-order',
+    'rank-from-text',
 ] as const satisfies readonly CardRuleId[];
 
 interface Exemption {
@@ -109,6 +111,7 @@ function allViolations(cards: readonly Card[]): CardRuleViolation[] {
         ...checkDiscardCost(cards),
         ...checkFaceGrammar(cards, ATLAS_WORDS),
         ...checkTextOrder(cards),
+        ...checkRankFromText(cards, CARD_KEYWORDS),
     ];
 }
 
@@ -243,6 +246,52 @@ describe('each rule fires on a synthetic breaker', () => {
             paid: { text: 'GUARD 8, DEAL 4', run: c => { c.deal(4); c.guard(8); } },
         } };
         expect(checkTextOrder([card]).map(x => x.id)).toEqual(['syn-order']);
+    });
+});
+
+// ── Every card's rank is the one its text earns ─────────────────────────────
+
+describe('ranks follow the card text (rankForCard)', () => {
+    const handRanked = EXEMPTIONS.filter(e => e.rule === 'rank-from-text');
+
+    it('fires on a card whose rank is not the one its text earns', () => {
+        const card: Card = { ...base, id: 'syn-rank', rank: 1, program: {
+            free: { text: 'SACRIFICE 2, LEECH 1.', run: () => {} },
+        } };
+        const v = allViolations([card]).filter(x => x.rule === 'rank-from-text');
+        expect(v.map(x => [x.id, x.detail])).toEqual([['syn-rank', 'rank 1, its text earns 3 (2 keywords, 0 conditions)']]);
+    });
+
+    it('every hand-ranked card is a library card pinned with the reason T gave', () => {
+        for (const e of handRanked) {
+            const card = cardLibrary.find(c => c.id === e.id);
+            expect(card, e.id).toBeDefined();
+            expect(e.reason).not.toMatch(/replace this/);
+        }
+    });
+
+    it('Curses keep rank 1 and are not ranked by text', () => {
+        const curses = cardLibrary.filter(c => c.cardType === 'curse');
+        expect(curses.length).toBeGreaterThan(0);
+        for (const c of curses) expect(c.rank).toBe(1);
+        expect(checkRankFromText(curses, CARD_KEYWORDS)).toEqual([]);
+    });
+
+    it('every upgraded copy keeps its base card\'s rank', () => {
+        let copies = 0;
+        for (const card of cardLibrary) {
+            for (let up = upgradeCard(card); up; up = upgradeCard(up)) {
+                copies++;
+                expect(up.rank, up.id).toBe(card.rank);
+                expect(rankForCard(up, CARD_KEYWORDS, card), up.id).toBe(rankForCard(card, CARD_KEYWORDS));
+            }
+        }
+        expect(copies).toBeGreaterThanOrEqual(cardLibrary.length - 1);
+    });
+
+    it('ranks the library across the bands, Saint never derived', () => {
+        const ranks = new Set(cardLibrary.filter(c => c.cardType !== 'curse').map(c => c.rank));
+        expect([...ranks].sort()).toEqual([1, 2, 3, 4, 5]);
     });
 });
 
