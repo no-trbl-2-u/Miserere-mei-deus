@@ -21,11 +21,15 @@ import { randomUUID } from 'crypto';
 import {
     parseCombatArgv,
     runCombatCli,
+    runHazardCombatCliEncounter,
 } from '../combat.cli';
 import { setOutputMode, setStateLogPath } from '../io';
 import { COMBAT_STAGE_PROFILES } from '../../Combat/combat.stage-profiles';
 import { ENEMY_REGISTRY } from '../../Enemy/enemy.library';
 import type { EnemySlug } from '../../Enemy/enemy.library';
+import { FloatEye } from '../../Enemy/enemy.library';
+import { mockSequentialRng } from '../../test-utils/rng';
+import { deepClone } from '../../Utils';
 
 const tmpFiles: string[] = [];
 function tmpPath(suffix: string, ext = 'jsonl'): string {
@@ -272,5 +276,22 @@ describe('Combat CLI — auto mode per-play transcript (Gate 0 §2)', () => {
         expect(typeof card.payload?.cardId).toBe('string');
         expect(typeof card.payload?.useBottom).toBe('boolean');
         expect(Array.isArray(card.payload?.events)).toBe(true);
+    });
+});
+
+describe('Combat CLI — the mercy check at the lethal blow', () => {
+    it.each(['naive', 'status'] as const)('an auto fight with the check forced open ends finished, not stalled (%s)', async (policy) => {
+        // No seed, so the singleton stays the stub: every draw comes up 0 and the check asks at the first lethal blow.
+        mockSequentialRng(0);
+        const enemy = deepClone(FloatEye);
+        enemy.difficulty = 'normal';
+        enemy.health = 1; enemy.maxHealth = 1; enemy.effects = [];
+        const result = await runHazardCombatCliEncounter({
+            enemy, presetId: 'apprentice', auto: true, policy, maxTurns: 12,
+        });
+        expect(result.outcome).toBe('victory');
+        expect(result.state.finalOutcome).toBe('victory');
+        expect(result.state.mercyCheck).toBe('finished');
+        expect(result.state.phase).toBe('complete');
     });
 });
