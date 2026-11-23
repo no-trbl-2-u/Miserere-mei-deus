@@ -1016,15 +1016,6 @@
 
 ## Pending
 
-### [HIGH] ci / critique-drive — the `combat-board` and `combat-dying` captures stop on the pre-fight preview, and `combat` captures a blank frame, so no pass since 2e1050b91 has seen the live board, the hand or the DY1d skull
-- pass: 119 (commit 4ab7d18d)
-- viewport: mobile (375x812) and desktop (1280x800)
-- category: performance
-- observation: `mobile/04-combat-board.png` and `mobile/14-combat-dying.png` (and both desktop copies) show the Quay-Crab preview with ENTER COMBAT and WITHDRAW, where the entries say they show the live board and the dying player's skull portrait. Their `.txt` holds only the preview text ("Quay-Crab / LEVEL 2 92 VITAE / ENTER COMBAT / WITHDRAW"). `03-combat.png` is an all-black frame at both viewports while its `.txt` holds the preview text, so it was taken mid-fade. The manifest marks all three "captured, 0 errors": the drive cannot tell.
-- evidence: `axiomancer-mobile/scripts/critique-drive.mjs:186-187` and `:274-275` (the `combat-enter` click and the `combat-board` wait each end in `.catch(() => {})`, so a missed click or a board that never shows is swallowed); the `combat` entry (`:172-178`) has no `settle`.
-- suggested fix: drop the two `.catch`es so a board that never shows marks the entry `navError`; wait for the preview to be opaque before the click (the `menuSettled` pattern) and give `combat` the same settle; pin it in `critique-drive.test.mjs`.
-- source: critique:drive (unattended)
-
 ### [MED] combat rewards / mobile — at 375 wide the reward card face clips its keyword line, so the Word card reads "VULNERABL" over "25% for 2 turn"
 - pass: 119 (commit 4ab7d18d)
 - viewport: mobile (375x812)
@@ -1437,6 +1428,8 @@
 - source: loop
 
 ## Done
+
+### [x] [HIGH] ci / critique-drive — the `combat-board` and `combat-dying` captures stop on the pre-fight preview, and `combat` captures a blank frame, so no pass since 2e1050b91 has seen the live board, the hand or the DY1d skull — RESOLVED 2026-11-23 (branch loop/iterate-critique-drive-board: `live-fight-entry.mjs` gains `revealSettled` and `enterBoard`, a press only after the reveal entrance ends and a rejection when no board mounts; the drive uses them with no catch; both viewports capture the live board and the dying skull; pinned in critique-drive.test.mjs)
 
 ### [x] [LOW] docs — `plan/revamp/card-rules-inventory.md` §17 still says a Global is "unique in play" — RESOLVED 2026-11-13 (annotated "superseded by GS1" in the inventory row)
 - pass: antagonist on PR #520 (GS1, commit fc4aa159)
