@@ -10,7 +10,8 @@
  *      normal learning requirements (the dilemma IS the gate), unlike
  *      `learnCard`. It has no live caller.
  *   3. THE ELITE REWARD (after a won elite fight) offers the best cards
- *      available, one from the player's own lanes, or one upgrade of a random
+ *      available (rares while three are in the pool), one from the player's
+ *      own lanes when one reaches that band, or one upgrade of a random
  *      owned card at the highest rarity the player owns (`rollEliteReward`).
  *
  * Pure: rolling takes an explicit `rng`. The mobile aftermath offers the 1-of-N
@@ -205,13 +206,83 @@ function drawDistinct(pool: readonly string[], count: number, offers: string[], 
 }
 
 /**
+ * The odds a normal reward's offer is of each rarity, as weights (they need
+ * not sum to 100). Each offer draws its rarity by these, then a card of that
+ * rarity.
+ */
+export const CARD_REWARD_RARITY_WEIGHTS: Readonly<Record<CardRarity, number>> = Object.freeze({
+    common: 60,
+    uncommon: 30,
+    rare: 10,
+});
+
+/** Rarity bands, worst first: the order the weights are laid out on `[0, 1)`. */
+const RARITY_WORST_FIRST: readonly CardRarity[] = ['common', 'uncommon', 'rare'];
+
+/**
+ * The bands an offer tries for a drawn `rarity`: the drawn band, then each
+ * band below it (toward common), then each band above it.
+ *
+ * @example rewardRarityOrder('uncommon') // ['uncommon', 'common', 'rare']
+ */
+export function rewardRarityOrder(rarity: CardRarity): CardRarity[] {
+    const at = RARITY_WORST_FIRST.indexOf(rarity);
+    const below = RARITY_WORST_FIRST.slice(0, at).reverse();
+    const above = RARITY_WORST_FIRST.slice(at + 1);
+    return [rarity, ...below, ...above];
+}
+
+/** One rarity drawn by {@link CARD_REWARD_RARITY_WEIGHTS}. */
+function drawRarity(rng: () => number): CardRarity {
+    const total = RARITY_WORST_FIRST.reduce((sum, band) => sum + CARD_REWARD_RARITY_WEIGHTS[band], 0);
+    let roll = rng() * total;
+    for (const band of RARITY_WORST_FIRST) {
+        roll -= CARD_REWARD_RARITY_WEIGHTS[band];
+        if (roll < 0) return band;
+    }
+    return RARITY_WORST_FIRST[RARITY_WORST_FIRST.length - 1];
+}
+
+/** The rarity of a card id; undefined when the library cannot resolve it. */
+function rarityOfId(id: string): CardRarity | undefined {
+    const card = getCardById(id);
+    return card === undefined ? undefined : rankToRarity(card.rank);
+}
+
+/**
+ * Draws up to `count` distinct ids from `pool` into `offers`, skipping ids
+ * already offered. Each draw picks a rarity by {@link CARD_REWARD_RARITY_WEIGHTS}
+ * and then a card uniformly within that band; a band with no card left falls
+ * through {@link rewardRarityOrder}.
+ */
+function drawWeighted(pool: readonly string[], count: number, offers: string[], rng: () => number): void {
+    const remaining = pool.filter(id => !offers.includes(id));
+    let drawn = 0;
+    while (drawn < count && remaining.length > 0) {
+        const wanted = drawRarity(rng);
+        for (const band of rewardRarityOrder(wanted)) {
+            const inBand = remaining.filter(id => rarityOfId(id) === band);
+            if (inBand.length === 0) continue;
+            const id = inBand[pick(inBand.length, rng)];
+            offers.push(id);
+            remaining.splice(remaining.indexOf(id), 1);
+            break;
+        }
+        drawn += 1;
+    }
+}
+
+/**
  * Rolls `count` distinct card-reward offers after a won combat (the cache
  * rolls its one card with `count = 1`).
  *
  * The lane slots come first: {@link rewardLaneSlots} cards from the lane the
- * player wears most, then the rest from {@link rewardPoolFor}. A card the
- * player already owns may be offered. When the dev override names a lane,
- * every slot draws from the override and the lane slots are not read.
+ * player wears most, then the rest from {@link rewardPoolFor}. Every offer
+ * draws its rarity first, by {@link CARD_REWARD_RARITY_WEIGHTS}, then a card
+ * of that rarity from its pool; a band with no card left falls to the next
+ * band down, then up. A card the player already owns may be offered. When the
+ * dev override names a lane, every slot draws from the override uniformly and
+ * the lane slots are not read.
  * Pure: every decision is seeded by `rng`, so the same seed always yields the
  * same offers.
  *
@@ -220,7 +291,7 @@ function drawDistinct(pool: readonly string[], count: number, offers: string[], 
  * @param count  - Offers to roll; defaults to 3.
  * @param lanes  - The lane registry; defaults to {@link CARD_LANES}.
  * @param relics - The relic library; defaults to {@link relicLibrary}.
- * @example rollCombatCardRewards(freshPlayer, seeded(1)) // three grey ids
+ * @example rollCombatCardRewards(theChosen, seeded(1)) // three ids from the Chosen's lanes
  */
 export function rollCombatCardRewards(
     player: Character,
@@ -237,9 +308,9 @@ export function rollCombatCardRewards(
     }
     const slots = rewardLaneSlots(player, rng, lanes, relics);
     if (slots !== null) {
-        drawDistinct(rewardable(laneRewardPool([slots.laneId], lanes)), Math.min(slots.slots, count), offers, rng);
+        drawWeighted(rewardable(laneRewardPool([slots.laneId], lanes)), Math.min(slots.slots, count), offers, rng);
     }
-    drawDistinct(rewardPoolFor(player, lanes, relics), count - offers.length, offers, rng);
+    drawWeighted(rewardPoolFor(player, lanes, relics), count - offers.length, offers, rng);
     return offers;
 }
 
@@ -293,11 +364,30 @@ function drawBest(ids: readonly string[], rng: () => number): string | undefined
 }
 
 /**
+ * The lowest band the best `count` cards of `ids` reach: filling best band
+ * first, the band the `count`th card lands in (the lowest band present when
+ * `ids` holds fewer than `count`). Undefined for an empty list.
+ */
+function floorBand(ids: readonly string[], count: number): CardRarity | undefined {
+    let filled = 0;
+    let lowest: CardRarity | undefined;
+    for (const band of RARITY_BEST_FIRST) {
+        const inBand = ids.filter(id => rarityOfId(id) === band).length;
+        if (inBand === 0) continue;
+        lowest = band;
+        filled += inBand;
+        if (filled >= count) return band;
+    }
+    return lowest;
+}
+
+/**
  * The elite reward's cards: the best `count` cards of {@link rewardPoolFor}
- * the player, highest rarity first. The first offer is the best card from the
- * lanes the player's deck draws on (`deckLaneIds`), so at least one offer is
- * theirs; the rest fill from the best bands left. Distinct; seeded by `rng`.
- * While rares are few, the highest rarity available stands in for "rare".
+ * the player, highest rarity first, so every offer is rare while the pool
+ * holds `count` rares, and the best bands left fill the rest while it holds
+ * fewer. The first offer is a card from the lanes the player's deck draws on
+ * (`deckLaneIds`) when one of them sits in a band the best `count` reach;
+ * otherwise every offer fills from the best bands. Distinct; seeded by `rng`.
  */
 export function rollEliteCardRewards(
     player: Character,
@@ -308,13 +398,19 @@ export function rollEliteCardRewards(
 ): string[] {
     const remaining = rewardPoolFor(player, lanes, relics);
     const laneCards = new Set(laneRewardPool(deckLaneIds(ownedCardIds(player), lanes), lanes));
+    const floor = floorBand(remaining, count);
+    const reachesFloor = (id: string): boolean => {
+        const band = rarityOfId(id);
+        return band !== undefined && floor !== undefined
+            && RARITY_BEST_FIRST.indexOf(band) <= RARITY_BEST_FIRST.indexOf(floor);
+    };
     const offers: string[] = [];
     const take = (id: string | undefined): void => {
         if (id === undefined) return;
         offers.push(id);
         remaining.splice(remaining.indexOf(id), 1);
     };
-    if (count > 0) take(drawBest(remaining.filter(id => laneCards.has(id)), rng));
+    if (count > 0) take(drawBest(remaining.filter(id => laneCards.has(id) && reachesFloor(id)), rng));
     while (offers.length < count && remaining.length > 0) {
         const next = drawBest(remaining, rng);
         if (next === undefined) break;

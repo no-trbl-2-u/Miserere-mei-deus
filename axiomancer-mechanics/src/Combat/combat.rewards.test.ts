@@ -5,7 +5,8 @@
  *   · determinism — same player + same seeded rng ⇒ same offers, always;
  *   · offers are always distinct and always resolvable;
  *   · the pool is the player's lanes, never grey, and every one of its cards
- *     is reachable (a uniform draw, no steering);
+ *     is reachable (the draw weighs rarity, pinned in
+ *     `e2e/reward-rarity.engine.test.ts`, but no card is out of reach);
  *   · a player on no lane has no pool: the draft throws, it never falls back;
  *   · a request larger than the pool returns the whole pool, never a repeat.
  * The worn-lane rule itself is pinned in `e2e/reward-lanes.engine.test.ts`.
@@ -104,8 +105,8 @@ describe('rollCombatCardRewards', () => {
         };
         const pool = rewardPoolFor(unsteered());
         const seen = new Set<string>();
-        for (let i = 0; i < pool.length; i++) {
-            seen.add(rollCombatCardRewards(unsteered(), ()=> (i + 0.5) / pool.length, 1)[0]);
+        for (let seed = 1; seed <= 3000; seed++) {
+            seen.add(rollCombatCardRewards(unsteered(), seededRng(seed * 7919), 1)[0]);
         }
         expect([...seen].sort()).toEqual([...pool].sort());
     });
