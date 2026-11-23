@@ -61,6 +61,7 @@ import type {
     CombatEncounterState,
     CombatOutcome,
 } from '../Combat/combat.encounter.types';
+import { chooseMercyCheck } from '../Combat/combat.mercy-check';
 import { ENEMY_REGISTRY } from '../Enemy/enemy.library';
 import type { EnemySlug } from '../Enemy/enemy.library';
 import { getPresetById, buildCharacterFromPreset } from '../Character';
@@ -368,6 +369,13 @@ async function promptSignatureChoice(state: CombatEncounterState): Promise<strin
     return choice === '__skip__' ? null : choice;
 }
 
+/** The CLI answers a mercy check at the lethal blow with FINISH: the kill, as the blow made it. */
+function finishMercyCheck(state: CombatEncounterState): CombatEncounterState {
+    if (state.mercyCheck !== 'offered') return state;
+    log('  The foe stands at 1 VITAE and asks for mercy. The CLI finishes it.');
+    return chooseMercyCheck(state, 'finish');
+}
+
 async function interactiveHazardCombatLoop(
     initial: CombatEncounterState,
     flags: CombatCliFlags,
@@ -420,7 +428,7 @@ async function interactiveHazardCombatLoop(
                 ? firstLegalPoweringDie(s, chosen.card)?.id
                 : undefined;
             const res = playCombatCard(s, { uid: cardChoice.uid }, cardChoice.useBottom, dieId);
-            s = res.state;
+            s = finishMercyCheck(res.state);
             logState('hazardCombat:playCard', beforeCard, s, {
                 uid: cardChoice.uid, useBottom: cardChoice.useBottom,
                 events: res.events.map(e => e.kind),
@@ -435,7 +443,7 @@ async function interactiveHazardCombatLoop(
         // Resolve threat phase + between-phases.
         const beforeResolve = s;
         const resolved = resolveThreatPhase(s);
-        s = resolved.state;
+        s = finishMercyCheck(resolved.state);
         logState('hazardCombat:resolveThreat', beforeResolve, s, {
             phaseIndex: s.currentPhaseIndex,
             events: resolved.events.map(e => e.kind),
@@ -460,7 +468,7 @@ async function autoHazardCombatLoop(
         phaseCount++;
         const before = s;
 
-        s = autoPlayPhase(s, flags.policy, flags.maxTurns);
+        s = finishMercyCheck(autoPlayPhase(s, flags.policy, flags.maxTurns));
         logState('hazardCombat:autoPhase', before, s, { phaseCount, policy: flags.policy });
         // A per-phase boundary marker with
         // an HP snapshot, alongside the per-play transcript above, so an
@@ -474,7 +482,7 @@ async function autoHazardCombatLoop(
         if (s.phase === 'phase-play') {
             const beforeResolve = s;
             const resolved = resolveThreatPhase(s);
-            s = resolved.state;
+            s = finishMercyCheck(resolved.state);
             logState('hazardCombat:resolveThreat', beforeResolve, s, { phaseCount });
             emit({ type: 'hazardCombat:resolvedPhase', payload: { events: resolved.events } });
         }

@@ -5,13 +5,15 @@
  * Pins (A5, and the footgun `spare-table-unreached`): a spared foe pays no XP,
  * `spareWage` and one table roll that reaches the player and the save; it counts
  * as a won fight for quests, the defeat ledger and the node; and it grants the
- * foe's story flag and journal entry, which a plain victory does not.
+ * foe's story flag and journal entry, which a plain victory does not. A fight
+ * played through the engine asks at the lethal blow (spec 187 A2): spared, the
+ * foe stands at 1 VITAE and the Spare ending pays; finished, it pays as the kill.
  */
 
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { GreenJelly, FloatEye } from '../../Enemy/enemy.library';
-import { chooseMercyCheck, rollMercyCheck, fightWage, spareWage } from '../../Combat/combat.mercy-check';
+import { fightWage, mercyCheckSettled, spareWage } from '../../Combat/combat.mercy-check';
 import { runHazardCombatAutoEncounter } from '../../test-utils/combat-autoplay';
 import type { SpareReward } from '../../Combat/combat.spare-reward';
 import { setSeed } from '../../Utils/rng';
@@ -160,36 +162,63 @@ describe('the Spare ending', () => {
 });
 
 describe('a fight that falls, end to end', () => {
-    /** A fight the engine played until the foe, left with 1 VITAE, fell. */
-    function fallen() {
+    /**
+     * A fight the engine played until the lethal blow on the foe, left with 1
+     * VITAE: the check at the blow forced (`mercyCheckChance`) or never drawn,
+     * and answered as `answer` says.
+     */
+    function fallen(chance: number, answer: 'spare' | 'finish' = 'finish') {
         const store = createGameStore(nullAdapter);
         store.getState().startCombat(GreenJelly);
         const foe = { ...GreenJelly, health: 1, maxHealth: 1 };
         const player = { ...store.getState().player, knownCards: ['grey-strike', 'grey-strike', 'grey-strike'] };
-        const { state: fight } = runHazardCombatAutoEncounter(player, foe, { seed: 7 });
+        const { state: fight } = runHazardCombatAutoEncounter(player, foe, {
+            seed: 7, mercyCheckChance: chance, mercyCheck: answer,
+        });
         return { store, fight };
     }
 
-    it('a hit, spared, pays the Spare ending through the store', () => {
-        const { store, fight } = fallen();
+    it('the blow asks, and spared, the foe stands at 1 VITAE and the store pays the Spare ending', () => {
+        const { store, fight } = fallen(1, 'spare');
         expect(fight.finalOutcome).toBe('victory');
-        const answered = chooseMercyCheck(rollMercyCheck(fight, () => 0), 'spare');
-        expect(answered.mercyCheck).toBe('spared');
-        const report = store.getState().endCombat(answered.finalOutcome as 'victory', undefined, {
-            spared: answered.mercyCheck === 'spared',
+        expect(fight.mercyCheck).toBe('spared');
+        expect(fight.enemy.health).toBe(1);
+        expect(mercyCheckSettled(fight)).toBe(true);
+        const report = store.getState().endCombat(fight.finalOutcome as 'victory', undefined, {
+            spared: fight.mercyCheck === 'spared',
         });
         expect(report.xpGained).toBe(0);
         expect(report.shillings).toBe(spareWage(GreenJelly.level));
         expect(report.spareReward).toBeDefined();
     });
 
-    it('a miss pays as a finish', () => {
-        const { store, fight } = fallen();
-        const rolled = rollMercyCheck(fight, () => 1);
-        expect(rolled.mercyCheck).toBe('none');
+    it('the blow asks, and finished, the foe falls and the store pays as any win', () => {
+        const { store, fight } = fallen(1, 'finish');
+        expect(fight.finalOutcome).toBe('victory');
+        expect(fight.mercyCheck).toBe('finished');
+        expect(fight.enemy.health).toBeLessThanOrEqual(0);
+        const report = store.getState().endCombat('victory', undefined, { spared: false });
+        expect(report.xpGained).toBe(GreenJelly.xpReward ?? 0);
+        expect(report.shillings).toBe(fightWage(GreenJelly.level));
+        expect(report.spareReward).toBeUndefined();
+    });
+
+    it('a blow that does not ask is the kill, and pays as a finish', () => {
+        const { store, fight } = fallen(0);
+        expect(fight.finalOutcome).toBe('victory');
+        expect(fight.mercyCheck).toBe('none');
         const report = store.getState().endCombat('victory');
         expect(report.xpGained).toBe(GreenJelly.xpReward ?? 0);
         expect(report.shillings).toBe(fightWage(GreenJelly.level));
         expect(report.spareReward).toBeUndefined();
+    });
+
+    it('a boss is never asked, forced or not', () => {
+        const store = createGameStore(nullAdapter);
+        const player = { ...store.getState().player, knownCards: ['grey-strike', 'grey-strike', 'grey-strike'] };
+        const boss = { ...GreenJelly, health: 1, maxHealth: 1, difficulty: 'boss' as const };
+        const { state: fight } = runHazardCombatAutoEncounter(player, boss, { seed: 7, mercyCheckChance: 1, mercyCheck: 'spare' });
+        expect(fight.finalOutcome).toBe('victory');
+        expect(fight.mercyCheck).toBe('none');
     });
 });

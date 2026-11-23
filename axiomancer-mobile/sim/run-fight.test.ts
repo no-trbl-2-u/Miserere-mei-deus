@@ -1,7 +1,7 @@
 /**
- * The sim's mercy check (chunk MR1d): a won fight's check is rolled and
- * answered as the panel would, by the policy's field, and a Spare pays through
- * `endCombat` the way the app does.
+ * The sim's mercy check (chunk MR1d, moved to the lethal blow by MR6a): the
+ * engine asks at the blow, the sim answers as the panel would, by the policy's
+ * field, and a Spare pays through `endCombat` the way the app does.
  */
 
 import {
@@ -20,13 +20,21 @@ import { FloatEye } from '@mechanics/Enemy/enemy.library';
 import { playRun } from './run-driver';
 import { answerMercyCheck, damagePctOf } from './run-fight';
 
-function won(mercyCheck?: CombatEncounterState['mercyCheck']): CombatEncounterState {
+function fight(): CombatEncounterState {
     const player = createCharacter({ name: 'Pilgrim', level: 3, baseStats: { heart: 8, body: 8, mind: 8 } });
-    const fight = initializeCombatEncounter(player, { ...FloatEye, difficulty: 'normal' }, ['the-gleaners-due'], 7);
-    return {
-        ...fight, enemy: { ...fight.enemy, health: 0 }, phase: 'complete', finalOutcome: 'victory',
-        ...(mercyCheck ? { mercyCheck } : {}),
-    };
+    return initializeCombatEncounter(player, { ...FloatEye, difficulty: 'normal' }, ['the-gleaners-due'], 7);
+}
+
+/** A fight the lethal blow paused on the check: the foe at 1 VITAE, nothing ended. */
+function asked(): CombatEncounterState {
+    const f = fight();
+    return { ...f, enemy: { ...f.enemy, health: 1 }, phase: 'mercy-check', mercyCheck: 'offered', mercyBlowVitae: 0 };
+}
+
+/** A fight the blow ended with no check. */
+function won(mercyCheck: CombatEncounterState['mercyCheck'] = 'none'): CombatEncounterState {
+    const f = fight();
+    return { ...f, enemy: { ...f.enemy, health: 0 }, phase: 'complete', finalOutcome: 'victory', mercyCheck };
 }
 
 describe('damagePctOf', () => {
@@ -41,22 +49,29 @@ describe('damagePctOf', () => {
 });
 
 describe('answerMercyCheck', () => {
-    it('spares an offered check for spare-all, and finishes it for the player witness', () => {
-        expect(answerMercyCheck(won('offered'), SPARE_ALL_WITNESS).mercyCheck).toBe('spared');
-        expect(answerMercyCheck(won('offered'), PLAYER_WITNESS).mercyCheck).toBe('finished');
+    it('spares an open check for spare-all, and finishes it for the player witness', () => {
+        const spared = answerMercyCheck(asked(), SPARE_ALL_WITNESS);
+        expect(spared.mercyCheck).toBe('spared');
+        expect(spared.finalOutcome).toBe('victory');
+        expect(spared.enemy.health).toBe(1);
+        const finished = answerMercyCheck(asked(), PLAYER_WITNESS);
+        expect(finished.mercyCheck).toBe('finished');
+        expect(finished.finalOutcome).toBe('victory');
+        expect(finished.enemy.health).toBe(0);
     });
 
     it('leaves a fight with no check alone, whatever the policy', () => {
-        expect(answerMercyCheck(won('none'), SPARE_ALL_WITNESS).mercyCheck).toBe('none');
+        const killed = won('none');
+        expect(answerMercyCheck(killed, SPARE_ALL_WITNESS)).toBe(killed);
     });
 
-    it('rolls the check on a fresh win and settles it', () => {
-        const answered = answerMercyCheck(won(), SPARE_ALL_WITNESS);
-        expect(['none', 'spared']).toContain(answered.mercyCheck);
+    it('leaves a fight still going alone', () => {
+        const going = fight();
+        expect(answerMercyCheck(going, SPARE_ALL_WITNESS)).toBe(going);
     });
 
     it('never touches a defeat', () => {
-        const lost = { ...won(), finalOutcome: 'defeat' as const };
+        const lost = { ...fight(), phase: 'complete' as const, finalOutcome: 'defeat' as const };
         expect(answerMercyCheck(lost, COMBAT_SIM_POLICIES.greedy).mercyCheck).toBeUndefined();
     });
 });

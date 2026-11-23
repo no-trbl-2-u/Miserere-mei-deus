@@ -1,5 +1,6 @@
 /**
- * Player-facing strings for the mercy check: the prompt as a normal foe falls,
+ * Player-facing strings for the mercy check: the prompt at the blow that would
+ * fell a normal or elite foe,
  * and what the spared end screen reveals. The prompt shows no reward and hints
  * at none.
  */

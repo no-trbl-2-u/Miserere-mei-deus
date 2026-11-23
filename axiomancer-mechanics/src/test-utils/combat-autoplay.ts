@@ -12,6 +12,7 @@ import {
     buildCombatSummary,
 } from '../Combat/combat.engine';
 import type { CombatCard, CombatEncounterState, CombatOutcome } from '../Combat/combat.encounter.types';
+import { chooseMercyCheck } from '../Combat/combat.mercy-check';
 
 export type HazardAutoPolicyId = 'naive' | 'safe' | 'aggressive' | 'status';
 
@@ -19,6 +20,10 @@ export interface HazardCombatAutoOptions {
     seed?: number;
     policy?: HazardAutoPolicyId;
     maxTurns?: number;
+    /** The fight's mercy check chance (`mercyCheckChance`); absent is the live chance. */
+    mercyCheckChance?: number;
+    /** How a mercy check at the lethal blow is answered: FINISH (the kill) unless told to spare. */
+    mercyCheck?: 'spare' | 'finish';
 }
 
 export interface HazardCombatAutoResult {
@@ -107,13 +112,16 @@ export function runHazardCombatAutoEncounter(
 ): HazardCombatAutoResult {
     const policy = options.policy ?? 'status';
     const maxTurns = options.maxTurns ?? 20;
-    let state = rollEncounterDice(initializeCombatEncounter(player, enemy, undefined, options.seed)).state;
+    const answer = options.mercyCheck ?? 'finish';
+    const opened = initializeCombatEncounter(player, enemy, undefined, options.seed);
+    const chance = options.mercyCheckChance === undefined ? {} : { mercyCheckChance: options.mercyCheckChance };
+    let state = chooseMercyCheck(rollEncounterDice({ ...opened, ...chance }).state, answer);
     let phaseCount = 0;
     while (state.phase !== 'complete' && !state.finalOutcome && phaseCount < maxTurns) {
         phaseCount++;
-        state = playAutoPhase(state, policy, maxTurns);
+        state = chooseMercyCheck(playAutoPhase(state, policy, maxTurns), answer);
         if (state.finalOutcome) break;
-        if (state.phase === 'phase-play') state = resolveThreatPhase(state).state;
+        if (state.phase === 'phase-play') state = chooseMercyCheck(resolveThreatPhase(state).state, answer);
     }
     return { state, outcome: state.finalOutcome ?? null, summary: buildCombatSummary(state), phaseCount };
 }

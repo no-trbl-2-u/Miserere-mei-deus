@@ -33,6 +33,7 @@ import { executeCard } from '../Cards/card.engine';
 import type { Card, CardAspect, CardRider } from '../Cards/types';
 import type { CombatState } from './types';
 import { applyDamage, heal, isDefeated, erodeMaxHealth } from './health';
+import { mercyCheckOpen, offerMercyAtBlow } from './combat.mercy-check';
 import {
     processRoundStartEffects, processRoundEndEffects,
     getDamageTakenFlat, getDamageTakenMultiplier, getPendingDotTotal,
@@ -429,7 +430,7 @@ export function startTurn(
         events.push(...pt.events);
         // Your INFERNO can kill you at the start of your turn.
         if (isDefeated(started.player)) return endCombat(started, 'defeat', events);
-        if (isDefeated(started.enemy)) return endCombat(started, 'victory', events);
+        if (isDefeated(started.enemy)) return endCombat(started, 'victory', events, rng);
     }
     // A held UNBROKEN clause pays last, so the board's fx can read it off the tail.
     const paid = payHeldClause(started, rng);
@@ -437,7 +438,7 @@ export function startTurn(
         started = withLog(paid.state, paid.events);
         events.push(...paid.events);
         if (isDefeated(started.player)) return endCombat(started, 'defeat', events);
-        if (isDefeated(started.enemy)) return endCombat(started, 'victory', events);
+        if (isDefeated(started.enemy)) return endCombat(started, 'victory', events, rng);
     }
     return { state: started, events };
 }
@@ -583,8 +584,8 @@ function playCombatCardCore(
         if (pp.events.length === 0) return { state, events: [] };
         const fizzled = pp.events.length === 1 && pp.events[0].kind === 'effect-fizzled';
         if (fizzled) return { state: withLog(state, pp.events), events: pp.events };
-        const played = checkImmediateOutcome(withLog(pp.state, pp.events), pp.events);
-        return applyBoonAndMomentumV2(state, played, card.stance, useBottom);
+        const played = checkImmediateOutcome(withLog(pp.state, pp.events), pp.events, rng);
+        return applyBoonAndMomentumV2(state, played, card.stance, useBottom, rng);
     }
 
     const transition = useBottom
@@ -592,7 +593,7 @@ function playCombatCardCore(
         : playTopAction(state, entry.uid, card, rng);
     // The BOON payload + the null-reset momentum chain; FREE plays
     // never touch either.
-    return applyBoonAndMomentumV2(state, transition, card.stance, useBottom);
+    return applyBoonAndMomentumV2(state, transition, card.stance, useBottom, rng);
 }
 
 /**
@@ -609,12 +610,14 @@ function applyBoonAndMomentumV2(
     transition: CombatTransition,
     stance: CombatDieColor | CardAspect,
     useBottom: boolean,
+    rng: () => number = defaultRng,
 ): CombatTransition {
     if (!useBottom) return transition;
     const played = transition.events.find(e => e.kind === 'card-played');
     if (!played || played.kind !== 'card-played') return transition;
     let state = transition.state;
-    if (state.phase === 'complete') return transition;
+    // An ended fight, or one held on the mercy check, pays no BOON and moves no momentum.
+    if (state.phase === 'complete' || mercyCheckOpen(state)) return transition;
     const events: CombatEvent[] = [];
 
     // 1. BOON fires on USE.
@@ -640,7 +643,7 @@ function applyBoonAndMomentumV2(
                 // A payload that takes the foe's last VITAE ends the fight here.
                 if (isDefeated(state.enemy)) {
                     return checkImmediateOutcome(
-                        withLog(state, events), [...transition.events, ...events],
+                        withLog(state, events), [...transition.events, ...events], rng,
                     );
                 }
             }
@@ -979,7 +982,7 @@ function playTopAction(
     state: CombatEncounterState,
     uid: string,
     card: CombatCard,
-    _rng: () => number,
+    rng: () => number,
 ): CombatTransition {
     const sourceCard = lookupCard(card.id);
     const events: CombatEvent[] = [
@@ -997,7 +1000,7 @@ function playTopAction(
     }
     next = fireFreePlayClock(next, enemyPrePlay, playerPrePlay, events);
     next = withLog(next, events);
-    return checkImmediateOutcome(next, events);
+    return checkImmediateOutcome(next, events, rng);
 }
 
 /**
@@ -1011,7 +1014,7 @@ function playBottomAction(
     uid: string,
     card: CombatCard,
     dieId: string | undefined,
-    _rng: () => number,
+    rng: () => number,
 ): CombatTransition {
     const sourceCard = lookupCard(card.id);
     if (!sourceCard) return { state, events: [] };
@@ -1248,21 +1251,39 @@ function playBottomAction(
         next = discardEntry(next, uid);
     }
     next = withLog(next, events);
-    return checkImmediateOutcome(next, events);
+    return checkImmediateOutcome(next, events, rng);
 }
 
 
 /** Checks for a global threshold crossing mid-phase (immediate outcome). */
-function checkImmediateOutcome(state: CombatEncounterState, events: CombatEvent[]): CombatTransition {
-    if (state.finalOutcome) return { state, events };
+function checkImmediateOutcome(
+    state: CombatEncounterState, events: CombatEvent[], rng: () => number = defaultRng,
+): CombatTransition {
+    if (state.finalOutcome || mercyCheckOpen(state)) return { state, events };
     // HP model: the enemy's only bar is HP. Emptying it is the only win.
-    if (isDefeated(state.enemy)) return endCombat(state, 'victory', events);
+    if (isDefeated(state.enemy)) return endCombat(state, 'victory', events, rng);
     return { state, events };
 }
 
-function endCombat(state: CombatEncounterState, outcome: CombatEncounterState['finalOutcome'], events: CombatEvent[]): CombatTransition {
+/**
+ * Ends the fight. A win is the lethal blow: a normal or elite foe may ask spare
+ * or finish instead (`offerMercyAtBlow`, one draw from `rng`), and then the
+ * fight pauses with the foe at 1 VITAE and nothing ended. `chooseMercyCheck`
+ * ends it; its FINISH lands on exactly the state this returns for a kill.
+ */
+function endCombat(
+    state: CombatEncounterState, outcome: CombatEncounterState['finalOutcome'], events: CombatEvent[],
+    rng: () => number = defaultRng,
+): CombatTransition {
+    if (outcome === 'victory') {
+        const asked = offerMercyAtBlow(state, rng);
+        if (asked) return { state: asked, events };
+    }
     const ev: CombatEvent = { kind: 'combat-ended', outcome: outcome! };
-    const ended: CombatEncounterState = { ...state, phase: 'complete', finalOutcome: outcome };
+    const ended: CombatEncounterState = {
+        ...state, phase: 'complete', finalOutcome: outcome,
+        ...(outcome === 'victory' && state.mercyCheck === undefined ? { mercyCheck: 'none' as const } : {}),
+    };
     return { state: withLog(ended, [ev]), events: [...events, ev] };
 }
 
@@ -1415,7 +1436,7 @@ function payHeldClause(stateIn: CombatEncounterState, rng: () => number): { stat
  * attack this phase. Then between-phases processing runs (DoT ticks, draw, advance).
  */
 export function resolveThreatPhase(stateRaw: CombatEncounterState, rng: () => number = defaultRng): CombatTransition {
-    if (stateRaw.phase === 'complete' || stateRaw.finalOutcome) return { state: stateRaw, events: [] };
+    if (stateRaw.phase === 'complete' || stateRaw.finalOutcome || mercyCheckOpen(stateRaw)) return { state: stateRaw, events: [] };
     // Your turn is over: Brim Over lets go before anything on the foe's turn heals you.
     const stateIn = programEndYourTurn(stateRaw);
     // The move's rider reads the board as your turn left it (your hand, your
@@ -1433,21 +1454,21 @@ export function resolveThreatPhase(stateRaw: CombatEncounterState, rng: () => nu
     const leechEvents = [...faded.events, ...leech.events];
     if (leechEvents.length > 0) {
         state = leech.state;
-        if (isDefeated(state.enemy)) return endCombat(withLog(state, leechEvents), 'victory', leechEvents);
+        if (isDefeated(state.enemy)) return endCombat(withLog(state, leechEvents), 'victory', leechEvents, rng);
     }
     // The weather ticks on the foe (INFERNO, then STORM, which grows).
     const weather = programElementFoeTurnStart(state);
     if (weather.events.length > 0) {
         leechEvents.push(...weather.events);
         state = weather.state;
-        if (isDefeated(state.enemy)) return endCombat(withLog(state, leechEvents), 'victory', leechEvents);
+        if (isDefeated(state.enemy)) return endCombat(withLog(state, leechEvents), 'victory', leechEvents, rng);
     } else state = weather.state;
     // MERCY's clock ticks on the foe; when it runs out the MERCY bursts.
     const mercy = programMercyFoeTurnStart(state, PROGRAM_KIT);
     if (mercy.events.length > 0) {
         leechEvents.push(...mercy.events);
         state = mercy.state;
-        if (isDefeated(state.enemy)) return endCombat(withLog(state, leechEvents), 'victory', leechEvents);
+        if (isDefeated(state.enemy)) return endCombat(withLog(state, leechEvents), 'victory', leechEvents, rng);
     }
 
     const idx = Math.min(state.currentPhaseIndex, state.threatPhases.length - 1);
@@ -1780,7 +1801,7 @@ export function resolveThreatPhase(stateRaw: CombatEncounterState, rng: () => nu
 
     // Outcome checks after the threat action.
     const outcome = pendingOutcome(next);
-    if (outcome) return endCombat(next, outcome, events);
+    if (outcome) return endCombat(next, outcome, events, rng);
 
     // Otherwise advance to between-phases.
     return processBetweenPhases(next, rng, events);
@@ -1805,6 +1826,8 @@ export function processBetweenPhases(
     priorEvents: CombatEvent[] = [],
     bonusDraw: number = 0,
 ): CombatTransition {
+    // An open mercy check holds the fight: no tick, no draw, no new round.
+    if (mercyCheckOpen(state)) return { state, events: priorEvents };
     const events: CombatEvent[] = [];
 
     // 1. Per-effect DoT ticks (labeled) — computed before processing.
@@ -2022,7 +2045,7 @@ export function processBetweenPhases(
 
     // 6. Outcome checks after ticks.
     const outcome = pendingOutcome(next);
-    if (outcome) return endCombat(next, outcome, [...priorEvents, ...events]);
+    if (outcome) return endCombat(next, outcome, [...priorEvents, ...events], rng);
 
     // 9. Safety cap — a degenerate stalemate resolves as defeat (couldn't close).
     if (next.round > MAX_PHASES) return endCombat(next, 'defeat', [...priorEvents, ...events]);
@@ -2121,7 +2144,7 @@ export function resolveCombatPhase(
         );
         working = res.state;
         allEvents.push(...res.events);
-        if (working.finalOutcome) return { state: working, events: allEvents };
+        if (working.finalOutcome || mercyCheckOpen(working)) return { state: working, events: allEvents };
     }
     if (working.phase !== 'phase-play') return { state: working, events: allEvents };
     const resolved = resolveThreatPhase(working, rng);

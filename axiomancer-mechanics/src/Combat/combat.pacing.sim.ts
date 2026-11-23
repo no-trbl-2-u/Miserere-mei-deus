@@ -32,6 +32,7 @@ import {
 import { programLineValue, programLineCost, programIllegalReason, isProgramCard } from './combat.card-program';
 import { OPEN_VEIN_HEAL } from './combat.signature';
 import { upgradeablePlayPhase } from './combat.encounter.sim';
+import { chooseMercyCheck } from './combat.mercy-check';
 import { COMBAT_SIM_POLICIES } from './combat.sim-policies';
 import { getRng } from '../Utils/rng';
 import { LIVE_ENCOUNTER_ENEMY_HP_MULTIPLIER, liveEncounterHpMultiplier } from './live-encounter';
@@ -188,12 +189,13 @@ export function runPacingEncounter(
     };
     for (let guard = 0; guard < 200 && s.phase !== 'complete' && !s.finalOutcome; guard++) {
         if (s.phase !== 'phase-play') break;
-        s = policy === 'witness'
+        // A blow that asks spare or finish is answered as the witness answers it.
+        s = chooseMercyCheck(policy === 'witness'
             ? upgradeablePlayPhase(s, witness, rng, {}, {}).state
-            : humanLikePhase(s, opts.maxPlaysPerTurn ?? Infinity, mercy);
+            : humanLikePhase(s, opts.maxPlaysPerTurn ?? Infinity, mercy), witness.mercyCheck);
         sample();
         if (s.finalOutcome) break;
-        if (s.phase === 'phase-play') s = resolveThreatPhase(s).state;
+        if (s.phase === 'phase-play') s = chooseMercyCheck(resolveThreatPhase(s).state, witness.mercyCheck);
         sample();
     }
     return {

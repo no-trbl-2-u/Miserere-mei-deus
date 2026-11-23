@@ -27,7 +27,8 @@ import {
     COMBAT_STAGE_PROFILES, COMBAT_STAGE_ORDER, buildStagePlayer, type CombatStageId,
 } from './combat.stage-profiles';
 import { STARTING_CARD_IDS } from './combat.rewards';
-import type { CombatSimPolicyId } from './combat.sim-policies';
+import { COMBAT_SIM_POLICIES, type CombatSimPolicyId } from './combat.sim-policies';
+import { chooseMercyCheck } from './combat.mercy-check';
 import { ENEMY_REGISTRY } from '../Enemy/enemy.library';
 import type {
     CombatEncounterState, CombatManaDie, CombatOutcome,
@@ -235,7 +236,8 @@ function accumulateEncounter(
 
         if (state.finalOutcome) break;
         if (state.phase === 'phase-play') {
-            state = resolveThreatPhase(state).state;
+            // A tick that asks spare or finish is answered as the policy says.
+            state = chooseMercyCheck(resolveThreatPhase(state).state, COMBAT_SIM_POLICIES[policyId].mercyCheck);
             // The resolve slice has no roll — pass convBefore through unused.
             foldEvents(acc, state.log.slice(cursor), convBefore);
             cursor = state.log.length;

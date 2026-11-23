@@ -8,7 +8,7 @@
  *   On by default only while T is the only player; before a preview build
  *   reaches anyone else the default flips to off (BE2 brief, DoD).
  *
- * - `forceMercyCheck`: every normal foe asks spare or finish as it falls, so the
+ * - `forceMercyCheck`: every lethal blow on a normal or elite foe asks spare or finish, so the
  *   prompt can be seen without waiting on the chance. Off by default.
  *
  * - `wildsBlackBand`: the top half of the Wilds' status card sits on a solid

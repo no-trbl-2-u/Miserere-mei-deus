@@ -1,12 +1,13 @@
 /**
  * CombatEncounterPanel — the mercy check on the screen.
  *
- * A foe with 1 VITAE falls to a real FREE strike through the board's own
- * handlers, with the dev switch forcing the check. Pins: the prompt shows only
- * its two lines and two buttons and pays nothing until it is answered; Spare goes
- * to the end screen with no card reward and reveals the roll there; Finish pays
- * as any win; an elite never asks, forced or not, and neither does a fight that
- * writes nothing back.
+ * A foe with 1 VITAE takes a real FREE strike through the board's own handlers,
+ * with the dev switch forcing the check at the lethal blow. Pins: the foe stands
+ * at 1 VITAE, the prompt shows only its two lines and two buttons, no other input
+ * reaches the fight, and nothing pays until it is answered; Spare goes to the end
+ * screen with no card reward and reveals the roll there; Finish pays as any win;
+ * an elite asks as a normal foe does; a boss never asks, forced or not, and
+ * neither does a fight that writes nothing back.
  */
 
 import React from 'react';
@@ -119,6 +120,19 @@ describe('the prompt, before the choice', () => {
         expect(screen.queryByText(new RegExp(spareRewardLabel))).toBeNull();
     });
 
+    it('holds the foe at 1 VITAE, the fight not ended, and takes no other input', () => {
+        fellTheFoe('normal');
+        expect(board().vm.enemy.hp).toBe(1);
+        const handBefore = board().vm.hand.map((c) => c.uid);
+        const next = board().vm.hand[0];
+        act(() => { board().onStage(next.uid); });
+        expect(board().stagedUids).toEqual([]);
+        act(() => { board().onApply(next.uid, null, false); });
+        expect(board().vm.hand.map((c) => c.uid)).toEqual(handBefore);
+        expect(board().vm.enemy.hp).toBe(1);
+        expect(screen.getByTestId('combat-mercy')).toBeTruthy();
+    });
+
     it('has paid nothing yet', () => {
         const { store, before } = fellTheFoe('normal');
         const player = store.getState().player;
@@ -190,8 +204,17 @@ describe('Finish', () => {
     });
 });
 
+describe('who asks', () => {
+    it('an elite foe, as a normal one does', () => {
+        fellTheFoe('elite');
+        expect(screen.getByTestId('combat-mercy')).toBeTruthy();
+        act(() => { fireEvent.press(screen.getByTestId('combat-mercy-spare')); });
+        expect(textsUnder('combat-summary').join(' ')).toMatch(/spared/);
+    });
+});
+
 describe('who never asks', () => {
-    it.each(['elite', 'boss', 'simple', 'unique'] as const)('a %s foe, even forced', (difficulty) => {
+    it.each(['boss', 'simple', 'unique'] as const)('a %s foe, even forced', (difficulty) => {
         fellTheFoe(difficulty);
         expect(screen.queryByTestId('combat-mercy')).toBeNull();
     });

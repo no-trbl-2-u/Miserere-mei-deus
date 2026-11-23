@@ -24,6 +24,7 @@ import {
     signatureCastBlock, PROGRAM_KIT,
 } from './combat.engine';
 import { programIllegalReason, programLineValue } from './combat.card-program';
+import { chooseMercyCheck } from './combat.mercy-check';
 import { getCardById } from '../Cards/cards.library';
 import { MOMENTUM_CHAIN_ORDER } from './combat.upgradeable-dice';
 import { getRng } from '../Utils/rng';
@@ -397,6 +398,20 @@ export function upgradeablePlayPhase(
     lines: Record<string, CombatCardLineTelemetry>,
     focusIds?: ReadonlySet<string>,
 ): PlayPhaseResult {
+    // A blow that asks spare or finish is answered as the policy says, as the
+    // player answers the prompt: the phase hands back an ended fight.
+    const played = playUpgradeablePhase(state, policy, rng, usage, lines, focusIds);
+    return { ...played, state: chooseMercyCheck(played.state, policy.mercyCheck) };
+}
+
+function playUpgradeablePhase(
+    state: CombatEncounterState,
+    policy: CombatSimPolicy,
+    rng: () => number,
+    usage: Record<string, CombatCardUsage>,
+    lines: Record<string, CombatCardLineTelemetry>,
+    focusIds?: ReadonlySet<string>,
+): PlayPhaseResult {
     let working = state;
     let plays = 0;
     let statusPlays = 0;
@@ -642,7 +657,7 @@ export function runOneEncounter(
                 const guardBefore = state.guard ?? 0;
                 const playerHpBefore = state.player.health;
                 const result = resolveThreatPhase(state);
-                state = result.state;
+                state = chooseMercyCheck(result.state, policyObj.mercyCheck);
                 lowestVitaeFraction = Math.min(lowestVitaeFraction, vitaeFraction(state));
                 // If the threat actually fired, attribute guard availability + HP taken.
                 if (result.events.some(e => e.kind === 'threat-fired')) {

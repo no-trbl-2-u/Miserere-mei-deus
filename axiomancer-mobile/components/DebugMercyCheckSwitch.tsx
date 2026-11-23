@@ -1,8 +1,9 @@
 /**
- * Dev-only MERCY CHECK switch: one checkbox that forces the check on every
- * normal foe, so the prompt can be seen without waiting on the chance. It flips
- * `forceMercyCheck` in the dev settings (`state/dev/dev-settings.ts`). An elite
- * or a boss still never asks. Renders null outside dev builds.
+ * Dev-only MERCY CHECK switch: one checkbox that forces the check at every
+ * lethal blow on a normal or elite foe, so the prompt can be seen without
+ * waiting on the chance. It flips `forceMercyCheck` in the dev settings
+ * (`state/dev/dev-settings.ts`), read when a fight opens. A boss still never
+ * asks. Renders null outside dev builds.
  */
 
 import React from 'react';
@@ -19,7 +20,7 @@ export function DebugMercyCheckSwitch({ store = devSettingsStore }: { store?: De
     return (
         <DevRow
             label="DEBUG · MERCY CHECK"
-            sub={on ? 'on · every normal foe asks spare or finish' : 'off · the normal chance'}
+            sub={on ? 'on · every normal or elite foe asks spare or finish' : 'off · the normal chance'}
             testID="debug-mercy-check"
         >
             <DevChips>
