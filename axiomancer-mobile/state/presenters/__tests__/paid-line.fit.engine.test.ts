@@ -33,6 +33,7 @@ const PARKED_FOR_T: Readonly<Record<string, string>> = {
     'Feeding Mark': 'over three rows; waits on the keyword T is designing for the foe-loses-VITAE heal',
     'Uneven Trade': 'four rows; T allowed it as it is (2026-11-01)',
     'Stay the Hand': 'four rows at 10px (three at 9px); T picked this wording (2026-11-01) and allows it',
+    'Bind the Three': 'four rows in words at its third upgrade, which its rare rank (from its text) allows; awaits T',
 };
 
 interface Printed { name: string; level: number; line: string }
