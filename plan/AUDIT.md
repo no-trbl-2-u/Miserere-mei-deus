@@ -74,21 +74,6 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 - detail: NX1e moved `/next`'s close and `/plot`'s rows onto `plan/pending/` files in the PR, settled on main by the merge job (`scripts/pr-settle.mjs`). The bookkeeping commits of `skills/critique.md`, `triage.md`, `expand.md`, `oversight.md`, `consolidate.md`, `digest.md` and `iterate.lanes.md`'s plan-only fix still `git push origin main` (D84). Each as a `loop:pr` PR would count toward the cap of 5 (D85) and wait on the review, so the move needs its own call: a `review:plan-only` PR outside the cap, or a batched bookkeeping PR. AGENTS.md rule 1 names the gap.
 - next: a `[loop-call]` for T before NX1i turns the loop on: decide the PR shape for queue-only commits, then move those verbs onto `scripts/loop-land.mjs` (or the pending files where they edit `plan/README.md` or a spec).
 
-### [ ] [ci] The shadow review burns runs on cancel-in-progress: 418 of ~1000 `pr-review.yml` runs cancelled (2026-10-17..27) (T, via /oversight 2026-10-27)
-- category: ci
-- impact: 5
-- ease: 6
-- detail: R11 watch count for the window since the 2026-10-17 oversight:
-  `pr-review.yml` 506 success, 73 failure, 418 cancelled, 3 blank. The job's
-  concurrency `pr-review-<PR>` with `cancel-in-progress: true` (brief RV1)
-  throws away a review whenever a new head lands mid-run (autofix, merges of
-  main into the PR head, the loop's own follow-up pushes). Measure how many
-  cancelled runs had already reached the Claude step (the paid part), then
-  pick the fix: debounce (wait N minutes for the head to settle before the
-  Claude step), skip the review on heads that only merge `main`, or let a run
-  finish once Claude has started. File the choice as `[loop-call]` residue.
-- next: `/iterate` (measure, then the workflow change).
-
 ### [content] Card-rules fence: 5 atlas words pinned under the carrier rule or the admission bar (Phase CS1, 2026-10-13)
 - category: content
 - impact: 3
@@ -320,6 +305,23 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 - 2026-11-22: left open. The honest flag needs data the map builder does not read today (node kinds on the start maps and staged events, in `axiomancer-mechanics`), and the shell-gate test (`isShellGateEdge`) lives in `feature-map-render.mjs`, not in `feature-map.evidence.mjs` `reachability`. Flipping gate-only routes to `reachable: false` would change the committed map, the render and the drive report together, and would mark routes a player does reach (by gate) as unreachable. Not a modest change; wants a spec that says what `reachable` means (a gate exists, or a play path exists) before code.
 
 ## Done
+
+### [x] [ci] The shadow review burns runs on cancel-in-progress: 418 of ~1000 `pr-review.yml` runs cancelled (2026-10-17..27) (T, via /oversight 2026-10-27) — CLOSED 2026-11-23 (measured: the paid part is no longer thrown away)
+- category: ci
+- impact: 5
+- ease: 6
+- detail: R11 watch count for the window since the 2026-10-17 oversight:
+  `pr-review.yml` 506 success, 73 failure, 418 cancelled, 3 blank. The job's
+  concurrency `pr-review-<PR>` with `cancel-in-progress: true` (brief RV1)
+  throws away a review whenever a new head lands mid-run (autofix, merges of
+  main into the PR head, the loop's own follow-up pushes). Measure how many
+  cancelled runs had already reached the Claude step (the paid part), then
+  pick the fix: debounce (wait N minutes for the head to settle before the
+  Claude step), skip the review on heads that only merge `main`, or let a run
+  finish once Claude has started. File the choice as `[loop-call]` residue.
+- next: `/iterate` (measure, then the workflow change).
+- measured 2026-11-23: the last 100 `pr-review.yml` runs (2026-11-22T20:42Z to 2026-11-23T21:40Z) are 60 success, 23 failure, 16 cancelled, 1 blank, so the cancel share fell from 42% to 16%. Of the 16 cancelled runs, 15 were cancelled before the Claude step: in `verify-gate`'s free wait for the head's `verify-*` runs (11), in checkout or setup (4), or in the report-only mutation job. Only 1 reached "Run Claude Code", and it was cancelled after 2 minutes. The workflow now gates the review behind `verify-gate` (its own `pr-review-gate-<PR>` group), so a head that is superseded mid-CI is dropped before the paid step. No debounce is needed; reopen if a later window shows more than 2 cancels in 100 at the Claude step.
+
 
 ### [x] [tests] HIGH: the defender lane bot's end deck ties merciful on seed 7 after the mercy check moved to the lethal blow (fix-ci, verify-mechanics run 45254682167, 2026-11-23) — CLOSED 2026-11-23 (f98c0d02b took the row's second option: the lane-lead check reads only cleared runs, so a run that dies early is exempt; the bot's drafting rule and its policy test are unchanged; `jest sim/` green on main)
 - category: tests
