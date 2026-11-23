@@ -106,9 +106,9 @@ export const breakwaterLayout: MapLayout = {
     nodes: [
         // ── the windmill and the west ──
         { id: 'bw-w1', ...at('bw-w1'), label: 'The Windmill', description: 'Sails lashed down. The sea is loud below.' },
-        { id: 'bw-w2', ...at('bw-w2'), label: 'The Gallows Crossroads', description: 'No one remembers the law it served. The last rope rotted through on its own.' },
+        { id: 'bw-w2', ...at('bw-w2'), label: 'The Gallows Crossroads', description: 'The town paid its hangman by the neck. He was never short of work.' },
         { id: 'bw-w3', ...at('bw-w3'), label: 'The Field Road', description: 'The barley rotted in the ear this wet year. Nobody has come to cut it.' },
-        { id: 'bw-w4', ...at('bw-w4'), label: 'The West Cliff Road', description: 'A ledge out of the wind. The gulls below have picked the last sleeper clean.' },
+        { id: 'bw-w4', ...at('bw-w4'), label: 'The West Cliff Road', description: 'A ledge out of the wind, above water that has never once been still.' },
         { id: 'bw-w5', ...at('bw-w5'), label: 'The Keep Causeway', description: 'Under water twice a day. Some who crossed on the turn are on it still.' },
         // ── the keep ──
         { id: 'bw-k1', ...at('bw-k1'), label: 'The Keep Gate', description: 'The gate keeps its hours by the book. The book forgets those within.' },
@@ -118,7 +118,7 @@ export const breakwaterLayout: MapLayout = {
         { id: 'bw-h2', ...at('bw-h2'), label: 'The Crane Quay', description: 'Cargo cranes over black mud. Something under it moves.' },
         { id: 'bw-h3', ...at('bw-h3'), label: 'The Harbour Light Pier', description: 'Each house that voted took its share. They drink to the sale each year.' },
         { id: 'bw-h4', ...at('bw-h4'), label: 'The Wreck', description: 'Kelp has taken her. Mind the hull.' },
-        { id: 'bw-h5', ...at('bw-h5'), label: 'The Moored Ship', description: 'In the tally, a boy\'s name with his boots beside it, and the house that took them.' },
+        { id: 'bw-h5', ...at('bw-h5'), label: 'The Moored Ship', description: 'The hulk where the town keeps its tally. Cargo first, then the swimmers.' },
         { id: 'bw-h6', ...at('bw-h6'), label: 'The Sea Cave Mouth', description: 'The sea runs into the cliff, and does not always bring back what it took.' },
         { id: 'bw-h7', ...at('bw-h7'), label: 'The Long Pier', description: 'The pier keeps one rule, cargo first. The town comes out to watch.' },
         { id: 'bw-h8', ...at('bw-h8'), label: 'The Pier End', description: 'What the pier lets go washes up here. Mothers look, and do not stay.' },
@@ -145,17 +145,17 @@ export const breakwaterLayout: MapLayout = {
         // ── the hamlet and the watchtower ──
         { id: 'bw-d1', ...at('bw-d1'), label: 'The Fishing Hamlet', description: 'Fish dry on the racks. Nobody is watching them.' },
         { id: 'bw-d2', ...at('bw-d2'), label: 'The Boat Sheds', description: 'Boats turned keel up for winter. Some wait on men the sea has kept.' },
-        { id: 'bw-d3', ...at('bw-d3'), label: 'The Hamlet Rise', description: 'A rise above the hamlet. From here the women watch for boats a season late.' },
+        { id: 'bw-d3', ...at('bw-d3'), label: 'The Hamlet Rise', description: 'A rise above the hamlet. The whole coast below, and nothing moving on it.' },
         { id: 'bw-d4', ...at('bw-d4'), label: 'The Tower Switchbacks', description: 'The path doubles back up to the tower. Rain has taken the edge in places.' },
         { id: 'bw-d5', ...at('bw-d5'), label: 'The Old Watchtower', description: 'The tower watched for a relief that never came. Its log ends in weather.' },
         // ── the manor road ──
-        { id: 'bw-m1', ...at('bw-m1'), label: 'The South Fork', description: 'The road splits for the river and the manor. Both were here before the town.' },
+        { id: 'bw-m1', ...at('bw-m1'), label: 'The South Fork', description: 'The road forks for river and manor. The sign went for firewood one winter.' },
         { id: 'bw-m2', ...at('bw-m2'), label: 'The River Meadow', description: 'Each spring the river floods here and takes the lambs that cannot climb.' },
         { id: 'bw-m3', ...at('bw-m3'), label: 'The Riverbank', description: 'The river gives up what it carried here. Sometimes a man from upstream.' },
         { id: 'bw-m4', ...at('bw-m4'), label: 'The Manor Road', description: 'A walled road to lit windows. A candle costs a week of bread.' },
         { id: 'bw-m5', ...at('bw-m5'), label: 'The Walled Manor', description: 'A bell rings in the yard. Nobody is at service.' },
         // ── the pass ──
         { id: 'bw-p1', ...at('bw-p1'), label: 'The Foothills', description: 'The foothills climb to the pass. The men at the top keep fee and boots.' },
-        { id: 'bw-p3', ...at('bw-p3'), label: 'The High Pass', description: 'Those who tried to leave the coast were turned back here for want of the toll.' },
+        { id: 'bw-p3', ...at('bw-p3'), label: 'The High Pass', description: 'The toll men keep a tally of the boots they took, read aloud at feasts.' },
     ],
 };
