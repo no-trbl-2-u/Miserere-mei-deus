@@ -36,7 +36,7 @@
 - proposed: 2026-11-23, expand pass 48
 - source signals:
   - This session's 177.19 build: the worktree had no `node_modules`, so the lead symlinked the root and both workspace folders in by hand. The builder's slice commit then carried the three symlinks, which a follow-up commit removed.
-  - Lesson `worktree-no-node-modules`, seen 3×, and its candidate "Root `npm test` names a missing install" (score 3.5) describe the same missing step from the gate's side.
+  - Lesson `worktree-no-node-modules`, seen 6×, and its candidate "Root `npm test` names a missing install" (score 3.5) describe the same missing step from the gate's side.
 - rationale: every `/next` cuts a worktree and every gate needs dependencies. The by-hand link is a trap: a broad `git add` commits it.
 - proposed scope: 1 small phase. `worktree.mjs cut --deps link` symlinks the primary checkout's `node_modules` (root and each workspace) and adds them to the worktree's `info/exclude`. `close` already unlinks links. Pin it in the worktree script's test. It may absorb the `npm test` missing-install candidate.
 - estimated phases: 1
@@ -170,7 +170,7 @@
 - estimated phases: 1
 - conflicts: none. Loop tooling only; no game code, content, rule, card or keyword (D88). Label `review:plan-only` for the docs half.
 
-### [ ] [score 3.5] Root `npm test` names a missing install instead of three false reds (lesson `worktree-no-node-modules`, seen 3×)
+### [ ] [score 3.5] Root `npm test` names a missing install instead of three false reds (lesson `worktree-no-node-modules`, seen 6×)
 - **Pass 43 note (2026-10-28):** rescored 3.0 -> 3.5. A third sighting since it was filed; scope unchanged.
 - proposed: 2026-10-27, `/plot` QL1 retro (lessons at the 40-open cap, so the automation is filed here)
 - source signals: `plan/lessons.md` `worktree-no-node-modules`, seen 2×, last 2026-10-27. In an isolated worktree with no `node_modules`, `scripts/axio-mcp-server.test.mjs` fails three cases (`catalog:export regen failed`, "0 cards, 0 enemies") on a plan-only diff (ship AD1b, plot QL1), and the reader must work out it is the environment.
