@@ -707,6 +707,30 @@ describe('travel', () => {
         expect(validatePlayRunEndPost(closes[0]!.body).reasons).toEqual([]);
     });
 
+    it('the chapter complete screen records nothing until CONTINUE, so a reload on it logs the crossing once', async () => {
+        const { store, actions } = createFixtureStore({
+            id: 'ce1b-travel-reload', seed: 'ce1b-travel-reload',
+            world: { continent: 'coastal-continent', map: 'breakwater', node: 'bw-b2' },
+        });
+        const runId = gs(store).runId;
+        actions.resolveCurrentMapEvent('travel');
+        expect(actions.takeTravel()).toBe(true);
+        await landed();
+        expect(eventsOf('node-resolved')).toEqual([]);
+        expect(calls.filter((c) => c.url === playRunEndPath(runId))).toHaveLength(0);
+        // A reload on the chapter complete screen: the travel slice is not saved, so the player
+        // stands on the far bank again and says YES a second time.
+        actions.closeTravel();
+        actions.resolveCurrentMapEvent('travel');
+        expect(actions.takeTravel()).toBe(true);
+        expect(actions.continueChapter()).toBe(true);
+        await landed();
+        expect(eventsOf('node-resolved').map((e) => e.payload)).toEqual([
+            expect.objectContaining({ nodeId: 'bw-b2', choice: 'travel' }),
+        ]);
+        expect(calls.filter((c) => c.url === playRunEndPath(runId))).toHaveLength(1);
+    });
+
     it('a chapter-cleared run keeps posting its events, and a later reset posts no second close', async () => {
         const { store, actions } = createFixtureStore({
             id: 'sm1d-travel-no-double-close', seed: 'sm1d-travel-no-double-close',

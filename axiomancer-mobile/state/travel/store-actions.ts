@@ -29,7 +29,9 @@ export function closeTravelAction(store: AppStore): void {
 /**
  * YES: takes the trip the open screen offers. A map destination crosses the
  * world (a toast names the region, and the crossing is a checkpoint save); a
- * passage stands the player on its far node. Returns true when the player
+ * passage stands the player on its far node. The crossing out of the
+ * Breakwater instead opens the chapter complete screen and moves no one:
+ * CONTINUE (`continueChapterAction`) crosses, without a toast. Returns true when the player
  * moved; a shut way moves no one and leaves the screen open. `toast` is the
  * host's one-shot toast.
  */
@@ -46,16 +48,15 @@ export function takeTravelAction(store: AppStore, toast: (text: string) => void)
     }
     const after = takeTravel(before);
     if (after === before) return false;
-    // The run log, while the player still stands on the travel node: the trip resolves it, and
-    // leaving the Breakwater (the Chapter 1 map) ends the run as a chapter clear.
-    recordNodeResolved(store, 'travel');
     if (before.world.currentMap.name === STARTING_MAP && after.world.currentMap.name !== STARTING_MAP) {
-        recordRunClosed(before, 'chapter-clear');
         // The far bank opens the chapter complete screen in place of the toast. The world has not
-        // moved: CONTINUE (`continueChapterAction`) takes the crossing.
+        // moved and nothing is recorded: CONTINUE (`continueChapterAction`) takes the crossing,
+        // writes the run log and saves, so a reload on this screen records nothing twice.
         store.setState({ travel: { open, chapterComplete: true } } as never);
         return true;
     }
+    // The run log, while the player still stands on the travel node: the trip resolves it.
+    recordNodeResolved(store, 'travel');
     return finishCrossing(store, open, after, toast);
 }
 
@@ -74,6 +75,10 @@ export function continueChapterAction(store: AppStore): boolean {
         closeTravelAction(store);
         return false;
     }
+    // The run log, while the player still stands on the travel node: the trip resolves it, and
+    // leaving the Breakwater (the Chapter 1 map) ends the run as a chapter clear.
+    recordNodeResolved(store, 'travel');
+    recordRunClosed(before, 'chapter-clear');
     return finishCrossing(store, open, after, null);
 }
 
