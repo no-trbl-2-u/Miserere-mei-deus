@@ -1,5 +1,5 @@
 /**
- * The mercy check at the lethal blow (D?mercy-at-the-blow, spec 187 A1, A2).
+ * The mercy check at the lethal blow.
  *
  * Pins: a blow that would kill a normal or elite foe, with the check drawn,
  * leaves it at 1 VITAE with the check open and `finalOutcome` null, whether the

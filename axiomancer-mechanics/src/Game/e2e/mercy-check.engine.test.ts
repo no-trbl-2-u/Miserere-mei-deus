@@ -6,7 +6,7 @@
  * `spareWage` and one table roll that reaches the player and the save; it counts
  * as a won fight for quests, the defeat ledger and the node; and it grants the
  * foe's story flag and journal entry, which a plain victory does not. A fight
- * played through the engine asks at the lethal blow (spec 187 A2): spared, the
+ * played through the engine asks at the lethal blow: spared, the
  * foe stands at 1 VITAE and the Spare ending pays; finished, it pays as the kill.
  */
 
