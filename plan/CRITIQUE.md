@@ -1107,16 +1107,6 @@
 - suggested fix: reword both lines so they do not reuse the hub's verb, e.g. "The node is spent the moment you stop here. Pick one before you go; it will not offer again."; copy only, pinned where the presenter tests read the line.
 - source: critique:drive (unattended)
 
-### [MED] exploration / desktop — the level-15 hub opens with the pilgrim's own node above the frame, so the first view shows open roads leading from somewhere off-screen
-- pass: 109 (commit 1250f1d9)
-- viewport: desktop (1280x800)
-- category: navigation
-- observation: on the `sage-bw-door-gate` hub at 1280 the camera's first frame shows eight open (gold-ringed) nodes and several roads running up off the pane's top edge, but no dotted "you are here" node anywhere; the pilgrim's node sits above the frame. The same fixture at 375 shows it at about (200, 248), and the level-1 hub at 1280 shows it only 40px under the pane's top edge. A first-time player sees choices with no origin until they press the recentre button, which runs the same fit and lands in the same place.
-- evidence: `.critique-artifacts/desktop/11-late-game-hub.png` (no dotted current node; roads exit the top near x 680) against `mobile/11-late-game-hub.png`; `desktop/05-exploration-hub.png` (windmill node at y about 210, the pane's top at 170). `axiomancer-mobile/components/exploration/MapCanvas.tsx` `computeFocusTransform`: the scale is floored at `minScaleFor` (the plate covers the pane, #1046, T 2026-10-28), and on the wide, short desktop pane that floor is likely above the scale that fits the focus box's height, so the box overflows the pane and the vertical centre can drop the current node out. The `settleAxis` comment promises it never takes a focus node off-screen; that holds only when the box fits.
-- suggested fix: keep the cover floor (T's ruling), but when the floored scale cannot fit the whole focus box, centre the overflowing axis on the current node instead of the box's middle (still clamped by `settleAxis`), so the pilgrim's node is always in the first frame; pin it in `MapCanvas.test.tsx` with a 1260x500 viewport and a focus box taller than the pane.
-- pass 110 note: not reproduced at 1280 on the rebuilt Breakwater (BW1b): the `sage-bw-door-gate` hub now frames the dotted current node at about (500, 495). The fixture moved, not the fit: `computeFocusTransform` still floors the scale at `minScaleFor` with no overflow rule, so the row stands.
-- source: critique:drive (unattended)
-
 ### [LOW] /cache — TAKE THE GOODS prints two identical potions as two "+ GREATER HEALING POTION" chips, where the satchel stacks the same item as "x6"
 - pass: 109 (commit 1250f1d9)
 - viewport: mobile (375x812) and desktop (1280x800)
@@ -1419,6 +1409,16 @@
 - source: loop
 
 ## Done
+
+### [x] [MED] exploration / desktop — the level-15 hub opens with the pilgrim's own node above the frame, so the first view shows open roads leading from somewhere off-screen — RESOLVED 2026-11-23 (stale: `computeFocusTransform` now centres the current node on both axes (`tx = w/2 - cx*scale`, `ty = h/2 - cy*scale`) at a contain floor (`minScaleFor`, T 2026-10-31); the focus box and `settleAxis` the row describes are gone. Branch loop/iterate-hub-focus-node pins it in MapCanvas.test.tsx at 1260x500 with the node at the sheet top, middle and bottom; critique:drive shows the dotted node centred on both hubs at 1280 and 375)
+- pass: 109 (commit 1250f1d9)
+- viewport: desktop (1280x800)
+- category: navigation
+- observation: on the `sage-bw-door-gate` hub at 1280 the camera's first frame shows eight open (gold-ringed) nodes and several roads running up off the pane's top edge, but no dotted "you are here" node anywhere; the pilgrim's node sits above the frame. The same fixture at 375 shows it at about (200, 248), and the level-1 hub at 1280 shows it only 40px under the pane's top edge. A first-time player sees choices with no origin until they press the recentre button, which runs the same fit and lands in the same place.
+- evidence: `.critique-artifacts/desktop/11-late-game-hub.png` (no dotted current node; roads exit the top near x 680) against `mobile/11-late-game-hub.png`; `desktop/05-exploration-hub.png` (windmill node at y about 210, the pane's top at 170). `axiomancer-mobile/components/exploration/MapCanvas.tsx` `computeFocusTransform`: the scale is floored at `minScaleFor` (the plate covers the pane, #1046, T 2026-10-28), and on the wide, short desktop pane that floor is likely above the scale that fits the focus box's height, so the box overflows the pane and the vertical centre can drop the current node out. The `settleAxis` comment promises it never takes a focus node off-screen; that holds only when the box fits.
+- suggested fix: keep the cover floor (T's ruling), but when the floored scale cannot fit the whole focus box, centre the overflowing axis on the current node instead of the box's middle (still clamped by `settleAxis`), so the pilgrim's node is always in the first frame; pin it in `MapCanvas.test.tsx` with a 1260x500 viewport and a focus box taller than the pane.
+- pass 110 note: not reproduced at 1280 on the rebuilt Breakwater (BW1b): the `sage-bw-door-gate` hub now frames the dotted current node at about (500, 495). The fixture moved, not the fit: `computeFocusTransform` still floors the scale at `minScaleFor` with no overflow rule, so the row stands.
+- source: critique:drive (unattended)
 
 ### [x] [MED] combat / phases foe — the preview and board number each loop move as a "PHASE", so Float-Eye reads as an 8-step fight whose DANGER lands on turn 5, where the rule gives it 2 phases and a DANGER at 30% — RESOLVED 2026-11-23 (stale: no component renders the THREAT SEQUENCE preview, `phaseBadge` or the dock ledger pips since the board and reveal redesign; `threatPhaseHeader` and `revealDangers` are read only by tests and `CombatFooterDock.tsx` prints no phase count. A view-model fix with per-phase sections was built on branch loop/iterate-phase-labels (7909f292f) and kept unmerged, since nothing on screen would read it; reopen if a phase preview returns)
 - pass: 113 (commit 594a0d81)

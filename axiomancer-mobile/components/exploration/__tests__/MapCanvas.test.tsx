@@ -562,6 +562,20 @@ describe('computeFocusTransform: the recentre framing (MC1b A5)', () => {
         expect(fit.ty).toBeCloseTo(viewport.h / 2 - (400 * SPREAD * fit.scale) / 2, 5);
     });
 
+    it('keeps the current node inside a wide, short pane wherever it sits on the plate', () => {
+        const sheet = { width: 1000, height: 1000, scale: 2.4 };
+        const viewport = { w: 1260, h: 500 };
+        for (const y of [20, 500, 980]) {
+            const fit = computeFocusTransform([curNode(500, y)], viewport, sheet);
+            const sx = 500 * 2.4 * fit.scale + fit.tx;
+            const sy = y * 2.4 * fit.scale + fit.ty;
+            expect(fit.scale).toBeGreaterThanOrEqual(minScaleFor(viewport, sheet));
+            expect(sx).toBeGreaterThanOrEqual(0);
+            expect(sx).toBeLessThanOrEqual(viewport.w);
+            expect(sy).toBeCloseTo(viewport.h / 2, 5);
+        }
+    });
+
     it('floors at the scale where the whole plate just fits the pane (MC1a A3)', () => {
         const sheet = { width: 2400, height: 2400, scale: 1 };
         expect(minScaleFor({ w: 394, h: 557 }, sheet)).toBeCloseTo(394 / 2400, 5);
