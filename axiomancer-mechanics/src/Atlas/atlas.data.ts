@@ -14,7 +14,9 @@ import { CARD_LANES } from '../Cards/card.lanes';
 import { printedKeywords } from '../Cards/card-rules';
 import { relicLibrary } from '../Items/relic.library';
 import { SIGNATURE_SKILLS, signatureText } from '../Combat/combat.signature';
-import { LIVE_ENCOUNTER_ENEMY_HP_MULTIPLIER } from '../Combat/live-encounter';
+import {
+    LIVE_ENCOUNTER_ENEMY_HP_MULTIPLIER, EARLY_ENCOUNTER_ENEMY_HP_MULTIPLIER, EARLY_ENCOUNTER_MAX_LEVEL,
+} from '../Combat/live-encounter';
 import { scaleAmount } from '../Combat/stat-scaling';
 import { EnemyLibrary } from '../Enemy/enemy.library';
 import { MAP_REGISTRY } from '../World/map.registry';
@@ -61,6 +63,7 @@ export interface AtlasData {
     signatures: { id: string; name: string; cost: number; description: string }[];
     enemies: {
         id: string; name: string; level: number; difficulty: string | null;
+        /** The authored VITAE, and the live VITAE at the base multiplier (a fight past level {@link EARLY_ENCOUNTER_MAX_LEVEL}). */
         vitae: number; liveVitae: number;
     }[];
     regions: {
@@ -75,7 +78,11 @@ export interface AtlasData {
     formulas: {
         PLAYER_VITAE_BASE: number;
         RESOURCE_MULTIPLIERS: { VITAE_PER_BODY: number; VITAE_PER_MIND: number; VITAE_PER_HEART: number };
+        /** The base live multiplier: every fight past {@link EARLY_ENCOUNTER_MAX_LEVEL}. */
         LIVE_ENCOUNTER_ENEMY_HP_MULTIPLIER: number;
+        /** The early multiplier, for fights at player levels 1 to {@link EARLY_ENCOUNTER_MAX_LEVEL}. */
+        EARLY_ENCOUNTER_ENEMY_HP_MULTIPLIER: number;
+        EARLY_ENCOUNTER_MAX_LEVEL: number;
         scalingBase: number;
         scaling: { stat: number; oneShot: number; repeating: number }[];
     };
@@ -187,6 +194,8 @@ export function buildAtlasData(meta: AtlasMeta = { commit: 'unknown', generatedA
             PLAYER_VITAE_BASE,
             RESOURCE_MULTIPLIERS: { ...RESOURCE_MULTIPLIERS },
             LIVE_ENCOUNTER_ENEMY_HP_MULTIPLIER,
+            EARLY_ENCOUNTER_ENEMY_HP_MULTIPLIER,
+            EARLY_ENCOUNTER_MAX_LEVEL,
             scalingBase: ATLAS_SCALING_BASE,
             scaling: Array.from({ length: ATLAS_MAX_STAT + 1 }, (_, stat) => ({
                 stat,

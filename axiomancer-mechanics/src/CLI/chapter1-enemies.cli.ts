@@ -1,7 +1,8 @@
 /**
  * Chapter 1 tuning table: every Breakwater foe at its node's level against
  * the four kitted lane decks at player levels 8 and 10, under both pacing
- * drivers (`Combat/combat.pacing.sim.ts`), at live foe VITAE.
+ * drivers (`Combat/combat.pacing.sim.ts`), at live foe VITAE (the base
+ * multiplier: every fight past player level 3 takes it).
  *
  * Usage:
  *   npm run chapter1-enemies -w axiomancer-mechanics
@@ -35,6 +36,7 @@ import {
 import {
     simulatePacing, LIVE_ENCOUNTER_ENEMY_HP_MULTIPLIER, type PacingPolicy, type PacingSummary,
 } from '../Combat/combat.pacing.sim';
+import { EARLY_ENCOUNTER_MAX_LEVEL } from '../Combat/live-encounter';
 
 /** The four lanes, grey first. */
 export const TUNING_LANES = ['grey', 'blood-price', 'elementalist', 'defender'] as const;
@@ -226,7 +228,7 @@ export function renderReport(cells: TuningCell[], o: { runs: number; seed: numbe
         'A cell reads `turns to kill / VITAE lost (share of the player\'s max VITAE)`. Turns are the player turns of the',
         'fights the deck won; VITAE lost is the player\'s max minus the mean VITAE left, a lost fight counting as all of',
         'it. A cell appends `win N%` when the deck did not win every fight. Foe VITAE is the live encounter VITAE',
-        `(x${mult}) after the tier and level scaling, shown in the VITAE column.`,
+        `(x${mult}, the base multiplier for fights past player level ${EARLY_ENCOUNTER_MAX_LEVEL}) after the tier and level scaling, shown in the VITAE column.`,
         '',
         '- The player is an even stat spread at the level, wearing the lane\'s relics.',
         ...lanes,

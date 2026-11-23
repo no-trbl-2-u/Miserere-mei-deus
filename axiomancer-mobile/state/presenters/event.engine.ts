@@ -33,7 +33,7 @@ import { getDialogueNode, visibleChoices } from '@mechanics';
 
 import { CUTSCENE_NARRATOR, cutsceneScene } from '@/assets/images/cutscenes';
 
-import { ENCOUNTER_ENEMY_HP_MULTIPLIER, withScaledEnemyHp } from '../actions';
+import { encounterEnemyHpMultiplier, withScaledEnemyHp } from '../actions';
 import type { AppStoreState } from '../store';
 import {
     defaultBodyForEvent,
@@ -379,6 +379,7 @@ function withChrome(
 let _evtEventRef: unknown;
 let _evtQuestsRef: unknown;
 let _evtFlagsRef: unknown;
+let _evtLevel: number | undefined;
 let _evtVm: EventViewModel | null = null;
 
 /**
@@ -390,7 +391,8 @@ export function selectEventViewModel(state: AppStoreState): EventViewModel {
         _evtVm !== null &&
         state.event === _evtEventRef &&
         state.quests === _evtQuestsRef &&
-        state.flags === _evtFlagsRef
+        state.flags === _evtFlagsRef &&
+        state.player?.level === _evtLevel
     ) {
         return _evtVm;
     }
@@ -398,6 +400,7 @@ export function selectEventViewModel(state: AppStoreState): EventViewModel {
     _evtEventRef = state.event;
     _evtQuestsRef = state.quests;
     _evtFlagsRef = state.flags;
+    _evtLevel = state.player?.level;
     _evtVm = vm;
     return vm;
 }
@@ -414,7 +417,7 @@ function computeEventViewModel(state: AppStoreState): EventViewModel {
     if (resolved.kind === 'encounter') {
         return freezeViewModel(
             withSourceNodeType(
-                withPreludeChrome(withChrome(composeCombatPrelude(resolved.encounter, resolved.isBoss))),
+                withPreludeChrome(withChrome(composeCombatPrelude(resolved.encounter, resolved.isBoss, state.player?.level ?? 1))),
                 sourceNodeType,
             ),
         );
@@ -456,15 +459,15 @@ const BOSS_OMEN_BY_LEVEL: readonly string[] = [
     'fifth seal · the long count',
 ];
 
-function composeCombatPrelude(encounter: Encounter, isBoss: boolean): Omit<EventViewModel, 'preludeChrome' | 'chrome' | 'sourceNodeType'> {
+function composeCombatPrelude(encounter: Encounter, isBoss: boolean, playerLevel: number): Omit<EventViewModel, 'preludeChrome' | 'chrome' | 'sourceNodeType'> {
     // Engine `Encounter` is `{ enemies: Enemy[], origin?: string }`.
     // The prelude shows the first enemy (combat is single-enemy).
     const enemy = encounter.enemies[0];
     // The live encounter (`beginHazardEncounter` in actions.ts) scales every
-    // foe's HP by `ENCOUNTER_ENEMY_HP_MULTIPLIER` before combat starts, so the
-    // combat VITAE bar reads double this preview's authored value unless the
-    // preview previews the SAME scaled number.
-    const previewHealth = withScaledEnemyHp(enemy, ENCOUNTER_ENEMY_HP_MULTIPLIER).health;
+    // foe's HP by `encounterEnemyHpMultiplier(player level)` before combat
+    // starts, so the combat VITAE bar reads more than this preview's authored
+    // value unless the preview previews the SAME scaled number.
+    const previewHealth = withScaledEnemyHp(enemy, encounterEnemyHpMultiplier(playerLevel)).health;
     const badge = isBoss ? 'OMEN OF DOOM' : ENCOUNTER_LABEL;
     // Boss encounters label FIGHT/FLEE as STRIKE/KNEEL. Choice IDs stay
     // 'fight' / 'flee' so the screen's handlers (onFight/onFlee) dispatch

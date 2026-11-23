@@ -10,6 +10,7 @@ import { scaleAmount } from '../Combat/stat-scaling';
 import { MAP_REGISTRY } from '../World/map.registry';
 import { listQuestlines } from '../World/questline';
 import { PLAYER_VITAE_BASE, RESOURCE_MULTIPLIERS } from '../Game/game-mechanics.constants';
+import { liveEncounterHpMultiplier } from '../Combat/live-encounter';
 
 const atlas = buildAtlasData({ commit: 'abc1234', generatedAt: '2026-10-31' });
 
@@ -71,10 +72,12 @@ describe('buildAtlasData', () => {
         expect(atlas.questlines.map(q => q.id)).toEqual(listQuestlines().map(q => q.id));
     });
 
-    it('doubles foe VITAE for the live encounter', () => {
+    it('shows live foe VITAE at the base multiplier, and carries the early one beside it', () => {
         for (const e of atlas.enemies) {
             expect(e.liveVitae).toBe(e.vitae * atlas.formulas.LIVE_ENCOUNTER_ENEMY_HP_MULTIPLIER);
         }
+        expect(atlas.formulas.LIVE_ENCOUNTER_ENEMY_HP_MULTIPLIER).toBe(liveEncounterHpMultiplier(atlas.formulas.EARLY_ENCOUNTER_MAX_LEVEL + 1));
+        expect(atlas.formulas.EARLY_ENCOUNTER_ENEMY_HP_MULTIPLIER).toBe(liveEncounterHpMultiplier(atlas.formulas.EARLY_ENCOUNTER_MAX_LEVEL));
     });
 
     it('stamps the meta it is given', () => {

@@ -175,7 +175,7 @@ function statsPlate(atlas) {
     `<label for="${id}">${label}<input type="range" id="${id}" min="1" max="${maxStat}" value="5"><output id="${out}">5</output></label>`
   return `<section class="plate" id="stats" data-toc="Stats">
   <div class="plate-head"><div class="eyebrow"><b>Mechanics</b> \u00B7 Stats, VITAE, levels</div><h2>One bar, three stats, scaled effects</h2>
-  <p>VITAE is the only health track. Each effect scales by its family's stat: body for damage to the foe, mind for anything on you, heart for anything on the foe. Foes' VITAE is multiplied by ${F.LIVE_ENCOUNTER_ENEMY_HP_MULTIPLIER} in live encounters.</p></div>
+  <p>VITAE is the only health track. Each effect scales by its family's stat: body for damage to the foe, mind for anything on you, heart for anything on the foe. Foes' VITAE is multiplied by ${F.LIVE_ENCOUNTER_ENEMY_HP_MULTIPLIER} in live encounters${earlyNote(F)}.</p></div>
   <div class="grid2">
     <div class="calc">
       <div class="eyebrow">Your stats</div>
@@ -225,11 +225,17 @@ ${quests}
 </section>`
 }
 
+/** The early live multiplier, said after the base one (empty for an atlas.json built before it). */
+function earlyNote(F) {
+  if (F.EARLY_ENCOUNTER_MAX_LEVEL == null || F.EARLY_ENCOUNTER_ENEMY_HP_MULTIPLIER == null) return ''
+  return `, the base for fights past level ${F.EARLY_ENCOUNTER_MAX_LEVEL}; fights at levels 1 to ${F.EARLY_ENCOUNTER_MAX_LEVEL} take ${F.EARLY_ENCOUNTER_ENEMY_HP_MULTIPLIER}`
+}
+
 function foesPlate(atlas) {
   const rows = atlas.enemies.map((e) => `<tr><td>${esc(e.name)}</td><td class="n">${e.level}</td><td>${esc(e.difficulty ?? '')}</td><td class="n">${e.vitae}</td><td class="n">${e.liveVitae}</td></tr>`)
   return `<section class="plate" id="foes" data-toc="Foes">
   <div class="plate-head"><div class="eyebrow"><b>Content</b> \u00B7 ${atlas.enemies.length} foes</div><h2>The foe roster</h2>
-  <p>Authored VITAE, and the live VITAE a fight starts with (<code>LIVE_ENCOUNTER_ENEMY_HP_MULTIPLIER</code> = ${atlas.formulas.LIVE_ENCOUNTER_ENEMY_HP_MULTIPLIER}). No win rates here: balance numbers live in <code>docs/reports/measured/latest.md</code>.</p></div>
+  <p>Authored VITAE, and the live VITAE a fight starts with at the base multiplier (<code>LIVE_ENCOUNTER_ENEMY_HP_MULTIPLIER</code> = ${atlas.formulas.LIVE_ENCOUNTER_ENEMY_HP_MULTIPLIER}${earlyNote(atlas.formulas)}). No win rates here: balance numbers live in <code>docs/reports/measured/latest.md</code>.</p></div>
   ${table(['foe', 'level', 'difficulty', 'VITAE', 'live VITAE'], rows)}
 </section>`
 }

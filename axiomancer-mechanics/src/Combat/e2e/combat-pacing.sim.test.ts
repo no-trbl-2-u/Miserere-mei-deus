@@ -13,6 +13,9 @@ import { STARTING_CARD_IDS } from '../combat.rewards';
 import {
     runPacingEncounter, simulatePacing, scaleEnemyVitae, LIVE_ENCOUNTER_ENEMY_HP_MULTIPLIER,
 } from '../combat.pacing.sim';
+import {
+    EARLY_ENCOUNTER_ENEMY_HP_MULTIPLIER, EARLY_ENCOUNTER_MAX_LEVEL, liveEncounterHpMultiplier,
+} from '../live-encounter';
 
 const deck = [...STARTING_CARD_IDS];
 
@@ -22,6 +25,30 @@ describe('the pacing sim', () => {
         const foe = scaleEnemyVitae(deepClone(FloatEye), LIVE_ENCOUNTER_ENEMY_HP_MULTIPLIER);
         expect(foe.maxHealth).toBe(FloatEye.maxHealth * 2);
         expect(scaleEnemyVitae(FloatEye, 1)).toBe(FloatEye);
+    });
+
+    it('takes the early multiplier at levels 1 to 3 and the base past them (phase EP1a)', () => {
+        expect(EARLY_ENCOUNTER_ENEMY_HP_MULTIPLIER).toBe(1.5);
+        expect(EARLY_ENCOUNTER_MAX_LEVEL).toBe(3);
+        expect(liveEncounterHpMultiplier(1)).toBe(1.5);
+        expect(liveEncounterHpMultiplier(2)).toBe(1.5);
+        expect(liveEncounterHpMultiplier(3)).toBe(1.5);
+        expect(liveEncounterHpMultiplier(4)).toBe(2);
+        expect(liveEncounterHpMultiplier(10)).toBe(LIVE_ENCOUNTER_ENEMY_HP_MULTIPLIER);
+    });
+
+    it('defaults to the multiplier for the player\'s level', () => {
+        const base = { enemy: deepClone(FloatEye), deck, runs: 4, policy: 'human-like' as const, mercy: false };
+        for (const level of [3, 4]) {
+            const player = { ...deepClone(Player), level };
+            const byDefault = simulatePacing({ ...base, player });
+            const explicit = simulatePacing({ ...base, player, enemyHpMultiplier: liveEncounterHpMultiplier(level) });
+            expect(byDefault).toEqual(explicit);
+        }
+        const at3 = simulatePacing({ ...base, player: { ...deepClone(Player), level: 3 }, enemyHpMultiplier: 1.5 });
+        const at3AsBase = simulatePacing({ ...base, player: { ...deepClone(Player), level: 3 }, enemyHpMultiplier: 2 });
+        expect(simulatePacing({ ...base, player: { ...deepClone(Player), level: 3 } })).toEqual(at3);
+        expect(at3).not.toEqual(at3AsBase);
     });
 
     it('replays a seed exactly, under both drivers', () => {

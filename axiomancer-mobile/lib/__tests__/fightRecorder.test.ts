@@ -9,6 +9,7 @@
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 import {
     endTurn,
+    initializeCombatEncounter,
     PLAY_LOG_FIGHTS_PATH,
     resolveThreatPhase,
     rollEncounterDice,
@@ -23,7 +24,8 @@ import { isDevToolsEnabled } from '@/lib/buildProfile';
 import { createFightRecorder, endCombatOutcome, fightRecorder, type FightRecorderDeps } from '@/lib/fightRecorder';
 import type { PlayLogStamps } from '@/lib/playLog';
 import type { PuzzleApiConfig, PuzzleFetch } from '@/lib/puzzleAttempts';
-import { ENCOUNTER_ENEMY_HP_MULTIPLIER } from '@/state/actions';
+import { encounterEnemyHpMultiplier, withScaledEnemyHp } from '@/state/actions';
+import { selectEventViewModel } from '@/state/presenters/event.engine';
 import { arriveAtRealFight, startRealFight } from '@/test-utils/realFight';
 
 jest.mock('@/lib/buildProfile', () => ({
@@ -304,7 +306,7 @@ describe('the app bridges', () => {
         expect(post).toMatchObject({
             enemyId: enemy!.id,
             playerLevel: player.level,
-            enemyHpMultiplier: ENCOUNTER_ENEMY_HP_MULTIPLIER,
+            enemyHpMultiplier: encounterEnemyHpMultiplier(player.level),
             outcome: 'retreat',
             vitaeStart: player.health,
             buildCommit: 'abc1234',
@@ -313,6 +315,35 @@ describe('the app bridges', () => {
             runId: (arrival.store.getState() as unknown as GameState).runId,
         });
     });
+
+    // Phase EP1a (A1): a fight begun at level 3 takes the early ×1.5, one at level 4 the base ×2;
+    // the prelude's preview, the staged foe the VITAE bar reads and the logged multiplier agree.
+    for (const [level, mult] of [[3, 1.5], [4, 2]] as const) {
+        it(`a fight begun at player level ${level} scales the foe's VITAE by ${mult}, previews and logs the same`, async () => {
+            const arrival = arriveAtRealFight(undefined, { player: { level } });
+            expect(arrival.store.getState().player.level).toBe(level);
+            const fightChoice = selectEventViewModel(arrival.store.getState()).choices.find((c) => c.id === 'fight');
+            const preview = Number(/· (\d+) VITAE/.exec(fightChoice?.decode ?? '')?.[1]);
+
+            const enemy = arrival.actions.beginHazardEncounter();
+            expect(enemy).not.toBeNull();
+            const scaled = withScaledEnemyHp(arrival.nodeEnemy, mult);
+            expect(enemy!.maxHealth).toBe(scaled.maxHealth);
+            expect(enemy!.maxHealth).toBe(Math.round(arrival.nodeEnemy.maxHealth * mult));
+            expect(preview).toBe(enemy!.health);
+            const combat = initializeCombatEncounter(arrival.store.getState().player, enemy!, undefined, 7);
+            expect(combat.enemy.health).toBe(preview);
+            expect(combat.enemy.maxHealth).toBe(enemy!.maxHealth);
+
+            arrival.actions.endCombat('flee');
+            await flush();
+            const posts = fetchSpy.mock.calls.filter(([url]) => url.endsWith(PLAY_LOG_FIGHTS_PATH));
+            expect(posts).toHaveLength(1);
+            const post = JSON.parse(posts[0][1].body) as FightPost;
+            expect(post).toMatchObject({ playerLevel: level, enemyHpMultiplier: mult });
+            expect(validateFightPost(post)).toMatchObject({ ok: true });
+        });
+    }
 
     it('stamps the fight with the run id it started under, even if the run is reset before it ends', async () => {
         const arrival = arriveAtRealFight();

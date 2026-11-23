@@ -19,6 +19,7 @@ import {
     consumableLibrary,
     relicLibrary,
     LIVE_ENCOUNTER_ENEMY_HP_MULTIPLIER,
+    liveEncounterHpMultiplier,
     createMapState,
     equipItem as engineEquipItem,
     unequipItem as engineUnequipItem,
@@ -683,16 +684,29 @@ function ensureStarterCards(store: AppStore): void {
 // ---------------------------------------------------------------------------
 
 /**
- * Testing multiplier applied to every LIVE-encounter foe's HP so fights last
- * longer and there's more time to exercise a deck's status-effect play. Applied
- * only at the mobile `beginHazardEncounter` chokepoint (below), NOT in the
- * engine's `createEnemy` — the hermetic engine tests assert exact authored
+ * The BASE testing multiplier applied to a LIVE-encounter foe's HP so fights
+ * last longer and there's more time to exercise a deck's status-effect play:
+ * every fight past player level 3. A fight started at levels 1 to 3 takes the
+ * engine's smaller early multiplier instead (phase EP1a), so read a fight's
+ * own value with {@link encounterEnemyHpMultiplier}. Applied only at the
+ * mobile `beginHazardEncounter` chokepoint (below), NOT in the engine's
+ * `createEnemy` — the hermetic engine tests assert exact authored
  * `maxHealth` values (e.g. every survivor's `maxHealth` in `enemy.library.ts`) and must stay untouched.
- * The value is the engine's `LIVE_ENCOUNTER_ENEMY_HP_MULTIPLIER`, which the
- * engine's pacing sim also applies, so sim turn counts match live fights.
- * Set it to 1 there to restore stock HP.
+ * The value is the engine's `LIVE_ENCOUNTER_ENEMY_HP_MULTIPLIER`, and the
+ * level rule is its `liveEncounterHpMultiplier`, which the engine's pacing sim
+ * also applies, so sim turn counts match live fights.
  */
 export const ENCOUNTER_ENEMY_HP_MULTIPLIER = LIVE_ENCOUNTER_ENEMY_HP_MULTIPLIER;
+
+/**
+ * The foe HP multiplier for a live fight started at this player level: the
+ * early value at levels 1 to 3, {@link ENCOUNTER_ENEMY_HP_MULTIPLIER} past
+ * them. The fight's VITAE, its prelude preview and its play-log row all read
+ * this, so the three agree.
+ */
+export function encounterEnemyHpMultiplier(playerLevel: number): number {
+    return liveEncounterHpMultiplier(playerLevel);
+}
 
 /**
  * Returns a copy of `enemy` with `health` and `maxHealth` scaled by `mult`
@@ -801,10 +815,12 @@ export function createAppActions(store: AppStore): AppActions {
             ensureStarterCards(store);
             clearEventSlice(store);
             // Testing: fatten every live foe so encounters run longer (more
-            // turns to exercise status-effect play). See ENCOUNTER_ENEMY_HP_MULTIPLIER.
-            const scaledEnemy = withScaledEnemyHp(enemy, ENCOUNTER_ENEMY_HP_MULTIPLIER);
+            // turns to exercise status-effect play), less so at levels 1 to 3.
+            // See encounterEnemyHpMultiplier.
+            const hpMultiplier = encounterEnemyHpMultiplier(store.getState().player.level);
+            const scaledEnemy = withScaledEnemyHp(enemy, hpMultiplier);
             store.getState().startCombat(scaledEnemy);
-            recordFightStart(store, scaledEnemy, ENCOUNTER_ENEMY_HP_MULTIPLIER);
+            recordFightStart(store, scaledEnemy, hpMultiplier);
             return scaledEnemy;
         },
         endCombat: (outcome) => {

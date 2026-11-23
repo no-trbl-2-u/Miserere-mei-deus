@@ -7,7 +7,7 @@
 import { describe, expect, it } from '@jest/globals';
 import { buildCombatDeck, selectIsInCombat } from '@mechanics';
 
-import { ENCOUNTER_ENEMY_HP_MULTIPLIER, withScaledEnemyHp } from '@/state/actions';
+import { encounterEnemyHpMultiplier, withScaledEnemyHp } from '@/state/actions';
 
 import { arriveAtRealFight, REAL_BOSS_FIGHT_FIXTURE, REAL_FIGHT_FIXTURE, startRealFight } from '@/test-utils/realFight';
 
@@ -27,7 +27,7 @@ describe('startRealFight', () => {
         expect(selectIsInCombat(state)).toBe(true);
         expect(state.event?.pending ?? null).toBeNull();
         expect(state.currentEncounter?.enemies[0]).toEqual(fight.enemy);
-        expect(fight.enemy).toEqual(withScaledEnemyHp(fight.nodeEnemy, ENCOUNTER_ENEMY_HP_MULTIPLIER));
+        expect(fight.enemy).toEqual(withScaledEnemyHp(fight.nodeEnemy, encounterEnemyHpMultiplier(state.player.level)));
         expect(fight.combat.enemy.id).toBe(fight.nodeEnemy.id);
         expect(fight.combat.enemy.maxHealth).toBe(fight.enemy.maxHealth);
     });

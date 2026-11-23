@@ -1,7 +1,9 @@
 /**
  * Lane pacing table — a lane's test deck against the three Act 1 foes at
  * player levels 1, 3 and 5, under both pacing drivers
- * (`Combat/combat.pacing.sim.ts`), at live foe VITAE.
+ * (`Combat/combat.pacing.sim.ts`), at live foe VITAE: the base multiplier
+ * (fights past level 3) at every level unless `--hp` says otherwise; live
+ * fights at levels 1 to 3 take the early one (`liveEncounterHpMultiplier`).
  *
  * Usage:
  *   npx ts-node --transpile-only src/CLI/lane-pacing.cli.ts
@@ -12,7 +14,7 @@
  *
  * Each foe is built the way live play builds it (`resolveEncounter`): the
  * library row scaled with `scaleEnemyToLevel` to its Act 1 map pin, then
- * the live VITAE multiplier. Pins per player level (the region the player
+ * the base live VITAE multiplier. Pins per player level (the region the player
  * reaches at that level, `World/MapEvents/content.ts`):
  *
  * The trio is the pre-recast Chapter 1 trio. Since EN3b (2026-11-07) the
@@ -38,6 +40,7 @@ import { scaleEnemyToLevel } from '../World/encounter';
 import type { Enemy } from '../Enemy/types';
 import { getCardLane } from '../Cards/card.lanes';
 import { simulatePacing, LIVE_ENCOUNTER_ENEMY_HP_MULTIPLIER, type PacingPolicy } from '../Combat/combat.pacing.sim';
+import { EARLY_ENCOUNTER_ENEMY_HP_MULTIPLIER, EARLY_ENCOUNTER_MAX_LEVEL } from '../Combat/live-encounter';
 
 const LEVELS = [1, 3, 5] as const;
 /** Act 1 map pin per foe per player level (see the header). */
@@ -107,7 +110,10 @@ function main(): void {
         console.log(JSON.stringify(rows, null, 1));
         return;
     }
-    console.log(`${lane.name} test deck · ${runs} runs/cell · foe VITAE ×${hp}`);
+    const hpLabel = hp === LIVE_ENCOUNTER_ENEMY_HP_MULTIPLIER
+        ? `×${hp} (the base, for fights past level ${EARLY_ENCOUNTER_MAX_LEVEL}; live fights at levels 1 to ${EARLY_ENCOUNTER_MAX_LEVEL} take ×${EARLY_ENCOUNTER_ENEMY_HP_MULTIPLIER})`
+        : `×${hp}`;
+    console.log(`${lane.name} test deck · ${runs} runs/cell · foe VITAE ${hpLabel}`);
     console.table(rows);
 }
 

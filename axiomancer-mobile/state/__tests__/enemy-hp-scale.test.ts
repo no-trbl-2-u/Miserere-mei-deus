@@ -1,15 +1,22 @@
 import { describe, expect, it } from '@jest/globals';
-import { LIVE_ENCOUNTER_ENEMY_HP_MULTIPLIER, type Enemy } from '@mechanics';
+import { EARLY_ENCOUNTER_ENEMY_HP_MULTIPLIER, LIVE_ENCOUNTER_ENEMY_HP_MULTIPLIER, type Enemy } from '@mechanics';
 
-import { ENCOUNTER_ENEMY_HP_MULTIPLIER, withScaledEnemyHp } from '@/state/actions';
+import { ENCOUNTER_ENEMY_HP_MULTIPLIER, encounterEnemyHpMultiplier, withScaledEnemyHp } from '@/state/actions';
 
 function fakeEnemy(health: number, maxHealth: number): Enemy {
     return { id: 'foe', name: 'Foe', health, maxHealth } as unknown as Enemy;
 }
 
 describe('withScaledEnemyHp — testing HP knob for live encounters', () => {
-    it('the shipped knob doubles enemy HP', () => {
+    it('the shipped base knob doubles enemy HP', () => {
         expect(ENCOUNTER_ENEMY_HP_MULTIPLIER).toBe(2);
+    });
+
+    it('a fight at levels 1 to 3 takes the early multiplier, one past them the base (phase EP1a)', () => {
+        expect(EARLY_ENCOUNTER_ENEMY_HP_MULTIPLIER).toBe(1.5);
+        expect(encounterEnemyHpMultiplier(1)).toBe(1.5);
+        expect(encounterEnemyHpMultiplier(3)).toBe(1.5);
+        expect(encounterEnemyHpMultiplier(4)).toBe(ENCOUNTER_ENEMY_HP_MULTIPLIER);
     });
 
     it('is the engine constant the pacing sim applies, so sim and live fights agree', () => {

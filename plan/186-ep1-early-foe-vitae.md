@@ -28,8 +28,8 @@ One function beside the constant, read at the three app sites that scale a live 
 ## Design
 
 - **The rule.** `liveEncounterHpMultiplier(playerLevel)` in `live-encounter.ts` returns `EARLY_ENCOUNTER_ENEMY_HP_MULTIPLIER` when `playerLevel <= EARLY_ENCOUNTER_MAX_LEVEL`, else `LIVE_ENCOUNTER_ENEMY_HP_MULTIPLIER`.
-  - Early multiplier: **1.5** [T to confirm #1].
-  - Last early level: **3** [T to confirm #2].
+  - Early multiplier: **1.5** Accepted at merge (default).
+  - Last early level: **3** Accepted at merge (default).
   - `LIVE_ENCOUNTER_ENEMY_HP_MULTIPLIER` stays 2 for every later fight.
   - The band is by the player's level, not by node. The fights at levels 1 to 3 are the opening five plus, on most routes, the bw-c1 elite. The elite takes the early multiplier too.
 - **The app sites.** `beginHazardEncounter`, the prelude preview and the play log all read the multiplier for the player's level at the moment the fight starts, so the preview, the VITAE bar and the logged `enemyHpMultiplier` agree.
@@ -57,8 +57,8 @@ One function beside the constant, read at the three app sites that scale a live 
 
 ## Open questions
 
-- [T to confirm #1] The early multiplier: 1.5 (default), or 1.25, or 1 (authored VITAE).
-- [T to confirm #2] The last early level: 3 (default, the opening five and the bw-c1 elite), or 2 (the first four fights only).
+- Accepted at merge (default). The early multiplier: 1.5 (default), or 1.25, or 1 (authored VITAE).
+- Accepted at merge (default). The last early level: 3 (default, the opening five and the bw-c1 elite), or 2 (the first four fights only).
 
 ## Chunks
 

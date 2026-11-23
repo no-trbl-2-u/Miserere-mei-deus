@@ -91,8 +91,11 @@ export type { MercyState } from './combat.mercy';
 // The lighthouse path's board reads (phase EN1k): the Lamplighter's lamp and the Wrecker's Bait.
 export { lampOf, intentsInTheDark, baitSet } from './combat.enemy-riders';
 export type { LampState } from './combat.enemy-riders';
-// The live-encounter VITAE knob the app applies (and the pacing sim reads).
-export { LIVE_ENCOUNTER_ENEMY_HP_MULTIPLIER } from './live-encounter';
+// The live-encounter VITAE knob the app applies (and the pacing sim reads): base, early, and by level.
+export {
+    LIVE_ENCOUNTER_ENEMY_HP_MULTIPLIER, EARLY_ENCOUNTER_ENEMY_HP_MULTIPLIER, EARLY_ENCOUNTER_MAX_LEVEL,
+    liveEncounterHpMultiplier,
+} from './live-encounter';
 // Stat scaling: the formula, the keyword families, and the
 // display-only stat-scaled card the hand prints.
 export {
