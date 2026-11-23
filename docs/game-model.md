@@ -165,12 +165,14 @@ the Expo app (`axiomancer-mobile`) presents it.
   relic worn (an unworn relic opens nothing), grey never. A run with no
   character and no worn lane relic draws the grey office. The guaranteed
   lane slots (`rewardLaneSlots`, D100) count worn relics only, so starting
-  lanes widen the pool and never add a slot. A cache offers one. The dev
+  lanes widen the pool and never add a slot. A cache offers one. Each offer draws its rarity first (common 60,
+  uncommon 30, rare 10, `CARD_REWARD_RARITY_WEIGHTS`), then a card of it. The dev
   menu's REWARD POOL can narrow the draft to card lanes (`CARD_LANES`: the
   grey office, Blood Price, the Elementalist and the Defender). A won elite fight
   (`difficulty: 'elite'`; the sea cave draws the Cave Choir, the Tithe-Collector or Saltwick Swarm, the other elite slots stage the Green Jelly at that tier) pays the elite reward instead
-  (`rollEliteReward`, Phase UP1f): the best 3 cards by rarity, one from a
-  lane the deck draws on (`deckLaneIds`), or one upgrade of a random owned
+  (`rollEliteReward`, Phase UP1f): the best 3 cards by rarity (all rares
+  while the pool holds three), the first from a lane the deck draws on
+  (`deckLaneIds`) only when such a card reaches the band the best 3 reach, or one upgrade of a random owned
   card at the highest rarity owned that can take one, read on the shared
   upgrade screen; the upgrade option hides when nothing can be upgraded.
 

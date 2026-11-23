@@ -146,6 +146,21 @@ describe('the elite reward offers rares', () => {
         }
     });
 
+    it('offers a deck-lane card first when one reaches the floor band', () => {
+        // Blood Price holds the only rares (fewer than three), so the floor is
+        // uncommon; the deck draws on Defender, whose uncommons reach it.
+        const defender = getCardLane('defender')!;
+        const player = { ...onLanes('blood-price', 'defender'), knownCards: [defender.cardIds[0]] };
+        const pool = rewardPoolFor(player);
+        expect(bandCounts(pool).rare).toBeLessThan(3);
+        const defenderUncommons = pool.filter(id => defender.cardIds.includes(id) && rarityOf(id) === 'uncommon');
+        expect(defenderUncommons.length).toBeGreaterThan(0);
+        for (let i = 0; i < 200; i++) {
+            const cards = rollEliteCardRewards(player, seededRng(spread(i)));
+            expect(defenderUncommons).toContain(cards[0]);
+        }
+    });
+
     it('fills from the best band left when fewer than three rares are in the pool', () => {
         const player = onLanes('blood-price', 'defender');
         const rares = bandCounts(rewardPoolFor(player)).rare;

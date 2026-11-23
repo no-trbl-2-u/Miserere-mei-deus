@@ -98,6 +98,8 @@ describe('rollCombatCardRewards', () => {
     });
 
     it('reaches every pool card as a single offer', () => {
+        // A reachability guard, not a weights check (reward-rarity.engine.test.ts
+        // pins those): a rarity draw must leave no pool card out of reach.
         // No relic worn: a worn lane relic would steer a guaranteed slot.
         const unsteered = (): Character => {
             const p = chosenPlayer();
