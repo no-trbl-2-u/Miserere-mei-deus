@@ -8,14 +8,16 @@
 
 import { describe, it, expect } from 'vitest';
 
-import { rollSpareReward, transformResultPool, type SpareReward, type SpareResultKind } from './combat.spare-reward';
-import { MERCY_TUNING, fightWage, spareWage } from './combat.mercy-check';
+import { questRewardRelicIds, rollSpareReward, spareRelicPool, transformResultPool, type SpareReward, type SpareResultKind } from './combat.spare-reward';
+import { MERCY_TUNING, fightWage, spareWage, spareTableFor } from './combat.mercy-check';
 import { createNewGameState, gameReducer } from '../Game/game.reducer';
 import { getCardById } from '../Cards/cards.library';
 import { GREY_LANE } from '../Cards/card.lanes';
 import { equipmentLibrary, EQUIPMENT_LANE } from '../Items/equipment.library';
 import { relicLibrary } from '../Items/relic.library';
 import type { Character } from '../Character/types';
+import type { MapDefinition } from '../World/types';
+import type { Questline } from '../World/questline';
 
 function seededRng(seed: number): () => number {
     let state = seed % 2147483647 || 1;
@@ -169,5 +171,56 @@ describe('a result with nothing to give pays the extra shillings', () => {
         const { player } = chosen();
         const bare: Character = { ...player, knownCards: [], combatRewardCards: [] };
         expect(rollSpareReward(bare, scripted(DRAW.upgrade, 0), 15)).toEqual({ kind: 'shillings', amount: 15 });
+    });
+});
+
+describe('the elite spare table', () => {
+    it('gives the relic 15 and shillings 20, the rest as the normal table, summing to 100', () => {
+        const elite = spareTableFor('elite');
+        expect(elite).toEqual({ shillings: 20, consumable: 30, upgrade: 15, transform: 10, gear: 10, relic: 15 });
+        expect(Object.values(elite).reduce((a, b) => a + b, 0)).toBe(100);
+    });
+
+    it('leaves a normal foe on the normal table (relic 5, shillings 30)', () => {
+        expect(spareTableFor('normal')).toEqual({ shillings: 30, consumable: 30, upgrade: 15, transform: 10, gear: 10, relic: 5 });
+    });
+
+    it('a draw in the elite relic band pays a relic for an elite and not for a normal', () => {
+        const { player } = chosen();
+        expect(rollSpareReward(player, scripted(0.9, 0), 15, 'elite').kind).toBe('relic');
+        expect(rollSpareReward(player, scripted(0.9, 0), 15, 'normal').kind).toBe('gear');
+    });
+});
+
+describe('the spare relic pool', () => {
+    it('holds the three unpaid quest relics and not the two the Breakwater questline pays', () => {
+        const ids = spareRelicPool(new Set()).map(r => r.id);
+        expect(ids).toEqual(expect.arrayContaining(['relic-carapace-belt', 'relic-brimming-locket', 'relic-penitents-brooch']));
+        expect(ids).not.toContain('relic-ruby-signet');
+        expect(ids).not.toContain('relic-mirror-brooch');
+    });
+
+    it('leaves out a relic the player carries', () => {
+        const ids = spareRelicPool(new Set(['relic-carapace-belt'])).map(r => r.id);
+        expect(ids).not.toContain('relic-carapace-belt');
+    });
+});
+
+describe('the quest-paid relics', () => {
+    const [byLine, byMap, unpaid] = relicLibrary;
+
+    it('reads a questline step reward and a map quest reward, and nothing else', () => {
+        const questlines = [{ id: 'q', mapName: 'breakwater', steps: [{ step: 1, rewards: [byLine] }] }] as unknown as Questline[];
+        const maps = [{ name: 'm', quests: [{ name: 'mq', reward: byMap }] }] as unknown as MapDefinition[];
+        const ids = questRewardRelicIds(questlines, maps);
+        expect([...ids].sort()).toEqual([byLine!.id, byMap!.id].sort());
+        expect(ids.has(unpaid!.id)).toBe(false);
+    });
+
+    it('a map quest reward alone keeps its relic out of the pool', () => {
+        const maps = [{ name: 'm', quests: [{ name: 'mq', reward: byMap }] }] as unknown as MapDefinition[];
+        const pool = spareRelicPool(new Set(), relicLibrary, questRewardRelicIds([], maps)).map(r => r.id);
+        expect(pool).not.toContain(byMap!.id);
+        expect(pool).toContain(byLine!.id);
     });
 });

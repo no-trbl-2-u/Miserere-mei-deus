@@ -1678,6 +1678,12 @@
       "kind": "coupling",
       "from": "area:Combat",
       "to": "area:Enemy",
+      "file": "axiomancer-mechanics/src/Combat/combat.spare-reward.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Combat",
+      "to": "area:Enemy",
       "file": "axiomancer-mechanics/src/Combat/combat.threat.ts"
     },
     {
@@ -1799,6 +1805,12 @@
       "from": "area:Combat",
       "to": "area:World",
       "file": "axiomancer-mechanics/src/Combat/combat.measured-truth.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Combat",
+      "to": "area:World",
+      "file": "axiomancer-mechanics/src/Combat/combat.spare-reward.ts"
     },
     {
       "kind": "coupling",

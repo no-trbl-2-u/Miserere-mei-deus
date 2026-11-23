@@ -2,6 +2,7 @@
  * The Spare table: the one roll a spared foe pays.
  *
  * `rollSpareReward` draws a result by the weights in `MERCY_TUNING.spareTable`
+ * (`eliteSpareTable` for an elite)
  * and, for a result that needs a pick (a card, a piece, a relic), picks it. A
  * result with nothing to give (all gear carried, nothing upgradable) pays the
  * extra shillings result instead. `applySpareReward` puts a result on the
@@ -23,7 +24,12 @@ import { relicLibrary } from '../Items/relic.library';
 import { getConsumableById } from '../Items/consumable.library';
 import { addItemStacking } from '../Items/item.reducer';
 import { deepClone } from '../Utils';
-import { MERCY_TUNING, fightWage } from './combat.mercy-check';
+import type { Enemy } from '../Enemy/types';
+import type { MapDefinition, Reward } from '../World/types';
+import type { Questline } from '../World/questline';
+import { MAP_REGISTRY } from '../World/map.registry';
+import { AUTHORED_QUESTLINES } from '../World/quest.library';
+import { MERCY_TUNING, fightWage, spareTableFor } from './combat.mercy-check';
 
 /** The table's results, in table order. */
 export type SpareResultKind = keyof typeof MERCY_TUNING.spareTable;
@@ -77,9 +83,45 @@ function shillingsResult(normalWage: number): SpareReward {
     return { kind: 'shillings', amount: Math.ceil(MERCY_TUNING.extraShillingsMultiplier * normalWage) };
 }
 
-/** Which table result a draw in `[0, 1)` lands on. */
-function kindForDraw(draw: number): SpareResultKind {
-    const entries = Object.entries(MERCY_TUNING.spareTable) as [SpareResultKind, number][];
+/** Every relic id in the library. */
+const RELIC_IDS: ReadonlySet<string> = new Set(relicLibrary.map(relic => relic.id));
+
+/** The id of the relic a quest reward pays, if it pays one. */
+function rewardRelicId(reward: Reward): string | undefined {
+    if (typeof reward !== 'object') return undefined;
+    const id = 'category' in reward ? reward.id : reward.kind === 'item' ? reward.item.id : undefined;
+    return id !== undefined && RELIC_IDS.has(id) ? id : undefined;
+}
+
+/** Every relic id a registered questline step or a map's quest pays as a reward. */
+export function questRewardRelicIds(
+    questlines: readonly Questline[] = AUTHORED_QUESTLINES,
+    maps: readonly MapDefinition[] = Object.values(MAP_REGISTRY)
+        .flatMap(byName => Object.values(byName))
+        .filter((def): def is MapDefinition => def !== undefined),
+): Set<string> {
+    const ids = new Set<string>();
+    const add = (reward: Reward): void => {
+        const id = rewardRelicId(reward);
+        if (id !== undefined) ids.add(id);
+    };
+    for (const line of questlines) for (const step of line.steps) step.rewards.forEach(add);
+    for (const def of maps) for (const quest of def.quests ?? []) add(quest.reward);
+    return ids;
+}
+
+/** The relics a spare can pay: every relic not carried and not paid by any quest. */
+export function spareRelicPool(
+    carried: ReadonlySet<string>,
+    relics: readonly Equipment[] = relicLibrary,
+    questPaid: ReadonlySet<string> = questRewardRelicIds(),
+): Equipment[] {
+    return relics.filter(relic => !carried.has(relic.id) && !questPaid.has(relic.id));
+}
+
+/** Which result of `table` a draw in `[0, 1)` lands on. */
+function kindForDraw(draw: number, table: Readonly<Record<SpareResultKind, number>>): SpareResultKind {
+    const entries = Object.entries(table) as [SpareResultKind, number][];
     const total = entries.reduce((sum, [, weight]) => sum + weight, 0);
     let left = Math.min(Math.max(draw, 0), 0.999999999) * total;
     for (const [kind, weight] of entries) {
@@ -97,14 +139,16 @@ function kindForDraw(draw: number): SpareResultKind {
  * @param player     - The player who spared.
  * @param rng        - The seeded rng.
  * @param normalWage - The fight's normal wage (`fightWage(level)`), the unit of the shillings result.
+ * @param difficulty - The spared foe's difficulty; an elite rolls the elite table.
  * @example rollSpareReward(player, rng, fightWage(5)) // { kind: 'shillings', amount: 15 }, or a card, piece or relic
  */
 export function rollSpareReward(
     player: Character,
     rng: () => number,
     normalWage: number = fightWage(1),
+    difficulty: Enemy['difficulty'] = 'normal',
 ): SpareReward {
-    const kind = kindForDraw(rng());
+    const kind = kindForDraw(rng(), spareTableFor(difficulty));
     switch (kind) {
         case 'shillings':
             return shillingsResult(normalWage);
@@ -135,8 +179,7 @@ export function rollSpareReward(
             return { kind, item: deepClone(pool[pick(pool.length, rng)]!) };
         }
         case 'relic': {
-            const carried = carriedPieceIds(player);
-            const pool = relicLibrary.filter(relic => !carried.has(relic.id));
+            const pool = spareRelicPool(carriedPieceIds(player));
             if (pool.length === 0) return shillingsResult(normalWage);
             return { kind, item: deepClone(pool[pick(pool.length, rng)]!) };
         }

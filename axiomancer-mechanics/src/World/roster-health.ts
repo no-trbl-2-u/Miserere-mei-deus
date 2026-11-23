@@ -39,6 +39,7 @@ import { ENEMY_REGISTRY, EnemiesByMap, EnemyLibrary } from '../Enemy/enemy.libra
 import type { Equipment, Item } from '../Items/types';
 import { consumableLibrary } from '../Items/consumable.library';
 import { relicLibrary } from '../Items/relic.library';
+import { spareRelicPool, questRewardRelicIds } from '../Combat/combat.spare-reward';
 import { SIGNATURE_SKILLS } from '../Combat/combat.signature';
 import { getCardById } from '../Cards/cards.library';
 import type { DialogueTree } from '../NPCs/types';
@@ -356,10 +357,11 @@ export function eliteDropIds(src: RosterSources): string[] {
     return [...ids];
 }
 
-/** A consumable or relic no cache, shop, starting loadout or reward grants. */
+/** A consumable or relic no cache, shop, starting loadout, reward or spare pool grants. */
 export function orphanItems(src: RosterSources): RosterFinding[] {
     const granted = new Set<string>([
         ...src.startingItemIds, ...src.cacheItemIds, ...itemRefs(src).map(r => r.id), ...eliteDropIds(src),
+        ...spareRelicPool(new Set(), src.relics, questRewardRelicIds(src.questlines ?? [], src.maps)).map(r => r.id),
     ]);
     const out: RosterFinding[] = [];
     for (const c of src.consumables) {

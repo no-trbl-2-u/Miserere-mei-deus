@@ -153,8 +153,10 @@ the Expo app (`axiomancer-mobile`) presents it.
   foes never ask. Finish ends the fight exactly as the kill would have and pays
   as any win. Spare ends it as a `victory` with the foe at 1 VITAE and pays no XP and no
   card reward: `spareWage` (1.5 x the wage, rounded up) and one roll on the Spare
-  table (`MERCY_TUNING.spareTable`, `Combat/combat.spare-reward.ts`), revealed on
-  the end screen. A spared foe is still a `victory`: it counts for quests, the
+  table (`MERCY_TUNING.spareTable`; a spared elite rolls `eliteSpareTable`, relic
+  15 and shillings 20 of 100; `spareTableFor`, `Combat/combat.spare-reward.ts`),
+  revealed on the end screen. A relic result draws from every relic the player
+  does not carry that no questline step or map quest pays (`spareRelicPool`). A spared foe is still a `victory`: it counts for quests, the
   defeat ledger and the node, and it alone grants the foe's story flag and journal
   entry (`Enemy.spareStory`, `Enemy.journalEntry`). Sims answer the check through
   `mercyCheck` on their policies.

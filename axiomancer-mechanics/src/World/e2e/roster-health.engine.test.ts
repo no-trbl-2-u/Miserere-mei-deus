@@ -38,13 +38,6 @@ const PINNED_ORPHANS: ReadonlyArray<{ lens: string; id: string }> = [
     { lens: 'enemy-unpooled', id: 'enemy-wreck-picker' },
     { lens: 'enemy-unpooled', id: 'enemy-smokehouse-gutter' },
     { lens: 'enemy-unpooled', id: 'enemy-toll-keeper' },
-    // The Breakwater chain pays two relics (the Ruby Signet and the Mirror
-    // Brooch). Every `relicSource: 'elite'` relic drops from elites and is not
-    // an orphan; these three wait on a quest or a spare-reward pool that hands
-    // them out; until then only the dev menu hands them over.
-    { lens: 'item-ungranted', id: 'relic-carapace-belt' },
-    { lens: 'item-ungranted', id: 'relic-brimming-locket' },
-    { lens: 'item-ungranted', id: 'relic-penitents-brooch' },
 ];
 
 describe('roster health — live tree', () => {
@@ -226,25 +219,29 @@ describe('roster health — each orphan lens fires', () => {
         expect(orphanEnemies(src)).toEqual([]);
     });
 
-    it('item-ungranted: a consumable and a relic nothing grants', () => {
+    it('item-ungranted: a consumable nothing grants; a relic no quest pays is in the spare pool', () => {
         const found = orphanItems(sources({ startingItemIds: [], cacheItemIds: [] }));
-        expect(found.map(f => [f.subject, f.id])).toEqual([['consumable', 'healing-potion'], ['relic', 'relic-test']]);
+        expect(found.map(f => [f.subject, f.id])).toEqual([['consumable', 'healing-potion']]);
     });
 
-    it('item-ungranted: an elite-source relic is granted by the elite drop; a quest-source one is not', () => {
+    it('item-ungranted: a quest-source relic no quest pays is granted by the spare pool', () => {
         const elite = { ...ring, id: 'relic-elite', relicSource: 'elite' } as Equipment;
         const quest = { ...ring, id: 'relic-quest', relicSource: 'quest' } as Equipment;
         const found = orphanItems(sources({ relics: [elite, quest], pools: elitePools(), startingItemIds: [], cacheItemIds: [] }));
-        expect(found.filter(f => f.subject === 'relic').map(f => f.id)).toEqual(['relic-quest']);
+        expect(found.filter(f => f.subject === 'relic')).toEqual([]);
     });
 
-    it('item-ungranted: an elite-source relic counts only when a registered elite fight can drop it', () => {
+    it('the three unpaid quest relics are not orphans on the live tree', () => {
+        const three = ['relic-carapace-belt', 'relic-brimming-locket', 'relic-penitents-brooch'];
+        expect(LIVE.orphans.filter(o => three.includes(o.id))).toEqual([]);
+    });
+
+    it('item-ungranted: an elite fight drops only the relics it can reach', () => {
         const a = { ...ring, id: 'relic-elite-a', relicSource: 'elite' } as Equipment;
         const b = { ...ring, id: 'relic-elite-b', relicSource: 'elite' } as Equipment;
-        const orphans = (pools: MapEventPool[]) => orphanItems(sources({ relics: [a, b], pools, startingItemIds: [], cacheItemIds: [] }))
-            .filter(f => f.subject === 'relic').map(f => f.id);
+        const drops = (pools: MapEventPool[]) => eliteDropIds(sources({ relics: [a, b], pools }));
         // No elite fight at all: nothing drops either relic.
-        expect(orphans([])).toEqual(['relic-elite-a', 'relic-elite-b']);
+        expect(drops([])).toEqual([]);
         // A normal fight, even one naming a drop list, and a non-fight entry drop nothing.
         const normal: MapEventPool[] = [{
             id: 'x-normal.encounter',
@@ -253,11 +250,11 @@ describe('roster health — each orphan lens fires', () => {
                 { kind: 'encounter', weight: 1, payload: { kind: 'encounter', enemySlug: 'green-jelly', difficulty: 'normal' } },
             ],
         }, merchantPool('x-village', { id: 't', rootNodeId: 'r', nodes: {} } as unknown as DialogueTree)];
-        expect(orphans(normal)).toEqual(['relic-elite-a', 'relic-elite-b']);
+        expect(drops(normal)).toEqual([]);
         // An elite with its own drop list reaches only the relics it names.
-        expect(orphans(elitePools(['relic-elite-a']))).toEqual(['relic-elite-b']);
+        expect(drops(elitePools(['relic-elite-a']))).toEqual(['relic-elite-a']);
         // An elite with no list draws from the whole elite pool.
-        expect(orphans(elitePools())).toEqual([]);
+        expect(drops(elitePools())).toEqual(['relic-elite-a', 'relic-elite-b']);
         expect(eliteDropIds(sources({ relics: [a, b], pools: elitePools(['relic-elite-b']) }))).toEqual(['relic-elite-b']);
     });
 
