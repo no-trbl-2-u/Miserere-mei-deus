@@ -59,7 +59,7 @@ const greyWord: Card = {
     description:
         'No flourish, no colour, no argument. You tell it plainly what it ' +
         'is, and it cannot unhear you.',
-    tier: 1, rank: 1, cardType: 'spell',
+    tier: 1, rank: 2, cardType: 'spell',
     targetType: 'enemy',
     paidSummary: 'VULNERABLE 25% for 2 turns',
     // +25% for 2 turns, adds up and refreshes on re-application; FREE is

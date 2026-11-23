@@ -5,8 +5,8 @@
  * the brine-hag):
  *   · a fight pays the elite reward exactly when its foe is `difficulty: 'elite'`;
  *   · the cards are the best three of the reward pool (the worn relics'
- *     lanes plus the player's starting lanes, never grey), highest rarity first, so the
- *     one rare (Blood for Blood) is always offered once its lane is worn;
+ *     lanes plus the player's starting lanes, never grey), highest rarity first, so a
+ *     worn lane's rares (Blood for Blood among them) are offered while they fit;
  *   · at least one offer comes from a lane the player's deck draws on;
  *   · the other option upgrades one random owned card at the highest rarity
  *     the player owns that can still take an upgrade;
@@ -31,8 +31,8 @@ import { deepClone } from '../../Utils';
 import type { Character } from '../../Character/types';
 import type { Equipment } from '../../Items/types';
 
-/** The library's one rare, Blood for Blood, found by its limit (no trial id is named outside the set). */
-const BLOOD_FOR_BLOOD = cardLibrary.find(card => upgradeLimit(card) === 3)!.id;
+/** Blood for Blood, a rare, found by its name (no trial id is named outside the set). */
+const BLOOD_FOR_BLOOD = cardLibrary.find(card => card.name === 'Blood for Blood')!.id;
 const SEEDS = Array.from({ length: 40 }, (_, i) => i + 1);
 
 function seededRng(seed: number): () => number {
@@ -97,8 +97,9 @@ describe('the elite cards: the best three, one from the player\'s lanes', () => 
         }
     });
 
-    it('always offers the library\'s one rare, Blood for Blood, once its lane is worn', () => {
+    it('always offers Blood for Blood, a rare, once its lane is worn', () => {
         expect(rarityOf(BLOOD_FOR_BLOOD)).toBe('rare');
+        expect(upgradeLimit(getCardById(BLOOD_FOR_BLOOD)!)).toBe(3);
         for (const seed of SEEDS) {
             expect(rollEliteCardRewards(wearing(greyPlayer(), 'blood-price'), seededRng(seed))).toContain(BLOOD_FOR_BLOOD);
             expect(rollEliteCardRewards(wearing(bloodPricePlayer(), 'blood-price'), seededRng(seed))).toContain(BLOOD_FOR_BLOOD);
@@ -113,14 +114,14 @@ describe('the elite cards: the best three, one from the player\'s lanes', () => 
         }
     });
 
-    it('after the lane pick, the best band left comes first: an Elementalist card, then the rare', () => {
+    it('after the lane pick, the best band left comes first: an Elementalist rare, then a rare', () => {
         const elementalist = getCardLane('elementalist')!;
         const deck = [...STARTING_CARD_IDS, elementalist.cardIds[0]];
         for (const seed of SEEDS) {
             const player = wearing(playerWith(deck), 'blood-price', 'elementalist');
             const [lanePick, best] = rollEliteCardRewards(player, seededRng(seed));
             expect(elementalist.cardIds).toContain(lanePick);
-            expect(best).toBe(BLOOD_FOR_BLOOD);
+            expect([rarityOf(lanePick), rarityOf(best)]).toEqual(['rare', 'rare']);
         }
     });
 
@@ -138,10 +139,11 @@ describe('the elite upgrade: a random owned card at the highest rarity owned', (
         }
     });
 
-    it('a deck holding the rare always upgrades the rare', () => {
+    it('a deck holding a rare always upgrades a rare', () => {
         for (const seed of SEEDS) {
             const up = rollEliteUpgrade(bloodPricePlayer(), seededRng(seed))!;
-            expect(up).toEqual({ fromCardId: BLOOD_FOR_BLOOD, toCardId: `${BLOOD_FOR_BLOOD}+` });
+            expect(rarityOf(up.fromCardId)).toBe('rare');
+            expect(up.toCardId).toBe(`${up.fromCardId}+`);
         }
         const once = playerWith(['grey-strike'], [`${BLOOD_FOR_BLOOD}+`]);
         expect(rollEliteUpgrade(once, seededRng(3))).toEqual({

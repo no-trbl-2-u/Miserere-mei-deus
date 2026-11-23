@@ -44,7 +44,7 @@
  * This file is data-only.
  */
 
-import type { Card, CardAspect, CardType } from '../types';
+import type { Card, CardAspect, CardRank, CardType } from '../types';
 import type { CardProgram, ProgramCtx, ProgramLine } from '../card-program.types';
 import type { CardLane, TrialSet } from '../card.lanes';
 import { upgradeScale, type UpgradeScale } from '../card-upgrade.scale';
@@ -71,6 +71,8 @@ interface Entry {
     type: CardType;
     color: CardAspect;
     program: (u: UpgradeScale) => CardProgram;
+    /** The card's rank when it is not Ash (1), as its text earns it (`rankForCard`). Rarity, and so its upgrade limit, derives from it. */
+    rank?: CardRank;
     /** A Spell's PAID payoffs one Spell-law step below T's numbers (`Card.spellLawBaseline`). */
     spellLaw?: Readonly<Record<string, number>>;
 }
@@ -84,19 +86,19 @@ const SUB_LANE: Record<string, string> = { P: 'Payoff', E: 'Engine', M: 'Misc' }
 
 const ENTRIES: Entry[] = [
     // ── PAYOFF: paid for heals that land and MERCY that comes due ────────────
-    { slot: 'P-01', option: 'a', name: 'Searing Mend', type: 'attack', color: RED, program: u => ({
+    { slot: 'P-01', option: 'a', name: 'Searing Mend', type: 'attack', color: RED, rank: 2, program: u => ({
         free: L(`RADIANCE {radiance:${u.i(3)}}`, c => { c.radiance(u.i(3)); }),
         paid: L(`RADIANCE {radiance:${u.i(7)}}`, c => { c.radiance(u.i(7)); }) }) },
-    { slot: 'P-02', option: 'b', name: 'Dawn Bulwark', type: 'skill', color: BLUE, program: u => ({
+    { slot: 'P-02', option: 'b', name: 'Dawn Bulwark', type: 'skill', color: BLUE, rank: 2, program: u => ({
         free: L(`RADIANCE {radiance:${u.i(4)}}, GUARD {guard:${u.m(2)}}`, c => { c.radiance(u.i(4)); c.guard(u.m(2)); }),
         paid: L(`RADIANCE {radiance:${u.i(9)}}, GUARD {guard:${u.m(5)}}`, c => { c.radiance(u.i(9)); c.guard(u.m(5)); }) }) },
     // T: MERCY first, then the burst. Sims: PAID MERCY 15 became 8.
-    { slot: 'P-03', option: 'b', name: 'Grace Called Due', type: 'spell', color: PURPLE, spellLaw: { mercy: 5 }, program: u => ({
+    { slot: 'P-03', option: 'b', name: 'Grace Called Due', type: 'spell', color: PURPLE, rank: 2, spellLaw: { mercy: 5 }, program: u => ({
         free: L(`MERCY {mercy:${u.i(5)}}`, c => { c.mercy(u.i(5)); }),
         paid: L(`MERCY {mercy:${u.i(8)}}, the foe's MERCY bursts. EXILE`, c => {
             c.mercy(u.i(8)); c.burstMercy(MERCY_BURST_MULT);
         }, EX) }) },
-    { slot: 'P-04', option: 'a', name: 'What Grace Owes', type: 'attack', color: RED, program: u => ({
+    { slot: 'P-04', option: 'a', name: 'What Grace Owes', type: 'attack', color: RED, rank: 3, program: u => ({
         free: L(`DEAL {deal:${u.m(3)}} or {deal:${u.m(6)}} if the foe has MERCY`, c => {
             c.deal(c.q.foeHasMercy ? u.m(6) : u.m(3));
         }),
@@ -104,16 +106,16 @@ const ENTRIES: Entry[] = [
             c.deal(c.q.foeHasMercy ? u.m(12) : u.m(6));
         }) }) },
     // The tick and the burst carry no number for a Spell-law step to raise; held for T.
-    { slot: 'P-05', option: 'a', name: 'Hastened Reckoning', type: 'spell', color: PURPLE, program: () => ({
+    { slot: 'P-05', option: 'a', name: 'Hastened Reckoning', type: 'spell', color: PURPLE, rank: 2, program: () => ({
         free: L("The foe's MERCY bursts 1 turn sooner", c => { c.tickMercy(1); }),
         paid: L("The foe's MERCY bursts. EXILE", c => { c.burstMercy(MERCY_BURST_MULT); }, EX) }) },
-    { slot: 'P-06', option: 'a', name: 'Weight of Grace', type: 'attack', color: RED, program: () => ({
+    { slot: 'P-06', option: 'a', name: 'Weight of Grace', type: 'attack', color: RED, rank: 2, program: () => ({
         free: L("DEAL = foe's MERCY", c => { c.deal(c.q.foeMercy, { exact: true }); }),
         paid: L("DEAL 2× foe's MERCY", c => { c.deal(2 * c.q.foeMercy, { exact: true }); }) }) },
-    { slot: 'P-06', option: 'c', name: 'Spread the Mantle', type: 'skill', color: BLUE, program: () => ({
+    { slot: 'P-06', option: 'c', name: 'Spread the Mantle', type: 'skill', color: BLUE, rank: 2, program: () => ({
         free: L("GUARD = foe's MERCY", c => { c.guard(c.q.foeMercy, { exact: true }); }),
         paid: L("GUARD 2× foe's MERCY", c => { c.guard(2 * c.q.foeMercy, { exact: true }); }) }) },
-    { slot: 'P-07', option: 'b', name: 'Mended Wrath', type: 'attack', color: RED, program: u => ({
+    { slot: 'P-07', option: 'b', name: 'Mended Wrath', type: 'attack', color: RED, rank: 2, program: u => ({
         free: L(`HEAL {heal:${u.m(2)}}, DEAL = all you healed this turn`, c => {
             c.heal(u.m(2)); c.deal(c.q.healedThisTurn, { exact: true });
         }),
@@ -121,7 +123,7 @@ const ENTRIES: Entry[] = [
             c.heal(u.m(4)); c.deal(2 * c.q.healedThisTurn, { exact: true });
         }) }) },
     // Sims: "MERCY equal to all you healed" became half. T has not ruled the rounding; down.
-    { slot: 'P-08', option: 'b', name: 'Shared Mending', type: 'skill', color: BLUE, program: u => ({
+    { slot: 'P-08', option: 'b', name: 'Shared Mending', type: 'skill', color: BLUE, rank: 3, program: u => ({
         free: L(`HEAL {heal:${u.m(3)}}, MERCY half all you healed this turn`, c => {
             c.heal(u.m(3)); c.mercy(Math.floor(c.q.healedThisTurn / 2), { exact: true });
         }),
@@ -134,43 +136,43 @@ const ENTRIES: Entry[] = [
             c.guard(u.m(2), { plus: Math.floor(c.q.missing / 5) });
         }),
         paid: L('GUARD = your missing VITAE', c => { c.guard(c.q.missing, { exact: true }); }) }) },
-    { slot: 'P-10', option: 'c', name: 'Absolve at Dawn', type: 'global', color: PURPLE, program: u => turnGlobal(
+    { slot: 'P-10', option: 'c', name: 'Absolve at Dawn', type: 'global', color: PURPLE, rank: 5, program: u => turnGlobal(
         `RADIANCE {radiance:${u.i(5)}} if the foe has MERCY`, c => { if (c.q.foeHasMercy) c.radiance(u.i(5)); }) },
 
     // ── ENGINE: makes room to heal and keeps MERCY going ─────────────────────
-    { slot: 'E-01', option: 'b', name: 'Salve', type: 'skill', color: BLUE, program: u => ({
+    { slot: 'E-01', option: 'b', name: 'Salve', type: 'skill', color: BLUE, rank: 3, program: u => ({
         free: L(`HEAL {heal:${u.m(2)}}, DRAW 1`, c => { c.heal(u.m(2)); c.draw(1); }),
         paid: L(`HEAL {heal:${u.m(5)}}, DRAW 2`, c => { c.heal(u.m(5)); c.draw(2); }) }) },
-    { slot: 'E-02', option: 'c', name: 'Gentle Debt', type: 'skill', color: PURPLE, program: u => ({
+    { slot: 'E-02', option: 'c', name: 'Gentle Debt', type: 'skill', color: PURPLE, rank: 3, program: u => ({
         free: L(`MERCY {mercy:${u.i(2)}}, DRAW 1`, c => { c.mercy(u.i(2)); c.draw(1); }),
         paid: L(`MERCY {mercy:${u.i(4)}}, DRAW 1`, c => { c.mercy(u.i(4)); c.draw(1); }) }) },
     // Sims: PAID "three times as much" became twice. A multiplier has no number for a step; held for T.
-    { slot: 'E-03', option: 'b', name: 'Swelling Grace', type: 'spell', color: BLUE, program: u => ({
+    { slot: 'E-03', option: 'b', name: 'Swelling Grace', type: 'spell', color: BLUE, rank: 2, program: u => ({
         free: L(`+${u.m(3)} to each HEAL this turn`, c => { c.healsPlus(u.m(3)); }),
         paid: L('2× each HEAL this turn. EXILE', c => { c.healsTimes(2); }, EX) }) },
-    { slot: 'E-04', option: 'b', name: 'Open the Wound', type: 'skill', color: RED, program: () => ({
+    { slot: 'E-04', option: 'b', name: 'Open the Wound', type: 'skill', color: RED, rank: 3, program: () => ({
         free: L('SACRIFICE 3, DRAW 2', c => { c.sacrifice(3); c.draw(2); }),
         paid: L('SACRIFICE 4, DRAW 3', c => { c.sacrifice(4); c.draw(3); }) }) },
-    { slot: 'E-06', option: 'a', name: 'Kindled Prayer', type: 'spell', color: PURPLE, program: () => ({
+    { slot: 'E-06', option: 'a', name: 'Kindled Prayer', type: 'spell', color: PURPLE, rank: 3, program: () => ({
         free: L('Your next HEAL this turn is RADIANCE', c => { c.nextHealRadiance(); }),
         paid: L('Each HEAL this turn is RADIANCE with 2× DEAL. EXILE', c => {
             c.allHealsRadianceDouble();
         }, EX) }) },
-    { slot: 'E-07', option: 'b', name: 'Draw the Fever', type: 'attack', color: RED, program: u => ({
+    { slot: 'E-07', option: 'b', name: 'Draw the Fever', type: 'attack', color: RED, rank: 2, program: u => ({
         free: L(`DEAL {deal:${u.m(2)}}, LEECH {leech:${u.i(1)}}`, c => { c.deal(u.m(2)); c.leech(u.i(1)); }),
         paid: L(`DEAL {deal:${u.m(4)}}, LEECH {leech:${u.i(2)}}`, c => { c.deal(u.m(4)); c.leech(u.i(2)); }) }) },
     // T: MERCY first, then RADIANCE.
-    { slot: 'E-08', option: 'b', name: 'Twin Mending', type: 'skill', color: PURPLE, program: u => ({
+    { slot: 'E-08', option: 'b', name: 'Twin Mending', type: 'skill', color: PURPLE, rank: 3, program: u => ({
         free: L(`MERCY {mercy:${u.i(2)}}, RADIANCE {radiance:${u.i(3)}}`, c => { c.mercy(u.i(2)); c.radiance(u.i(3)); }),
         paid: L(`MERCY {mercy:${u.i(4)}}, RADIANCE {radiance:${u.i(6)}}`, c => { c.mercy(u.i(4)); c.radiance(u.i(6)); }) }) },
-    { slot: 'E-09', option: 'b', name: 'Vigil', type: 'global', color: BLUE, program: u => turnGlobal(
+    { slot: 'E-09', option: 'b', name: 'Vigil', type: 'global', color: BLUE, rank: 4, program: u => turnGlobal(
         `MERCY {mercy:${u.i(1)}}, HEAL {heal:${u.m(1)}}`, c => { c.mercy(u.i(1)); c.heal(u.m(1)); }) },
-    { slot: 'E-10', option: 'b', name: 'Quiet Breath', type: 'skill', color: RED, program: u => ({
+    { slot: 'E-10', option: 'b', name: 'Quiet Breath', type: 'skill', color: RED, rank: 3, program: u => ({
         free: L(`DRAW 1, HEAL {heal:${u.m(2)}}`, c => { c.draw(1); c.heal(u.m(2)); }),
         paid: L(`DRAW 2, HEAL {heal:${u.m(4)}}`, c => { c.draw(2); c.heal(u.m(4)); }) }) },
 
     // ── MISC: utility around it ──────────────────────────────────────────────
-    { slot: 'M-01', option: 'b', name: 'Sanctuary', type: 'skill', color: BLUE, program: u => ({
+    { slot: 'M-01', option: 'b', name: 'Sanctuary', type: 'skill', color: BLUE, rank: 3, program: u => ({
         free: L(`GUARD {guard:${u.m(3)}} or {guard:${u.m(5)}} if the foe has MERCY`, c => {
             c.guard(c.q.foeHasMercy ? u.m(5) : u.m(3));
         }),
@@ -178,10 +180,10 @@ const ENTRIES: Entry[] = [
             c.guard(c.q.foeHasMercy ? u.m(11) : u.m(7));
         }) }) },
     // T, 2026-11-03: bigger MERCY.
-    { slot: 'M-02', option: 'b', name: 'Offer of Peace', type: 'skill', color: PURPLE, program: u => ({
+    { slot: 'M-02', option: 'b', name: 'Offer of Peace', type: 'skill', color: PURPLE, rank: 2, program: u => ({
         free: L(`MERCY {mercy:${u.i(3)}}`, c => { c.mercy(u.i(3)); }),
         paid: L(`MERCY {mercy:${u.i(7)}}`, c => { c.mercy(u.i(7)); }) }) },
-    { slot: 'M-04', option: 'b', name: 'Purifying Light', type: 'skill', color: RED, program: u => ({
+    { slot: 'M-04', option: 'b', name: 'Purifying Light', type: 'skill', color: RED, rank: 2, program: u => ({
         free: L(`Remove 1 of your debuffs, RADIANCE {radiance:${u.i(2)}}`, c => {
             c.clearDebuffs(1); c.radiance(u.i(2));
         }),
@@ -189,30 +191,30 @@ const ENTRIES: Entry[] = [
             c.clearDebuffs(Infinity); c.radiance(u.i(5));
         }) }) },
     // Sims: PAID +12 max VITAE became +6.
-    { slot: 'M-05', option: 'c', name: 'Deep Well', type: 'spell', color: PURPLE, spellLaw: { maxVitae: 4 }, program: u => ({
+    { slot: 'M-05', option: 'c', name: 'Deep Well', type: 'spell', color: PURPLE, rank: 3, spellLaw: { maxVitae: 4 }, program: u => ({
         free: L(`+${u.m(4)} max VITAE this combat, DRAW 1`, c => { c.maxVitae(u.m(4)); c.draw(1); }),
         paid: L(`+${u.m(6)} max VITAE this combat, HEAL = your missing VITAE. EXILE`, c => {
             c.maxVitae(u.m(6)); c.healToFull();
         }, EX) }) },
-    { slot: 'M-06', option: 'c', name: 'Steady Pulse', type: 'global', color: BLUE, program: u => turnGlobal(
+    { slot: 'M-06', option: 'c', name: 'Steady Pulse', type: 'global', color: BLUE, rank: 5, program: u => turnGlobal(
         `HEAL {heal:${u.m(2)}} or {heal:${u.m(5)}} below half your VITAE`, c => {
             c.heal(c.q.belowHalf ? u.m(5) : u.m(2));
         }) },
-    { slot: 'M-07', option: 'c', name: 'Kind Cut', type: 'attack', color: RED, program: u => ({
+    { slot: 'M-07', option: 'c', name: 'Kind Cut', type: 'attack', color: RED, rank: 3, program: u => ({
         free: L(`DEAL {deal:${u.m(1)}}, MERCY {mercy:${u.i(1)}}, DRAW 1`, c => { c.deal(u.m(1)); c.mercy(u.i(1)); c.draw(1); }),
         paid: L(`DEAL {deal:${u.m(2)}}, MERCY {mercy:${u.i(2)}}, DRAW 1`, c => { c.deal(u.m(2)); c.mercy(u.i(2)); c.draw(1); }) }) },
     // T: "Otherwise, mercy 3/5."
-    { slot: 'M-08', option: 'a', name: 'Stay the Hand', type: 'skill', color: PURPLE, program: u => ({
+    { slot: 'M-08', option: 'a', name: 'Stay the Hand', type: 'skill', color: PURPLE, rank: 3, program: u => ({
         free: L(`If the foe has MERCY, its next attack deals ${u.m(2)} less; if not, MERCY {mercy:${u.i(3)}}`, c => {
             if (c.q.foeHasMercy) c.weakenNextAttack(u.m(2)); else c.mercy(u.i(3));
         }),
         paid: L(`If the foe has MERCY, its next attack deals ${u.m(5)} less; if not, MERCY {mercy:${u.i(5)}}`, c => {
             if (c.q.foeHasMercy) c.weakenNextAttack(u.m(5)); else c.mercy(u.i(5));
         }) }) },
-    { slot: 'M-09', option: 'c', name: 'Call Back a Kindness', type: 'skill', color: BLUE, program: () => ({
+    { slot: 'M-09', option: 'c', name: 'Call Back a Kindness', type: 'skill', color: BLUE, rank: 2, program: () => ({
         free: L('Return the last MERCY card you played to your hand', c => { c.returnMercyCards(1); }),
         paid: L('Return the last 2 MERCY cards you played to your hand', c => { c.returnMercyCards(2); }) }) },
-    { slot: 'M-10', option: 'c', name: 'Overflowing Cup', type: 'attack', color: RED, program: u => ({
+    { slot: 'M-10', option: 'c', name: 'Overflowing Cup', type: 'attack', color: RED, rank: 3, program: u => ({
         free: L(`If the foe is at max VITAE, DEAL {deal:${u.m(4)}}; if not, MERCY {mercy:${u.i(2)}}`, c => {
             if (c.q.foeAtMax) c.deal(u.m(4)); else c.mercy(u.i(2));
         }),
@@ -231,7 +233,7 @@ function toCard(e: Entry): Card {
         name: e.name,
         color: e.color,
         description: `Merciful trial card, ${SUB_LANE[e.slot[0]]} sub-lane.`,
-        tier: 1, rank: 1, cardType: e.type,
+        tier: 1, rank: e.rank ?? 1, cardType: e.type,
         targetType: e.type === 'attack' ? 'enemy' : 'self',
         program: build(upgradeScale(0)),
         programAt: build,
