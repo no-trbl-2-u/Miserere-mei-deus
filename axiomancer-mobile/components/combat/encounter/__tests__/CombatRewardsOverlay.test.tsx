@@ -54,6 +54,16 @@ describe('CombatRewardsOverlay', () => {
         }
     });
 
+    it('the narrow reward faces fit the longest keyword inside the tile', () => {
+        renderOverlay();
+        const word = screen.getByTestId('combat-reward-grey-word');
+        const line = within(word).getByTestId('combat-card-face-paid-line');
+        const size = StyleSheet.flatten(line.props.style).fontSize as number;
+        // VULNERABLE (10 capitals) at the chosen size, in the face's real advance, fits the 100pt tile's text room.
+        expect(size).toBeLessThan(10);
+        expect(10 * (0.79 * size + 0.4)).toBeLessThanOrEqual(100 - 3 - 10 - 22);
+    });
+
     it('every offer tile carries the card it actually offers in its label', () => {
         const { offers } = renderOverlay();
         for (const offer of offers) {

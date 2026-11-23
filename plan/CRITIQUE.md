@@ -1016,15 +1016,6 @@
 
 ## Pending
 
-### [MED] combat rewards / mobile — at 375 wide the reward card face clips its keyword line, so the Word card reads "VULNERABL" over "25% for 2 turn"
-- pass: 119 (commit 4ab7d18d)
-- viewport: mobile (375x812)
-- category: mobile
-- observation: on the victory screen (`18-victory-levelled`, `19-victory-plain`) the three reward cards sit side by side; the third card's keyword line is cut at the right edge to "VULNERABL" and its line under it to "25% for 2 turn". The Blow and Ward lines fit. The player chooses a card it cannot read in full; desktop shows the whole line.
-- evidence: `.critique-artifacts/mobile/18-victory-levelled.png`, `mobile/19-victory-plain.png` (third card); copy from `state/presenters/combat-reward.copy.ts`.
-- suggested fix: let the reward face's keyword and detail lines shrink or wrap to the face width (`adjustsFontSizeToFit` with a floor, or two lines) at phone width, as the hand faces already fit their names; pin the 375 case in the reward screen test.
-- source: critique:drive (unattended)
-
 ### [LOW] satchel / mobile — at 375 wide the filter tabs clip their own labels: PHIALS reads "HIALS" and SEALED reads "EALED" under the frame's corner filigree
 - pass: 119 (commit 4ab7d18d)
 - viewport: mobile (375x812)
@@ -1428,6 +1419,15 @@
 - source: loop
 
 ## Done
+
+### [x] [MED] combat rewards / mobile — at 375 wide the reward card face clips its keyword line, so the Word card reads "VULNERABL" over "25% for 2 turn" — RESOLVED 2026-11-23 (branch loop/iterate-reward-keyword-fit: faces narrower than the hand (reward tiles, the compact staged card) fit the paid line by the faces' measured font advances, half-pixel steps to a floor of 7, never clipping a word; the Word tile reads VULNERABLE / 25% for 2 turns at 375; pinned in paid-line.engine.test.ts and CombatRewardsOverlay.test.tsx)
+- pass: 119 (commit 4ab7d18d)
+- viewport: mobile (375x812)
+- category: mobile
+- observation: on the victory screen (`18-victory-levelled`, `19-victory-plain`) the three reward cards sit side by side; the third card's keyword line is cut at the right edge to "VULNERABL" and its line under it to "25% for 2 turn". The Blow and Ward lines fit. The player chooses a card it cannot read in full; desktop shows the whole line.
+- evidence: `.critique-artifacts/mobile/18-victory-levelled.png`, `mobile/19-victory-plain.png` (third card); copy from `state/presenters/combat-reward.copy.ts`.
+- suggested fix: let the reward face's keyword and detail lines shrink or wrap to the face width (`adjustsFontSizeToFit` with a floor, or two lines) at phone width, as the hand faces already fit their names; pin the 375 case in the reward screen test.
+- source: critique:drive (unattended)
 
 ### [x] [HIGH] ci / critique-drive — the `combat-board` and `combat-dying` captures stop on the pre-fight preview, and `combat` captures a blank frame, so no pass since 2e1050b91 has seen the live board, the hand or the DY1d skull — RESOLVED 2026-11-23 (branch loop/iterate-critique-drive-board: `live-fight-entry.mjs` gains `revealSettled` and `enterBoard`, a press only after the reveal entrance ends and a rejection when no board mounts; the drive uses them with no catch; both viewports capture the live board and the dying skull; pinned in critique-drive.test.mjs)
 - pass: 119 (commit 4ab7d18d)

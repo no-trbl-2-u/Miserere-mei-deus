@@ -85,7 +85,20 @@ export function paidLineGap(size: number): number {
     return SPACE_EM * size;
 }
 
-function wordWidth(word: string, size: number, mode: CardTextMode): number {
+/**
+ * The faces' mean advances per px of size as they print today (Uncial Antiqua
+ * capitals and digits, Rosarivo lowercase and space), read from the font files.
+ * {@link paidLineFit} uses them for a face too narrow to spare any slack
+ * (`measured`), where the lighter {@link CAPS_EM} / {@link SERIF_EM} estimates
+ * let a keyword run past the face's edge.
+ */
+export const PAID_FACE_ADVANCE = { caps: 0.79, serif: 0.53, space: 0.31 } as const;
+/** The floor a `measured` fit shrinks to, in px. */
+export const PAID_LINE_MEASURED_FLOOR = 7;
+
+function wordWidth(word: string, size: number, mode: CardTextMode, measured = false): number {
+    const capsAdv = measured ? PAID_FACE_ADVANCE.caps : CAPS_EM;
+    const serifAdv = measured ? PAID_FACE_ADVANCE.serif : SERIF_EM;
     let w = 0;
     for (const run of paidLineRuns(word, mode)) {
         if (run.glyph) {
@@ -93,7 +106,7 @@ function wordWidth(word: string, size: number, mode: CardTextMode): number {
             continue;
         }
         const n = [...run.text].length;
-        w += run.caps ? n * (CAPS_EM * size + PAID_CAPS_SPACING) : n * SERIF_EM * size;
+        w += run.caps ? n * (capsAdv * size + PAID_CAPS_SPACING) : n * serifAdv * size;
     }
     return w;
 }
@@ -102,12 +115,12 @@ function wordWidth(word: string, size: number, mode: CardTextMode): number {
  * How many rows `line` takes at `size` in `room` px, wrapping at spaces. A
  * word wider than the room counts the rows it would break across.
  */
-export function paidLineRows(line: string, size: number, room: number, mode: CardTextMode = 'words'): number {
-    const space = SPACE_EM * size;
+export function paidLineRows(line: string, size: number, room: number, mode: CardTextMode = 'words', measured = false): number {
+    const space = (measured ? PAID_FACE_ADVANCE.space : SPACE_EM) * size;
     let rows = 1;
     let used = 0;
     for (const word of line.split(' ').filter(Boolean)) {
-        const w = wordWidth(word, size, mode);
+        const w = wordWidth(word, size, mode, measured);
         if (used > 0 && used + space + w > room) {
             rows += 1;
             used = 0;
@@ -151,8 +164,18 @@ export function paidLineLead(cube: number): number {
  * then ends in an ellipsis and the large face prints the whole line). `lead`
  * is the die-and-colon width the line sits beside ({@link paidLineLead}).
  */
-export function paidLineFit({ width, line, mode = 'words', lead = 0 }: { width: number; line: string; mode?: CardTextMode; lead?: number }): { size: number; rows: number } {
+export function paidLineFit({ width, line, mode = 'words', lead = 0, measured = false }: { width: number; line: string; mode?: CardTextMode; lead?: number; measured?: boolean }): { size: number; rows: number } {
     const room = paidLineRoom(width, lead);
+    if (measured) {
+        // A narrow face: the faces' real advances, half-px steps down to the measured floor, no word wider than the room.
+        for (let size = PAID_LINE_SIZE; size >= PAID_LINE_MEASURED_FLOOR; size -= 0.5) {
+            const rows = paidLineRows(line, size, room, mode, true);
+            // No word may be wider than the room: a face cannot break one, it clips it.
+            const widest = Math.max(0, ...line.split(' ').filter(Boolean).map((word) => wordWidth(word, size, mode, true)));
+            if (rows <= PAID_LINE_ROWS && widest <= room) return { size, rows };
+        }
+        return { size: PAID_LINE_MEASURED_FLOOR, rows: paidLineRows(line, PAID_LINE_MEASURED_FLOOR, room, mode, true) };
+    }
     for (let size = PAID_LINE_SIZE; size >= PAID_LINE_FLOOR; size -= 1) {
         const rows = paidLineRows(line, size, room, mode);
         if (rows <= PAID_LINE_ROWS) return { size, rows };

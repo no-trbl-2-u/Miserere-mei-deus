@@ -9,7 +9,7 @@ import { describe, expect, it } from '@jest/globals';
 
 import { cardLibrary, lookupEffect, paidFaceLine } from '@mechanics';
 import {
-    PAID_LINE_FLOOR, PAID_LINE_ROWS, PAID_LINE_SIZE, paidLineCube, paidLineFit, paidLineLead, paidLineRoom, paidLineRows, paidLineRuns,
+    PAID_FACE_ADVANCE, PAID_LINE_FLOOR, PAID_LINE_MEASURED_FLOOR, PAID_LINE_ROWS, PAID_LINE_SIZE, paidLineCube, paidLineFit, paidLineLead, paidLineRoom, paidLineRows, paidLineRuns,
 } from '@/state/presenters/paid-line.engine';
 import { programHeadline } from '@/state/presenters/card-program.engine';
 
@@ -58,6 +58,18 @@ describe('paidLineFit', () => {
         const line = paidFaceLine(card, lookupEffect);
         const fit = paidLineFit({ width: HAND_W, line, lead: LEAD });
         expect(fit.size).toBe(PAID_LINE_SIZE);
+        expect(fit.rows).toBeLessThanOrEqual(PAID_LINE_ROWS);
+    });
+
+    it('a measured fit keeps the longest keyword inside a narrow face', () => {
+        const line = 'VULNERABLE 25% for 2 turns';
+        const lead = paidLineLead(paidLineCube(true));
+        const room = paidLineRoom(100, lead);
+        const fit = paidLineFit({ width: 100, line, lead, measured: true });
+        expect(fit.size).toBeLessThan(PAID_LINE_SIZE);
+        expect(fit.size).toBeGreaterThanOrEqual(PAID_LINE_MEASURED_FLOOR);
+        // The word itself, at the chosen size, is no wider than the room.
+        expect(10 * (PAID_FACE_ADVANCE.caps * fit.size + 0.4)).toBeLessThanOrEqual(room);
         expect(fit.rows).toBeLessThanOrEqual(PAID_LINE_ROWS);
     });
 
