@@ -58,8 +58,11 @@ T: "leave the ballot open, but in-game, use a random suggestion from each of
 them". The ballot stays open and nothing below is a verdict. One candidate per
 slot was drawn at random:
 
-M-01a M-02b M-03b M-04b M-05b M-06b M-07b M-08b M-09b M-10b M-11a M-12b M-13b M-14b M-15a M-16b M-17a M-18a M-19a M-20b M-21a M-22b M-23a M-24b M-25b M-26a M-27a M-28a M-29b M-30b M-31b M-32a M-33a S-01a S-02b S-03b S-04b S-05b S-06b P-01b P-02a P-03b
+M-01b M-02b M-03a M-04b M-05b M-06b M-07b M-08b M-09a M-10b M-11a M-12b M-13b M-14b M-15a M-16b M-17a M-18a M-19a M-20b M-21a M-22b M-23a M-24b M-25a M-26a M-27a M-28b M-29b M-30b M-31b M-32a M-33b S-01a S-02b S-03b S-04b S-05b S-06b P-01b P-02a P-03b
 
+- Six draws over the panel's two-line budget (about 74 characters) were
+  swapped to their other candidate on 2026-11-23: M-01, M-03, M-09, M-25,
+  M-28 and M-33.
 - M-01 to M-33 are the node blurbs in
   `axiomancer-mobile/state/exploration-maps/breakwater.layout.ts`.
 - S-01 to S-06 are the `mercyLines` of Quay-Crab, Bilge-Stalker and Coralback
