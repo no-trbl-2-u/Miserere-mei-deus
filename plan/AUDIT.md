@@ -87,18 +87,12 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
   - [ ] TEMPER: 0 cards; carried only by the anvil.
 - next: T's next card session (D37). BOON, HONE and TEMPER fail the bar because the atlas files them as Card keywords (the dice section) while no card prints them: T either moves them to Rule keywords or adds them to the bar's system exemptions (CONVICTION, RESERVE, WILD, PIP today). WAIVE needs a second carrier or a cut. Re-seed after.
 
-### [ ] [tests] `combat-encounter`'s first capture in a full `verify:visual` run differs by one pixel (2026-10-20)
+### [ ] [tests] `cutscene` is the one nondeterministic `verify:visual` route in CI: 4 of 30 runs (2026-11-23)
 - category: tests
 - impact: 5
 - ease: 5
-- detail: VE1b's `SMOKE_RUNS=5` (PR #663) found the one nondeterministic route. In a full 13-route run, the first
-  live-fight capture differs from runs 2-5 at (127,64), the antialiased top-left corner of a 1px `blood` rounded
-  border (rgb 210,84,64 vs 204,81,62). It is byte-stable shot alone, after one other route, and in a standalone
-  probe, and no CSS animation is running at the ready signal. It stays under the 0.5% gate, but it blocks VE1's
-  "0 nondeterministic routes" Measure and any parallel capture.
-- next: once VE1c's CI step runs `SMOKE_RUNS=2`, read whether the CI renderer shows it. If it does, bisect the
-  preceding routes (`SMOKE_ONLY` with growing prefixes) to find the one that leaves state behind, and fix that
-  leak or give the live fight a fresh browser.
+- detail: the CI visual step shoots every route twice (`SMOKE_RUNS=2`). Across the 30 newest unexpired `visual-smoke-<sha>` artifacts on 2026-11-23 (main and loop branches), 26 runs have no nondeterministic route and 4 flag `cutscene` alone (e.g. artifact 14862273168, `loop/next-187.2` at 79fb2c6). It stays report-only, but a route whose two shots disagree cannot be judged by the gate, and it blocks a "0 nondeterministic routes" claim.
+- next: download one flagged run's `screenshots/current` and `diff`, find the differing region (the narrator cut-out, the vellum panel's entrance, or the scene picture's fade), and settle that animation before the ready signal.
 
 ### [perf] Map SVG fix is unproven on a device (perf audit, 2026-10-03)
 - category: bug
@@ -305,6 +299,20 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 - 2026-11-22: left open. The honest flag needs data the map builder does not read today (node kinds on the start maps and staged events, in `axiomancer-mechanics`), and the shell-gate test (`isShellGateEdge`) lives in `feature-map-render.mjs`, not in `feature-map.evidence.mjs` `reachability`. Flipping gate-only routes to `reachable: false` would change the committed map, the render and the drive report together, and would mark routes a player does reach (by gate) as unreachable. Not a modest change; wants a spec that says what `reachable` means (a gate exists, or a play path exists) before code.
 
 ## Done
+
+### [x] [tests] `combat-encounter`'s first capture in a full `verify:visual` run differs by one pixel (2026-10-20) — CLOSED 2026-11-23 (the CI renderer does not show it)
+- category: tests
+- impact: 5
+- ease: 5
+- detail: VE1b's `SMOKE_RUNS=5` (PR #663) found the one nondeterministic route. In a full 13-route run, the first
+  live-fight capture differs from runs 2-5 at (127,64), the antialiased top-left corner of a 1px `blood` rounded
+  border (rgb 210,84,64 vs 204,81,62). It is byte-stable shot alone, after one other route, and in a standalone
+  probe, and no CSS animation is running at the ready signal. It stays under the 0.5% gate, but it blocks VE1's
+  "0 nondeterministic routes" Measure and any parallel capture.
+- next: once VE1c's CI step runs `SMOKE_RUNS=2`, read whether the CI renderer shows it. If it does, bisect the
+  preceding routes (`SMOKE_ONLY` with growing prefixes) to find the one that leaves state behind, and fix that
+  leak or give the live fight a fresh browser.
+- measured 2026-11-23: the row's `next` was to read the CI renderer once VE1c ran `SMOKE_RUNS=2`. Across the 30 newest unexpired `visual-smoke-<sha>` artifacts (37 routes, two shots each), `combat-encounter` matched its baseline and was never nondeterministic. The local one-pixel corner is not reproduced on the renderer of record, so no bisect is needed. The one route CI does flag is `cutscene` (4 of 30), filed as its own row.
 
 ### [x] [ci] The shadow review burns runs on cancel-in-progress: 418 of ~1000 `pr-review.yml` runs cancelled (2026-10-17..27) (T, via /oversight 2026-10-27) — CLOSED 2026-11-23 (measured: the paid part is no longer thrown away)
 - category: ci
