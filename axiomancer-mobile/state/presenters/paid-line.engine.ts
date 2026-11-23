@@ -94,7 +94,7 @@ export function paidLineGap(size: number): number {
  */
 export const PAID_FACE_ADVANCE = { caps: 0.79, serif: 0.53, space: 0.31 } as const;
 /** The floor a `measured` fit shrinks to, in px. */
-export const PAID_LINE_MEASURED_FLOOR = 7;
+export const PAID_LINE_MEASURED_FLOOR = 6.5;
 
 function wordWidth(word: string, size: number, mode: CardTextMode, measured = false): number {
     const capsAdv = measured ? PAID_FACE_ADVANCE.caps : CAPS_EM;

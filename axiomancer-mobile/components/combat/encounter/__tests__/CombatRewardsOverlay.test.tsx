@@ -23,6 +23,7 @@ import { getByGestureTestId } from 'react-native-gesture-handler/jest-utils';
 
 import { cardLibrary, getCardById, upgradeLimit } from '@mechanics';
 import { UPGRADE_FIGURE_STANDIN } from '@/assets/images/keepers';
+import { CombatCardFace } from '@/components/combat/encounter/CombatBoard';
 import { CombatRewardsOverlay } from '@/components/combat/encounter/CombatRewardsOverlay';
 import { UPGRADE_A11Y_ACTION } from '@/components/upgrade/CardUpgradePicker';
 import { rewardCardVMs } from '@/state/presenters/combat-encounter.engine';
@@ -54,14 +55,46 @@ describe('CombatRewardsOverlay', () => {
         }
     });
 
-    it('the narrow reward faces fit the longest keyword inside the tile', () => {
+    it('the reward tiles size their paid line by the measured fit', () => {
         renderOverlay();
-        const word = screen.getByTestId('combat-reward-grey-word');
-        const line = within(word).getByTestId('combat-card-face-paid-line');
-        const size = StyleSheet.flatten(line.props.style).fontSize as number;
-        // VULNERABLE (10 capitals) at the chosen size, in the face's real advance, fits the 100pt tile's text room.
-        expect(size).toBeLessThan(10);
-        expect(10 * (0.79 * size + 0.4)).toBeLessThanOrEqual(100 - 3 - 10 - 22);
+        const sizeOf = (id: string) => {
+            const line = within(screen.getByTestId(`combat-reward-${id}`)).getByTestId('combat-card-face-paid-line');
+            return StyleSheet.flatten(line.props.style).fontSize as number;
+        };
+        // The vellum tile (80pt) takes the Word line to the measured floor; Blow and Ward keep the full size.
+        expect(sizeOf('grey-word')).toBe(6.5);
+        expect(sizeOf('grey-strike')).toBe(10);
+        expect(sizeOf('grey-ward')).toBe(10);
+    });
+
+    describe('a Word face by width', () => {
+        const paidLine = (width: number) => {
+            const offer = rewardCardVMs(['grey-word'])[0]!;
+            render(withAllProviders(<CombatCardFace card={offer} width={width} height={Math.round(width * 1.45)} />).tree);
+            return screen.getByTestId('combat-card-face-paid-line');
+        };
+        const textOf = (node: unknown): string => {
+            if (typeof node === 'string') return node;
+            if (Array.isArray(node)) return node.map(textOf).join('');
+            const kids = (node as { props?: { children?: unknown } } | null)?.props?.children;
+            return kids === undefined ? '' : textOf(kids);
+        };
+
+        it.each([
+            [100, 7.5],
+            [92, 6.5],
+            [112, 8.5],
+            [120, 10],
+        ])('the %ipx face prints "VULNERABLE 25% for 2 turns" at %ipx', (width, size) => {
+            const line = paidLine(width);
+            expect(StyleSheet.flatten(line.props.style).fontSize).toBe(size);
+        });
+
+        it('keeps the tail of the line on the face', () => {
+            const text = textOf(paidLine(100));
+            expect(text).toContain('25%');
+            expect(text).toContain('turns');
+        });
     });
 
     it('every offer tile carries the card it actually offers in its label', () => {
