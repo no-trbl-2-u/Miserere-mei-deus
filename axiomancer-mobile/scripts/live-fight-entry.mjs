@@ -58,9 +58,10 @@ export async function enterLiveFight(page, baseUrl, options = {}) {
 }
 
 /**
- * Waits for the pre-fight reveal's entrance to finish: ENTER COMBAT opaque all
- * the way up its ancestors and no finite animation running under the reveal,
- * on two polls in a row. A press during the entrance is dropped by the app.
+ * Waits for the pre-fight reveal's entrance to finish: the ink curtain gone,
+ * ENTER COMBAT opaque all the way up its ancestors and no finite animation
+ * running under the reveal, on two polls in a row (any poll that fails a check
+ * resets the count). A press during the entrance is dropped by the app.
  * @param {import('playwright').Page} page
  * @param {number} [timeout]
  */
@@ -69,9 +70,11 @@ export async function revealSettled(page, timeout = 15000) {
     await page.waitForFunction(() => {
         const btn = document.querySelector('[data-testid="combat-enter"]')
         const reveal = document.querySelector('[data-testid="combat-reveal"]')
-        if (!btn || !reveal) return false
-        for (let n = btn; n; n = n.parentElement) if (getComputedStyle(n).opacity !== '1') return false
-        const idle = reveal.getAnimations({ subtree: true }).every((a) =>
+        // The ink curtain is the reveal's sibling and covers it until it unmounts.
+        const curtain = document.querySelector('[data-testid="ink-curtain"]')
+        let idle = btn != null && reveal != null && curtain == null
+        for (let n = btn; idle && n; n = n.parentElement) if (getComputedStyle(n).opacity !== '1') idle = false
+        idle = idle && reveal.getAnimations({ subtree: true }).every((a) =>
             a.playState !== 'running' || a.effect?.getComputedTiming().endTime === Infinity)
         const stable = idle && globalThis.__axmRevealIdle === true
         globalThis.__axmRevealIdle = idle
