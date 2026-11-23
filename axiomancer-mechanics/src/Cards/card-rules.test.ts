@@ -9,7 +9,7 @@ import type { Card } from './types';
 import {
     cardConditions, cardLinesText, checkCarrierRule, checkComplexityBudget,
     checkDiscardCost, checkFaceGrammar, checkGlobalTemplate, checkScrapFloor, checkTextOrder,
-    parseAtlasKeywords, printedKeywords,
+    parseAtlasKeywords, printedKeywords, rankForCard,
     type AtlasKeyword,
 } from './card-rules';
 import type { ProgramCtx } from './card-program.types';
@@ -67,6 +67,63 @@ describe('checkComplexityBudget', () => {
 
     it('counts only the Card keywords it is given', () => {
         expect(checkComplexityBudget([two], new Set(['SACRIFICE']))).toEqual([]);
+    });
+});
+
+describe('rankForCard', () => {
+    const line = (text: string): Card => ({ ...base, program: { free: { text, run: noop } } });
+
+    it('no keyword and no condition is Ash (1); DEAL and GUARD are free', () => {
+        expect(rankForCard(line('DEAL 4, GUARD 2.'), KWS)).toBe(1);
+    });
+
+    it('one keyword and no condition is Tooth (2)', () => {
+        expect(rankForCard(line('SACRIFICE 2, DEAL 4.'), KWS)).toBe(2);
+    });
+
+    it('two keywords and no condition is Splinter (3)', () => {
+        expect(rankForCard(line('SACRIFICE 2, LEECH 1.'), KWS)).toBe(3);
+    });
+
+    it('one condition and at most one keyword is Splinter (3)', () => {
+        expect(rankForCard(line('DEAL 3 or 6 at half your VITAE.'), KWS)).toBe(3);
+        expect(rankForCard(line('SACRIFICE 2, DEAL 3 or 6 at half your VITAE.'), KWS)).toBe(3);
+    });
+
+    it('two keywords and one condition is Rib (4)', () => {
+        expect(rankForCard(line('SACRIFICE 2, LEECH 1 at half VITAE or less.'), KWS)).toBe(4);
+    });
+
+    it('beyond the Rib band is Skull (5): three keywords, or two conditions', () => {
+        expect(rankForCard(line('SACRIFICE 2, LEECH 1, TETHER 1.'), KWS)).toBe(5);
+        expect(rankForCard(line('DEAL 3 if you can, or 6 at half your VITAE.'), KWS)).toBe(5);
+    });
+
+    it('counts a Global trigger as a condition, as the budget does', () => {
+        const global: Card = { ...base, cardType: 'global', program: {
+            global: { trigger: 'sac', text: 'DEAL X', run: noop } } };
+        expect(cardConditions(global)).toEqual(['trigger: sac']);
+        expect(rankForCard(global, KWS)).toBe(3);
+    });
+
+    it('agrees with the complexity budget: a card at its derived rank never breaks it', () => {
+        const cards = ['DEAL 4.', 'SACRIFICE 2.', 'SACRIFICE 2, LEECH 1.', 'DEAL 3 if you can.',
+            'SACRIFICE 2, LEECH 1 if you can.', 'SACRIFICE 2, LEECH 1, TETHER 1.'].map(line);
+        const ranked = cards.map(c => ({ ...c, rank: rankForCard(c, KWS) }));
+        expect(checkComplexityBudget(ranked, KWS)).toEqual([]);
+    });
+
+    it('never derives Saint (6)', () => {
+        const busy = line('SACRIFICE 2, LEECH 1, TETHER 1 if you can, or more at half VITAE each time.');
+        expect(rankForCard(busy, KWS)).toBe(5);
+    });
+
+    it('an upgraded copy keeps its base card\'s rank, whatever its own text counts', () => {
+        const baseCard: Card = { ...line('SACRIFICE 2.'), id: 'c' };
+        const upgraded: Card = { ...line('SACRIFICE 3, LEECH 1, TETHER 1.'), id: 'c++', rank: 2 };
+        expect(rankForCard(upgraded, KWS, baseCard)).toBe(2);
+        expect(() => rankForCard(upgraded, KWS)).toThrow(/base card/);
+        expect(() => rankForCard(upgraded, KWS, { ...baseCard, id: 'other' })).toThrow(/base card/);
     });
 });
 
