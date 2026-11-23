@@ -1016,6 +1016,15 @@
 
 ## Pending
 
+### [MED] quest / card offer, village shop — the 80px vellum offer tile and the ~84px shop peek faces cannot hold VULNERABLE at a readable size, so the keyword still clips
+- pass: 119 (commit 4ab7d18d)
+- viewport: mobile (375x812)
+- category: visual
+- observation: the PAID line fit takes the measured path on every face narrower than the hand card, and floors at 6.5px; the vellum offer tile (`VELLUM_OFFER_W` 80, text room about 45px) and the shop carousel peek faces (about 84px at the minimum stage) need more than that for VULNERABLE (10 capitals at about 0.79 em), so the word runs past the face edge on a card whose paid line holds it.
+- evidence: `app/quest/index.tsx` (offer tile, `VELLUM_OFFER_W` in `components/combat/encounter/spoils-ink.ts`), `components/village/ShopCarousel.tsx` (`peekW`); fit in `state/presenters/paid-line.engine.ts` (`paidLineFit`, `PAID_LINE_MEASURED_FLOOR`).
+- suggested fix: give these two faces more width, or print a long keyword as its glyph or a shorter form on a face under 90px; pin the fit in the quest and shop tests at the real widths.
+- source: review on #1717
+
 ### [LOW] satchel / mobile — at 375 wide the filter tabs clip their own labels: PHIALS reads "HIALS" and SEALED reads "EALED" under the frame's corner filigree
 - pass: 119 (commit 4ab7d18d)
 - viewport: mobile (375x812)

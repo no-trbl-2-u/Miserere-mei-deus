@@ -2092,7 +2092,7 @@ export const CombatCardFace = React.memo(function CombatCardFace({
     const ledgerCube = large ? LARGE_CUBE : paidLineCube(width < NARROW_FACE_W);
     const paidSize = large
         ? largePaidLineSize(width)
-        : paidLineFit({ width, line: f.paidLine, mode: cardText, lead: paidLineLead(ledgerCube), measured: width < NARROW_FACE_W }).size;
+        : paidLineFit({ width, line: f.paidLine, mode: cardText, lead: paidLineLead(ledgerCube), measured: width < HAND_CARD_W }).size;
     const paidRowH = Math.round(paidSize * PAID_LINE_LEADING);
     // A face too narrow for the hand card's name column (the Spoils tiles) trims the band's
     // side chrome and the name's size so the longest Act 1 name still fits one line.
