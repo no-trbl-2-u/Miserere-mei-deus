@@ -11,6 +11,11 @@ plan/NEEDS_T.md merge=lessons
 # back to its line merge.
 plan/deadlines.md merge=deadlines
 
+# Merge plan/AUDIT.md row by row (a `### ` header and its body), so two
+# branches that each move a row to Done never glue a row to the next header:
+# scripts/audit-merge.mjs, registered as merge.audit.driver the same way.
+plan/AUDIT.md merge=audit
+
 # The art-department masters are compared byte for byte against a fresh
 # regeneration (art-department/tests/test_rig_spritesheet.py), so git must
 # never rewrite their line endings on checkout.
