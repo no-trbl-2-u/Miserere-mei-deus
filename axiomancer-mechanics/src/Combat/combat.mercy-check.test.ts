@@ -1,121 +1,341 @@
 /**
- * The mercy check: a normal foe, falling, may ask spare or finish.
+ * The mercy check at the lethal blow.
  *
- * Pins: the chance lands near `MERCY_CHECK_CHANCE` over seeded fights; only a
- * `normal` foe can ask, and any other difficulty draws nothing from the rng; a
- * check rolls once and answers once; and the win stays a win.
+ * Pins: a blow that would kill a normal or elite foe, with the check drawn,
+ * leaves it at 1 VITAE with the check open and `finalOutcome` null, whether the
+ * blow is a card's FREE line, a die-powered PAID line, or a status tick (the
+ * card-played clock on your turn, and the round's tick). While it is open
+ * nothing moves: no play, no roll, no turn for the foe, no tick. A boss never
+ * asks and draws nothing. FINISH lands on exactly the state of the same blow
+ * with no check; SPARE is a win with the foe at 1 VITAE. Payment waits on the
+ * answer (`mercyCheckSettled`).
  */
 
-import { describe, it, expect } from 'vitest';
+import { afterEach, describe, it, expect, vi } from 'vitest';
 
 import {
-    MERCY_CHECK_CHANCE, chooseMercyCheck, mercyCheckSettled, rollMercyCheck,
+    MERCY_CHECK_CHANCE, canAskMercy, chooseMercyCheck, mercyCheckOpen, mercyCheckSettled, offerMercyAtBlow,
 } from './combat.mercy-check';
-import { buildCombatSummary, initializeCombatEncounter } from './combat.engine';
-import type { CombatEncounterState } from './combat.encounter.types';
-import { createCharacter } from '../Character';
-import { FloatEye } from '../Enemy/enemy.library';
+import {
+    buildCombatSummary, discardCombatCard, endTurn, playCombatCard, playSignatureSkill, processBetweenPhases,
+    resolveCombatPhase, resolveThreatPhase, startTurn, payTheToll, overheatSpentDie,
+} from './combat.engine';
+import type { CombatEncounterState, CombatManaDie } from './combat.encounter.types';
+import type { ActiveEffect } from '../Effects/types';
 import type { EnemyDifficulty } from '../Enemy/types';
+import { initProgramLedger } from './combat.card-program';
+import { initElementState } from './combat.elements';
+import { registerSandboxCards } from '../Cards/cards.sandbox';
+import { buildFixtureState } from '../test-utils/card-fixture';
+import { mockSequentialRng } from '../test-utils/rng';
 
-function seededRng(seed: number): () => number {
-    let state = seed % 2147483647 || 1;
-    return () => {
-        state = (state * 48271) % 2147483647;
-        return state / 2147483647;
+afterEach(() => vi.restoreAllMocks());
+
+registerSandboxCards([
+    {
+        id: 'qa-mercy-heart', name: 'QA Mercy Heart', color: 'heart', description: 'mercy-check momentum fixture',
+        tier: 1, targetType: 'enemy', rank: 1, cardType: 'attack',
+        free: { damage: 2 }, specialMechanics: [{ kind: 'deal', amount: 5 }],
+    },
+]);
+
+const DIE = 'fx-mercy-die';
+
+/** A clean fight with `cardId` in hand and one wild die, the foe at `vitae`. */
+function fight(
+    vitae: number, difficulty: EnemyDifficulty, chance: number, cardId = 'grey-strike',
+): CombatEncounterState {
+    const s = buildFixtureState({ clean: true });
+    const die: CombatManaDie = { id: DIE, color: 'wild', state: 'available', temporary: false, face: 'mana' };
+    return {
+        ...s,
+        enemy: { ...s.enemy, health: vitae, difficulty },
+        hand: [{ uid: 'under-test', cardId }],
+        dice: [die],
+        mercyCheckChance: chance,
     };
 }
 
-/** A fight against a foe of `difficulty`, just won. */
-function won(difficulty: EnemyDifficulty | undefined): CombatEncounterState {
-    const player = createCharacter({ name: 'Pilgrim', level: 3, baseStats: { heart: 8, body: 8, mind: 8 } });
-    const fight = initializeCombatEncounter(player, { ...FloatEye, difficulty }, ['the-gleaners-due'], 7);
-    return { ...fight, enemy: { ...fight.enemy, health: 0 }, phase: 'complete', finalOutcome: 'victory' };
+/** The same fight with a status on the foe. */
+function withStatus(s: CombatEncounterState, effectId: string, intensity = 1): CombatEncounterState {
+    const effect: ActiveEffect = { effectId, remainingDuration: 4, intensity, appliedAt: 0, tier: 1 };
+    return { ...s, enemy: { ...s.enemy, effects: [effect] } };
 }
 
-describe('rollMercyCheck', () => {
-    it('asks about as often as the chance, over seeded fights', () => {
+interface Source {
+    name: string;
+    vitae: number;
+    setup: (s: CombatEncounterState) => CombatEncounterState;
+    blow: (s: CombatEncounterState) => CombatEncounterState;
+}
+
+/** Each lethal source, as a function from a fight to the state after the blow. */
+const SOURCES: readonly Source[] = [
+    {
+        name: 'a card (FREE line)',
+        vitae: 2,
+        setup: s => s,
+        blow: s => playCombatCard(s, { uid: 'under-test' }, false).state,
+    },
+    {
+        name: 'a die (PAID line)',
+        vitae: 5,
+        setup: s => s,
+        blow: s => playCombatCard(s, { uid: 'under-test' }, true, DIE).state,
+    },
+    {
+        name: 'a status tick on your turn (POISON on the card-played clock)',
+        vitae: 1,
+        setup: s => withStatus({ ...s, hand: [{ uid: 'under-test', cardId: 'grey-ward' }] }, 'debuff_poison', 2),
+        blow: s => playCombatCard(s, { uid: 'under-test' }, false).state,
+    },
+    {
+        name: 'a status tick at the round\'s end',
+        vitae: 1,
+        setup: s => withStatus(s, 'debuff_creeping_doom', 2),
+        blow: s => processBetweenPhases(s).state,
+    },
+];
+
+/** Everything but the check's own bookkeeping. */
+function sansCheck(s: CombatEncounterState): Omit<CombatEncounterState, 'mercyCheck' | 'mercyCheckChance'> {
+    const { mercyCheck: _a, mercyCheckChance: _b, ...rest } = s;
+    return rest;
+}
+
+describe('the check at the lethal blow (A1)', () => {
+    describe.each(SOURCES)('$name', ({ vitae, setup, blow }) => {
+        it.each(['normal', 'elite'] as const)('a %s foe stands at 1 VITAE and asks; nothing has ended', (difficulty) => {
+            mockSequentialRng(0.5);
+            const asked = blow(setup(fight(vitae, difficulty, 1)));
+            expect(asked.mercyCheck).toBe('offered');
+            expect(mercyCheckOpen(asked)).toBe(true);
+            expect(asked.enemy.health).toBe(1);
+            expect(asked.finalOutcome).toBeNull();
+            expect(asked.phase).toBe('mercy-check');
+            expect(asked.log.some(e => e.kind === 'combat-ended')).toBe(false);
+            expect(mercyCheckSettled(asked)).toBe(false);
+        });
+
+        it('with the check not drawn, the blow kills', () => {
+            mockSequentialRng(0.5);
+            const killed = blow(setup(fight(vitae, 'normal', 0)));
+            expect(killed.finalOutcome).toBe('victory');
+            expect(killed.mercyCheck).toBe('none');
+            expect(killed.enemy.health).toBeLessThanOrEqual(0);
+            expect(mercyCheckSettled(killed)).toBe(true);
+        });
+
+        it.each(['boss', 'unique', 'simple'] as const)('a %s foe never asks, even forced', (difficulty) => {
+            mockSequentialRng(0.5);
+            const killed = blow(setup(fight(vitae, difficulty, 1)));
+            expect(killed.finalOutcome).toBe('victory');
+            expect(killed.mercyCheck).toBe('none');
+        });
+
+        it('FINISH lands on exactly the state of the same blow with no check (A2)', () => {
+            mockSequentialRng(0.5);
+            const killed = blow(setup(fight(vitae, 'elite', 0)));
+            mockSequentialRng(0.5);
+            const finished = chooseMercyCheck(blow(setup(fight(vitae, 'elite', 1))), 'finish');
+            expect(finished.mercyCheck).toBe('finished');
+            expect(sansCheck(finished)).toEqual(sansCheck(killed));
+            expect(buildCombatSummary(finished).headline).toBe(buildCombatSummary(killed).headline);
+        });
+
+        it('SPARE ends it as a win with the foe at 1 VITAE (A2)', () => {
+            mockSequentialRng(0.5);
+            const spared = chooseMercyCheck(blow(setup(fight(vitae, 'normal', 1))), 'spare');
+            expect(spared.finalOutcome).toBe('victory');
+            expect(spared.mercyCheck).toBe('spared');
+            expect(spared.phase).toBe('complete');
+            expect(spared.enemy.health).toBe(1);
+            expect(spared.log[spared.log.length - 1]).toEqual({ kind: 'combat-ended', outcome: 'victory' });
+            expect(mercyCheckSettled(spared)).toBe(true);
+            expect(buildCombatSummary(spared).headline).toMatch(/spared/);
+        });
+    });
+
+    it('a blow that leaves the foe standing asks nothing', () => {
+        mockSequentialRng(0.5);
+        const hit = playCombatCard(fight(10, 'normal', 1), { uid: 'under-test' }, false).state;
+        expect(hit.enemy.health).toBe(8);
+        expect(hit.mercyCheck).toBeUndefined();
+        expect(hit.finalOutcome).toBeNull();
+    });
+});
+
+describe('while the check is open, nothing moves (A1)', () => {
+    /** A fight held on the check, with a second card still in hand. */
+    function open(): CombatEncounterState {
+        mockSequentialRng(0.5);
+        const s = fight(2, 'normal', 1);
+        const withMore = { ...s, hand: [...s.hand, { uid: 'second', cardId: 'grey-strike' }] };
+        const asked = playCombatCard(withMore, { uid: 'under-test' }, false).state;
+        expect(mercyCheckOpen(asked)).toBe(true);
+        return asked;
+    }
+
+    it('no card plays, FREE or PAID, and none scraps', () => {
+        const asked = open();
+        expect(playCombatCard(asked, { uid: 'second' }, false).state).toBe(asked);
+        expect(playCombatCard(asked, { uid: 'second' }, true, DIE).state).toBe(asked);
+        expect(discardCombatCard(asked, 'second').state).toBe(asked);
+    });
+
+    it('no roll, no turn end, no signature, no toll, no overheat', () => {
+        const asked = { ...open(), conviction: 9 };
+        expect(startTurn(asked).state).toBe(asked);
+        expect(endTurn(asked).state).toBe(asked);
+        expect(playSignatureSkill(asked, 'sig-crimson-circlet').state).toBe(asked);
+        expect(payTheToll(asked).state).toBe(asked);
+        expect(overheatSpentDie(asked, DIE).state).toBe(asked);
+    });
+
+    it('a lethal PAID play pays no BOON and moves no momentum', () => {
+        mockSequentialRng(0.5);
+        const base = fight(5, 'normal', 1, 'qa-mercy-heart');
+        const armed: CombatEncounterState = {
+            ...base,
+            conviction: 0,
+            player: { ...base.player, knownCards: [...(base.player.knownCards ?? []), 'qa-mercy-heart'] },
+            dice: [{ id: DIE, color: 'heart', state: 'available', temporary: false, face: 'special' }],
+            equipmentDice: { dieChanges: [], special: { kind: 'conviction', amount: 2 }, specialSource: { itemId: 'w', itemName: 'W' } },
+        };
+        const r = playCombatCard(armed, { uid: 'under-test' }, true, DIE);
+        expect(mercyCheckOpen(r.state)).toBe(true);
+        expect(r.state.conviction).toBe(0);
+        expect(r.state.momentumV2 ?? null).toBeNull();
+        expect(r.events.some(e => e.kind === 'special-fired' || e.kind === 'momentum-advanced')).toBe(false);
+        // The same play that leaves the foe standing pays the BOON and starts the chain.
+        mockSequentialRng(0.5);
+        const standing = playCombatCard({ ...armed, enemy: { ...armed.enemy, health: 50 } }, { uid: 'under-test' }, true, DIE);
+        expect(standing.state.conviction).toBe(2);
+        expect(standing.state.momentumV2).toEqual({ color: 'heart', length: 1 });
+    });
+
+    it('the foe takes no turn and no tick fires on either side', () => {
+        const asked = withStatus(open(), 'debuff_creeping_doom', 2);
+        expect(resolveThreatPhase(asked).state).toBe(asked);
+        expect(processBetweenPhases(asked).state).toBe(asked);
+    });
+
+    it('a batch of plays stops at the check, and the foe does not move', () => {
+        mockSequentialRng(0.5);
+        const s = fight(2, 'normal', 1);
+        const withMore = { ...s, hand: [...s.hand, { uid: 'second', cardId: 'grey-strike' }] };
+        const r = resolveCombatPhase(withMore, [
+            { uid: 'under-test', cardId: 'grey-strike', useBottom: false },
+            { uid: 'second', cardId: 'grey-strike', useBottom: false },
+        ]);
+        expect(mercyCheckOpen(r.state)).toBe(true);
+        expect(r.state.hand.some(h => h.uid === 'second')).toBe(true);
+        expect(r.state.round).toBe(withMore.round);
+    });
+
+    it('answers once: an answered check does not answer again, and a kill has none to answer', () => {
+        const spared = chooseMercyCheck(open(), 'spare');
+        expect(chooseMercyCheck(spared, 'finish')).toBe(spared);
+        const killed = playCombatCard(fight(2, 'normal', 0), { uid: 'under-test' }, false).state;
+        expect(chooseMercyCheck(killed, 'spare')).toBe(killed);
+    });
+});
+
+describe('the check at the foe-turn kill sites in resolveThreatPhase', () => {
+    /** A fight at the foe's turn: the foe at `vitae` with a foe-turn source primed to kill it. */
+    function foeTurn(
+        vitae: number, chance: number, prime: (s: CombatEncounterState) => CombatEncounterState,
+    ): CombatEncounterState {
+        return prime({ ...fight(vitae, 'normal', chance), hand: [] });
+    }
+    const leech = (s: CombatEncounterState): CombatEncounterState => ({
+        ...s, program: { ...initProgramLedger(), leechTurns: 2, leechPotency: 5, leechCardId: 'leech' },
+    });
+    const weather = (s: CombatEncounterState): CombatEncounterState => ({
+        ...s, program: { ...initProgramLedger(), el: { ...initElementState(), infFoe: 5 } },
+    });
+    const mercyClock = (s: CombatEncounterState): CombatEncounterState => ({
+        ...s, program: { ...initProgramLedger(), mercy: { ...initProgramLedger().mercy, total: 5, clock: 1 } },
+    });
+
+    describe.each([
+        ['LEECH at the foe\'s turn start', leech],
+        ['the weather (INFERNO) at the foe\'s turn start', weather],
+        ['the MERCY clock bursting', mercyClock],
+    ] as const)('%s', (_name, prime) => {
+        it('asks at the blow with the foe at 1 VITAE and ends nothing', () => {
+            const asked = resolveThreatPhase(foeTurn(2, 1, prime), () => 0.5).state;
+            expect(mercyCheckOpen(asked)).toBe(true);
+            expect(asked.enemy.health).toBe(1);
+            expect(asked.finalOutcome).toBeNull();
+            expect(asked.phase).toBe('mercy-check');
+        });
+
+        it('kills when the check is not drawn', () => {
+            const killed = resolveThreatPhase(foeTurn(2, 0, prime), () => 0.5).state;
+            expect(killed.finalOutcome).toBe('victory');
+            expect(killed.mercyCheck).toBe('none');
+        });
+    });
+});
+
+describe('the draw', () => {
+    /** A fight just dealt its lethal blow, not yet ended. */
+    function atBlow(difficulty: EnemyDifficulty | undefined): CombatEncounterState {
+        const s = buildFixtureState({ clean: true });
+        return { ...s, enemy: { ...s.enemy, health: 0, difficulty } };
+    }
+
+    function seededRng(seed: number): () => number {
+        let state = seed % 2147483647 || 1;
+        return () => {
+            state = (state * 48271) % 2147483647;
+            return state / 2147483647;
+        };
+    }
+
+    it('asks about as often as the chance, over seeded blows', () => {
         const rng = seededRng(144);
         const runs = 4000;
         let asked = 0;
-        for (let i = 0; i < runs; i++) {
-            if (rollMercyCheck(won('normal'), rng).mercyCheck === 'offered') asked++;
-        }
+        for (let i = 0; i < runs; i++) if (offerMercyAtBlow(atBlow('normal'), rng)) asked++;
         expect(asked / runs).toBeGreaterThan(MERCY_CHECK_CHANCE - 0.02);
         expect(asked / runs).toBeLessThan(MERCY_CHECK_CHANCE + 0.02);
     });
 
     it('splits at the chance: just under asks, at the chance does not', () => {
-        expect(rollMercyCheck(won('normal'), () => MERCY_CHECK_CHANCE - 0.001).mercyCheck).toBe('offered');
-        expect(rollMercyCheck(won('normal'), () => MERCY_CHECK_CHANCE).mercyCheck).toBe('none');
+        expect(offerMercyAtBlow(atBlow('elite'), () => MERCY_CHECK_CHANCE - 0.001)?.mercyCheck).toBe('offered');
+        expect(offerMercyAtBlow(atBlow('elite'), () => MERCY_CHECK_CHANCE)).toBeNull();
     });
 
-    it.each(['simple', 'elite', 'boss', 'unique', undefined] as const)(
-        'a %s foe never asks and draws nothing',
-        (difficulty) => {
-            let draws = 0;
-            const rng = () => { draws++; return 0; };
-            expect(rollMercyCheck(won(difficulty), rng).mercyCheck).toBe('none');
-            expect(draws).toBe(0);
-        },
-    );
-
-    it('draws exactly once for a normal foe', () => {
+    it.each(['normal', 'elite'] as const)('a %s foe draws exactly once', (difficulty) => {
         let draws = 0;
-        rollMercyCheck(won('normal'), () => { draws++; return 0.5; });
+        offerMercyAtBlow(atBlow(difficulty), () => { draws++; return 0.5; });
         expect(draws).toBe(1);
+        expect(canAskMercy({ difficulty })).toBe(true);
     });
 
-    it('rolls once: a rolled fight is not rolled again', () => {
-        const offered = rollMercyCheck(won('normal'), () => 0);
-        expect(rollMercyCheck(offered, () => 1)).toBe(offered);
-        const none = rollMercyCheck(won('normal'), () => 1);
-        expect(rollMercyCheck(none, () => 0)).toBe(none);
+    it.each(['simple', 'boss', 'unique', undefined] as const)('a %s foe never asks and draws nothing', (difficulty) => {
+        let draws = 0;
+        expect(offerMercyAtBlow(atBlow(difficulty), () => { draws++; return 0; })).toBeNull();
+        expect(draws).toBe(0);
+        expect(canAskMercy({ difficulty })).toBe(false);
     });
 
-    it.each(['defeat', null] as const)('rolls nothing on a %s ending', (finalOutcome) => {
-        const fight = { ...won('normal'), finalOutcome };
-        expect(rollMercyCheck(fight, () => 0)).toBe(fight);
-    });
-});
-
-describe('chooseMercyCheck', () => {
-    it('marks the win spared or finished, and the outcome stays a victory', () => {
-        const offered = rollMercyCheck(won('normal'), () => 0);
-        const spared = chooseMercyCheck(offered, 'spare');
-        const finished = chooseMercyCheck(offered, 'finish');
-        expect(spared.mercyCheck).toBe('spared');
-        expect(finished.mercyCheck).toBe('finished');
-        expect(spared.finalOutcome).toBe('victory');
-        expect(finished.finalOutcome).toBe('victory');
-    });
-
-    it('answers only an offered check', () => {
-        const none = rollMercyCheck(won('normal'), () => 1);
-        expect(chooseMercyCheck(none, 'spare')).toBe(none);
-        const spared = chooseMercyCheck(rollMercyCheck(won('normal'), () => 0), 'spare');
-        expect(chooseMercyCheck(spared, 'finish')).toBe(spared);
-    });
-
-    it('heads the summary as spared only when spared', () => {
-        const offered = rollMercyCheck(won('normal'), () => 0);
-        expect(buildCombatSummary(chooseMercyCheck(offered, 'spare')).headline).toMatch(/spared/);
-        expect(buildCombatSummary(chooseMercyCheck(offered, 'finish')).headline).toMatch(/falls/);
+    it('a fight already ended or already asked draws nothing', () => {
+        let draws = 0;
+        const rng = () => { draws++; return 0; };
+        expect(offerMercyAtBlow({ ...atBlow('normal'), finalOutcome: 'victory' }, rng)).toBeNull();
+        expect(offerMercyAtBlow({ ...atBlow('normal'), mercyCheck: 'offered' }, rng)).toBeNull();
+        expect(draws).toBe(0);
     });
 });
 
 describe('mercyCheckSettled', () => {
-    it('holds a win until the check is rolled and answered', () => {
-        const unrolled = won('normal');
-        expect(mercyCheckSettled(unrolled)).toBe(false);
-        const offered = rollMercyCheck(unrolled, () => 0);
-        expect(mercyCheckSettled(offered)).toBe(false);
-        expect(mercyCheckSettled(chooseMercyCheck(offered, 'spare'))).toBe(true);
-        expect(mercyCheckSettled(chooseMercyCheck(offered, 'finish'))).toBe(true);
-        expect(mercyCheckSettled(rollMercyCheck(unrolled, () => 1))).toBe(true);
-    });
-
     it('holds nothing on any other end, and a fight still going is not settled', () => {
-        expect(mercyCheckSettled({ ...won('normal'), finalOutcome: 'defeat' })).toBe(true);
-        expect(mercyCheckSettled({ ...won('normal'), finalOutcome: null })).toBe(false);
+        const s = buildFixtureState({ clean: true });
+        expect(mercyCheckSettled({ ...s, finalOutcome: 'defeat' })).toBe(true);
+        expect(mercyCheckSettled({ ...s, finalOutcome: 'retreat' })).toBe(true);
+        expect(mercyCheckSettled({ ...s, finalOutcome: null })).toBe(false);
     });
 });

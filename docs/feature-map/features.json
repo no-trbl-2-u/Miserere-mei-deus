@@ -1654,6 +1654,12 @@
       "kind": "coupling",
       "from": "area:Combat",
       "to": "area:Enemy",
+      "file": "axiomancer-mechanics/src/Combat/combat.mercy-check.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Combat",
+      "to": "area:Enemy",
       "file": "axiomancer-mechanics/src/Combat/combat.pacing.sim.ts"
     },
     {
@@ -1781,6 +1787,12 @@
       "from": "area:Combat",
       "to": "area:Log",
       "file": "axiomancer-mechanics/src/Combat/combat.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Combat",
+      "to": "area:Log",
+      "file": "axiomancer-mechanics/src/Combat/combat.mercy-check.ts"
     },
     {
       "kind": "coupling",

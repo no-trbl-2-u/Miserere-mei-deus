@@ -510,6 +510,7 @@ export type CombatEncounterPhase =
     | 'phase-play'     // player plays cards
     | 'phase-resolve'  // effect kinds compared, enemy action fires, Clear/Overwhelmed
     | 'between-phases' // DoT ticks, durations tick, draw 5
+    | 'mercy-check'    // the lethal blow asked spare or finish; nothing moves until it is answered
     | 'complete';      // combat over, outcome determined
 
 // ---------------------------------------------------------------------------
@@ -769,11 +770,25 @@ export interface CombatEncounterState {
     log: CombatEvent[];                    // event stream for UI rendering
     finalOutcome: CombatOutcome | null;    // null until combat ends
     /**
-     * The mercy check on a won fight (`rollMercyCheck`): absent until it is
-     * rolled, `none` when it did not fire, `offered` while the prompt waits, then
-     * `spared` or `finished`. The outcome stays `victory` either way.
+     * The mercy check at the lethal blow (`combat.mercy-check.ts`). A blow that
+     * would take a normal or elite foe to 0 VITAE draws it: `offered` while the
+     * foe stands at 1 VITAE and the fight waits on spare or finish
+     * (`phase: 'mercy-check'`, `finalOutcome` still null), then `spared` or
+     * `finished`, both a `victory`. `none` on any other win; absent until the
+     * fight is won or asks.
      */
     mercyCheck?: 'none' | 'offered' | 'spared' | 'finished';
+    /**
+     * The chance the lethal blow asks in this fight; absent means
+     * `MERCY_CHECK_CHANCE`. A fight that writes nothing back sets 0, and the dev
+     * switch that forces the check sets 1.
+     */
+    mercyCheckChance?: number;
+    /**
+     * While the check is open: the VITAE the lethal blow left the foe at (0 or
+     * below), restored by FINISH so the kill reads exactly as the blow made it.
+     */
+    mercyBlowVitae?: number;
     /**
      * Permanent wild-die pool growth. Unlike `dice` (rolled
      * fresh each round), these persist for the REST of the encounter once

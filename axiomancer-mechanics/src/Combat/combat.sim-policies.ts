@@ -47,8 +47,8 @@ export interface CombatSimPolicy {
     /** Cast a signature when `conviction >= this`. */
     convictionThreshold: number;
     /**
-     * How the mercy check answers when a normal foe falls and it fires
-     * (`rollMercyCheck`).
+     * How the mercy check answers when a lethal blow on a normal or elite foe
+     * asks spare or finish (`offerMercyAtBlow`, answered by `chooseMercyCheck`).
      */
     mercyCheck: 'spare' | 'finish';
     /**

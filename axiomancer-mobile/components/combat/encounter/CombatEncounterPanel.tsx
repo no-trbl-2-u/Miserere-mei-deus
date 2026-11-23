@@ -31,7 +31,7 @@ import {
     startTurn, endTurn, discardCombatCard, playSignatureSkill, payTheToll,
     getFloatingDiceColors, unbrokenPayoutEvents,
     buildCombatSummary,
-    getLogger, enemySlugOf, firedDangerKeys, rollMercyCheck, chooseMercyCheck, mercyCheckSettled,
+    getLogger, enemySlugOf, firedDangerKeys, chooseMercyCheck, mercyCheckOpen, mercyCheckSettled,
     type CombatEncounterState, type CombatOutcome, type Character, type Enemy, type CombatEvent,
     type Equipment, type GameState, type PlayLogUiEventKind,
 } from '@mechanics';
@@ -237,10 +237,13 @@ export function applyHazardOutcome(
     // A won elite fight rolls its relic FIRST: on a drop the XP is withheld
     // and the card draft never opens; the shillings stand.
     const spared = outcome === 'victory' && finalState.mercyCheck === 'spared';
-    const relicOnly = outcome === 'victory' && settleEliteRelicAction(store, enemy, relics);
+    // A spared elite pays the Spare ending instead: no elite relic roll and no
+    // lane piece.
+    const killed = outcome === 'victory' && !spared;
+    const relicOnly = killed && settleEliteRelicAction(store, enemy, relics);
     // A beaten elite may also drop a lane piece: on top of the relic roll, never
     // the whole reward.
-    if (outcome === 'victory') settleEliteEquipmentAction(store, enemy);
+    if (killed) settleEliteEquipmentAction(store, enemy);
     const questsBefore = (store.getState() as unknown as GameState).quests;
     const playerBefore = (store.getState() as unknown as GameState).player;
     const report = store.getState().endCombat(mapHazardOutcomeToEndCombat(outcome), undefined, {
@@ -416,7 +419,12 @@ export function CombatEncounterPanel({
     // per encounter. Nothing engine-side reads `state.seed` after init.
     const initial = useMemo(
         () => {
-            const s = initializeCombatEncounter(bootstrapPlayer, enemy, deck, seed);
+            const opened = initializeCombatEncounter(bootstrapPlayer, enemy, deck, seed);
+            // The mercy check at the lethal blow: a fight that writes nothing back
+            // has nothing to spare for, and the dev switch makes every normal or
+            // elite foe ask. Otherwise the engine's own chance.
+            const forced = isDevToolsEnabled() && devSettingsStore.get().forceMercyCheck;
+            const s = !persistOutcome ? { ...opened, mercyCheckChance: 0 } : forced ? { ...opened, mercyCheckChance: 1 } : opened;
             const stamped = s.seed === undefined ? { ...s, seed: Math.floor(Math.random() * 0xffffffff) } : s;
             // AXM Log: thin mount marker only — the engine's `withLog` tap
             // already mirrors every CombatEvent this encounter produces.
@@ -550,8 +558,10 @@ export function CombatEncounterPanel({
     });
 
     // ── engine wiring ──
+    // While the mercy check is open the prompt is the only input: nothing else
+    // reaches the engine (which refuses it too) until it is answered.
     const apply = useCallback((fn: (s: CombatEncounterState) => CombatEncounterState) => {
-        setState((prev) => { const s = prev ?? initial; return fn(s); });
+        setState((prev) => { const s = prev ?? initial; return mercyCheckOpen(s) ? s : fn(s); });
     }, [initial]);
 
     // The play log's screen events (phase BE2d): read through refs so the
@@ -569,6 +579,7 @@ export function CombatEncounterPanel({
     const onEnter = useCallback(() => apply((s) => rollEncounterDice(s).state), [apply]);
     const onStage = useCallback((uid: string) => {
         if (resolvingRef.current) return; // no staging mid-resolution
+        if (mercyCheckOpen(screenRef.current.live)) return; // the prompt is the only input
         if (!screenRef.current.stagedUids.includes(uid)) recordScreen('ui-staged', uid);
         setStagedUids((prev) => (prev.includes(uid) ? prev : [...prev, uid]));
     }, [recordScreen]);
@@ -583,6 +594,7 @@ export function CombatEncounterPanel({
     // base action (top action, no die). One commit; the card leaves staging.
     const onApply = useCallback((uid: string, dieId: string | null, power: boolean, x?: number) => {
         if (resolvingRef.current) return; // a drag must not land mid-resolution
+        if (mercyCheckOpen(screenRef.current.live)) return; // the prompt is the only input
         apply((s) => {
             // Every dropped die (fresh tray face, Reserve, or GHOST) is its
             // OWN power source and is forwarded as the explicit `dieId`: the
@@ -619,6 +631,7 @@ export function CombatEncounterPanel({
         // double-tap) finds the lock already held and is dropped, so exactly one
         // threat phase resolves per intent.
         if (resolvingRef.current) return;
+        if (mercyCheckOpen(screenRef.current.live)) return; // the prompt is the only input
         resolvingRef.current = true;
         setResolving(true);
         apply((s) => {
@@ -659,16 +672,12 @@ export function CombatEncounterPanel({
         if (resolveTimer.current) clearTimeout(resolveTimer.current);
         resolveTimer.current = setTimeout(endResolving, RESOLVE_LOCK_MS);
     }, [apply, endResolving]);
-    const onMercyCheck = useCallback((choice: 'spare' | 'finish') => apply((s) => chooseMercyCheck(s, choice)), [apply]);
-
-    // The mercy check rolls as the foe falls, once, before anything is paid. A
-    // fight that writes nothing back (`persistOutcome` off) has nothing to spare
-    // for, and the dev switch makes every normal foe ask.
-    useEffect(() => {
-        if (live.finalOutcome !== 'victory' || live.mercyCheck) return;
-        const forced = isDevToolsEnabled() && devSettingsStore.get().forceMercyCheck;
-        setState(rollMercyCheck(live, !persistOutcome ? () => 1 : forced ? () => 0 : undefined));
-    }, [live, persistOutcome]);
+    // The prompt's answer: the engine asked at the lethal blow (the foe at 1
+    // VITAE, nothing ended); spare or finish ends the fight, and only then does
+    // anything pay (`mercyCheckSettled`).
+    const onMercyCheck = useCallback((choice: 'spare' | 'finish') => {
+        setState((prev) => chooseMercyCheck(prev ?? initial, choice));
+    }, [initial]);
     // Stable resolution-feedback payload — recomputed only when a new resolve bumps
     // the seq (captures the events stashed in fxRef just before).
     const fx = useMemo<CombatFx>(() => ({ seq: fxSeq, events: fxRef.current }), [fxSeq]);
@@ -780,7 +789,7 @@ export function CombatEncounterPanel({
     }
 
     const summary = live.finalOutcome ? buildCombatSummary(live) : null;
-    const mercyCheckOpen = live.mercyCheck === 'offered';
+    const mercyPromptOpen = mercyCheckOpen(live);
     const spareLines = spare ? spareSummaryLines(spare.reward, spare.journalTitle) : undefined;
     const mercyLine = mercyLineFor(enemy.mercyLines, live.mercyCheck);
     // The foe fell (a win, the mercy check settled, not spared): the victory screen's.
@@ -898,8 +907,8 @@ export function CombatEncounterPanel({
                 </View>
             )}
 
-            {/* the mercy check, as a normal foe falls. No reward shows here. */}
-            {mercyCheckOpen && (
+            {/* the mercy check, at the blow that would fell a normal or elite foe. No reward shows here. */}
+            {mercyPromptOpen && (
                 <View style={styles.backdrop} testID="combat-mercy">
                     <View style={[styles.modal, { borderColor: HUE.tickPurple }]}>
                         <Text style={styles.modalTitle}>{MERCY_CHECK_PROMPT.title}</Text>

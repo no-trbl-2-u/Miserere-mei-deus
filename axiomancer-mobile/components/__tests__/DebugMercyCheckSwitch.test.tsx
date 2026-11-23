@@ -29,7 +29,7 @@ describe('DebugMercyCheckSwitch', () => {
         getByText(/the normal chance/);
         fireEvent.press(getByTestId('debug-mercy-check-toggle'));
         expect(store.get().forceMercyCheck).toBe(true);
-        getByText(/every normal foe asks/);
+        getByText(/every normal or elite foe asks/);
     });
 
     it('renders nothing outside dev builds', () => {

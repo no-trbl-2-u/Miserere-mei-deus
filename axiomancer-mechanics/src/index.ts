@@ -67,8 +67,8 @@ export type {
 } from './Combat';
 
 // ─── Hazard-pattern combat ────────────────────────────────────────────────────
-// Card-and-dice combat: emptying the foe's VITAE (`isDefeated`) is the only win;
-// the mercy check decides what the win pays.
+// Card-and-dice combat: emptying the foe's VITAE (`isDefeated`) wins, and the
+// lethal blow on a normal or elite foe may ask spare or finish instead.
 export {
     initializeCombatEncounter, rollEncounterDice, playCombatCard,
     resolveThreatPhase, processBetweenPhases,
@@ -249,7 +249,8 @@ export type {
 
 // What a won fight pays.
 export {
-    MERCY_TUNING, MERCY_CHECK_CHANCE, fightWage, spareWage, rollMercyCheck, chooseMercyCheck, mercyCheckSettled,
+    MERCY_TUNING, MERCY_CHECK_CHANCE, fightWage, spareWage, canAskMercy, mercyCheckOpen, offerMercyAtBlow,
+    chooseMercyCheck, mercyCheckSettled,
 } from './Combat/combat.mercy-check';
 export {
     rollSpareReward, applySpareReward, transformCard, transformResultPool,

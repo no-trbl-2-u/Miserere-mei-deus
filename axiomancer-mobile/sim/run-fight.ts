@@ -25,7 +25,6 @@ import {
     isEliteEnemy,
     resolveThreatPhase,
     rollEncounterDice,
-    rollMercyCheck,
     upgradeablePlayPhase,
     type CombatEncounterState,
     type CombatOutcome,
@@ -120,18 +119,17 @@ export function fightContext(store: AppStore, enemy: Enemy, fleeAllowed: boolean
 
 /** Play the live fight to its outcome on the engine's encounter functions. */
 function playToOutcome(store: AppStore, enemy: Enemy, policy: RunPolicy, ctx: RunFightContext): CombatEncounterState {
-    const witness = policy.fightPolicy(ctx);
-    return answerMercyCheck(playToVictory(store, enemy, witness), witness);
+    return playToVictory(store, enemy, policy.fightPolicy(ctx));
 }
 
 /**
- * The panel's mercy check, on a fight just won: rolled from the combat rng once
- * the foe has fallen, answered as the policy's `mercyCheck` says. Any other
- * ending comes back as it is. The engine's turn loop draws nothing for it, so a
- * seeded stream reads as before.
+ * The panel's mercy check: the engine asks at the lethal blow on a normal or
+ * elite foe (one draw from the combat rng), and the sim answers it as the
+ * witness's `mercyCheck` says, as the player answers the prompt. Anything but
+ * an open check comes back as it is.
  */
 export function answerMercyCheck(live: CombatEncounterState, witness: CombatSimPolicy): CombatEncounterState {
-    const answered = chooseMercyCheck(rollMercyCheck(live), witness.mercyCheck);
+    const answered = chooseMercyCheck(live, witness.mercyCheck);
     if (answered !== live) fightRecorder.observe(answered);
     return answered;
 }
@@ -153,10 +151,12 @@ function playToVictory(store: AppStore, enemy: Enemy, witness: CombatSimPolicy):
         }
         live = upgradeablePlayPhase(live, witness, rng, {}, {}).state;
         fightRecorder.observe(live);
+        live = answerMercyCheck(live, witness);
         if (live.finalOutcome) continue;
         if (live.phase === 'phase-play') {
             live = resolveThreatPhase(live).state;
             fightRecorder.observe(live);
+            live = answerMercyCheck(live, witness);
         }
     }
     if (live.finalOutcome) return live;

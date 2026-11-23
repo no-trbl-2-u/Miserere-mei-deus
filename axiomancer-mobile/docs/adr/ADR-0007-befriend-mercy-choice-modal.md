@@ -38,7 +38,9 @@ When mechanics exposes them, mobile should make these consequences legible:
 
 ## The mercy check shares the modal (spec 144, 2026-11-03)
 
-The mercy check (`rollMercyCheck`) uses this modal too, with Spare and Finish.
+The mercy check (asked by the engine at the lethal blow since spec 187,
+`offerMercyAtBlow`, answered by `chooseMercyCheck`) uses this modal too, with
+Spare and Finish.
 It deliberately breaks "surface consequence language" above: T's ruling is that
 the player does not see the reward before choosing, so the prompt names no
 reward, no consequence category and no hint of one. The result shows only on the

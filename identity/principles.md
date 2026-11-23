@@ -18,8 +18,10 @@ Format: `- **P# · Short title.** One or two sentences, ≤ 40 words.`
 - **P1 · The title.** Product title is "Miserere Mei, Deus" in
   player/doc-facing prose (the `axiomancer-*` workspaces, repo and scheme
   keep the former title as internal identifiers); VITAE copy canon.
-- **P2 · VITAE is the one bar.** Emptying the foe's VITAE is the only way to
-  win; a blind spare-or-finish check on some normal foes decides what the win
-  pays. *(D47, D63, spec 144)*
+- **P2 · VITAE is the one bar.** Emptying the foe's VITAE wins. On 15% of the
+  blows that would kill a normal or elite foe it stands at 1 VITAE instead and
+  asks spare or finish: finish is the kill, spare is a win that leaves it at 1
+  VITAE. The check gives neither side a turn or an effect; a boss never asks.
+  *(D47, D63, spec 144, D?mercy-at-the-blow)*
 - **P3 · The cut terms stay cut.** RELENT and CONDEMN are cut (R7 deletes
   their engine code); never reintroduce them or Pressure Tracks.

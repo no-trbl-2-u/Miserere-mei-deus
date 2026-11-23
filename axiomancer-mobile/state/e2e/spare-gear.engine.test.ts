@@ -11,6 +11,7 @@
 import { afterEach, describe, expect, it, jest } from '@jest/globals';
 import {
     ENEMY_REGISTRY,
+    FIXTURE_ELITE_RELICS,
     FIXTURE_QUEST,
     emptyQuestLog,
     equipmentDropPool,
@@ -138,5 +139,36 @@ describe("a Spare's roll goes around what a quest paid in that fight", () => {
         const { store } = questPaying(paid, relicLibrary.slice(1));
         expect(spare(store, [RELIC_DRAW]).kind).toBe('shillings');
         expect(count(store.getState() as unknown as GameState, paid.id)).toBe(1);
+    });
+});
+
+describe('a spared elite pays the Spare ending instead of the elite drops', () => {
+    const ELITE = { ...ENEMY_REGISTRY['death-beholder'], difficulty: 'elite' as const, name: 'Fixture Elite' };
+
+    function fightEnds(mercyCheck: 'spared' | 'finished') {
+        const store = createAppStore({ adapter: createMemoryAdapter() });
+        createAppActions(store).startCombat(ELITE);
+        const player = (store.getState() as unknown as GameState).player;
+        const inventoryBefore = player.inventory.length;
+        const fought = initializeCombatEncounter(player, ELITE, ['grey-strike'], 7);
+        const finalState: CombatEncounterState = { ...fought, mercyCheck };
+        // Every roll lands: the elite relic, the lane piece and the spare table all pay.
+        jest.spyOn(Math, 'random').mockReturnValue(0);
+        jest.spyOn(getRng(), 'random').mockReturnValue(0);
+        applyHazardOutcome(store, 'victory' as CombatOutcome, finalState, ELITE, FIXTURE_ELITE_RELICS);
+        const queued = store.getState().itemReward.queue.map(e => e.item.id);
+        const eliteRelicIds = FIXTURE_ELITE_RELICS.map(r => r.id);
+        return { store, queued, eliteRelicIds, inventoryBefore };
+    }
+
+    it('spared: no elite relic is queued and the Spare ending is paid', () => {
+        const { store, queued, eliteRelicIds } = fightEnds('spared');
+        expect(queued.some(id => eliteRelicIds.includes(id))).toBe(false);
+        expect(store.getState().combatReward.spare).toBeDefined();
+    });
+
+    it('finished: the elite relic roll still pays, as any elite kill', () => {
+        const { queued, eliteRelicIds } = fightEnds('finished');
+        expect(queued.some(id => eliteRelicIds.includes(id))).toBe(true);
     });
 });
