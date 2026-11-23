@@ -1935,6 +1935,8 @@ export function processBetweenPhases(
         const to = state.threatPhases[phasesIndex]?.enemyMove;
         if (from && to && to.phase > from.phase) {
             events.push({ kind: 'enemy-phase-entered', enemyId: enemy.id, phase: to.phase, danger: to.danger ? to.name : null });
+            const entry = enemy.phases?.[to.phase]?.entry;
+            if (entry) events.push({ kind: 'stage-entered', enemyId: enemy.id, name: entry.name, text: entry.text });
         }
     }
 

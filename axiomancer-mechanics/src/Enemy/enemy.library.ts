@@ -1165,6 +1165,8 @@ export const SaintBeneath = createEnemy({
     phases: [
         { moves: [COMMUNION, THE_FAITHFUL_GATHER, HEAR_ME] },
         {
+            // P-01b, a random draw from the open ballot narrator-chapter1-5 (T, 2026-11-23); T's verdict replaces it.
+            entry: { name: 'THE SEA REMEMBERS HIM', text: 'The tide comes up through the floor at his call, as it came for everything he was given.' },
             danger: {
                 name: 'Swell', kind: 'danger',
                 text: '2 BARNACLE, then TANGLE 1 per card in your hand.',
@@ -1173,6 +1175,8 @@ export const SaintBeneath = createEnemy({
             moves: [COMMUNION, THE_FAITHFUL_GATHER, HEAR_ME],
         },
         {
+            // P-02a, a random draw from the open ballot narrator-chapter1-5 (T, 2026-11-23); T's verdict replaces it.
+            entry: { name: 'THE ROWS STIR', text: 'The drowned he kept laid out in rows turn their faces toward you.' },
             danger: {
                 name: 'Tithe of the Drowned', kind: 'danger',
                 text: '2 BARNACLE, then 3 damage per card in your hand.',
@@ -1181,6 +1185,8 @@ export const SaintBeneath = createEnemy({
             moves: [COMMUNION, THE_FAITHFUL_GATHER, HEAR_ME],
         },
         {
+            // P-03b, a random draw from the open ballot narrator-chapter1-5 (T, 2026-11-23); T's verdict replaces it.
+            entry: { name: 'WHAT HE BOUGHT', text: 'He bought the light to keep it safe. He will not let it go, and he takes you down with it.' },
             danger: {
                 name: 'Pull Under', kind: 'danger',
                 text: '16 damage. If you are under half VITAE: 24 damage, and it MENDs 12.',
