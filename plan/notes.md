@@ -569,3 +569,9 @@ Outside scope, unfixed: the test title "no live relic is elite-only yet" in `eli
 `takeTravelAction` on the crossing out of `STARTING_MAP` only sets the transient `travel.chapterComplete`; it records nothing and does not move the world, toast or save. `TravelGate` replaces `/travel` with `/chapter-complete` once; `CONTINUE` (`actions.continueChapter`) records the node, fires `recordRunClosed(..., 'chapter-clear')`, moves the world into the Charcoal Wood and saves, so a reload on the screen records nothing twice (#1702). A save reopened on the screen stands on the far bank with the crossing still to take. The cave shortcut and later crossings open no screen. The sim's run driver and `skip-event` call `continueChapter()` after the held crossing, so the sim still ends at `chapter-clear`.
 
 Defaults (heads down): CONTINUE walks on (T, 2026-11-22). The new smoke route's baseline PNG is CI's own capture (the renderer of record). The screenshot is 390 px wide (the smoke size); rows cap at 340 px, so 375 does not clip.
+
+The first five fights of a fresh run now take a median of 26 foe turns over wanderer seeds 1 to 100 (p25/p75 24/28), down from 32 (30/35). The run driver played the runs; the harness was a throwaway, not committed.
+
+Defaults taken (heads down, T accepted both calls at the plot's merge): early multiplier 1.5, last early level 3. `ENCOUNTER_ENEMY_HP_MULTIPLIER` is kept as the base value and `encounterEnemyHpMultiplier(level)` added beside it in `axiomancer-mobile/state/actions.ts`. `sim/run-driver.test.ts`'s boss-damage test raised its boss to level 50: the lighter opening lets the merciful seed-1 run clear a level-30 boss.
+
+Left as they are: `docs/reports/chapter1-enemies.md` (a generated report, re-recorded by its own run) and `lane-pacing.cli.ts`'s level 1 and 3 rows, which still play at the base x2 unless `--hp=1.5` is passed (the spec keeps the CLIs on the base value).
