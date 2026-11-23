@@ -43,8 +43,7 @@ export async function enterLiveFight(page, baseUrl, options = {}) {
     await page.waitForURL((url) => url.pathname.endsWith('/combat-encounter'), { timeout })
     await page.getByTestId('combat-reveal').waitFor({ state: 'visible', timeout })
     if (!intoBoard) return
-    await page.getByTestId('combat-enter').click({ timeout, force: true })
-    await page.getByTestId('combat-board').waitFor({ state: 'visible', timeout })
+    await enterBoard(page, timeout)
     // The tray's tap-to-skip layer is mounted only while a die is tumbling;
     // attached then detached is the dice at rest (a motion-reduced run may
     // never mount it, so the attach wait is allowed to miss).
@@ -56,4 +55,38 @@ export async function enterLiveFight(page, baseUrl, options = {}) {
     // fade is a few levels off per pixel and differs load to load.
     await page.waitForFunction(() => document.getAnimations().every((a) => a.playState === 'finished' || a.effect?.getComputedTiming().iterations === Infinity), null, { timeout })
     await waitForReady(page)
+}
+
+/**
+ * Waits for the pre-fight reveal's entrance to finish: ENTER COMBAT opaque all
+ * the way up its ancestors and no finite animation running under the reveal,
+ * on two polls in a row. A press during the entrance is dropped by the app.
+ * @param {import('playwright').Page} page
+ * @param {number} [timeout]
+ */
+export async function revealSettled(page, timeout = 15000) {
+    await page.getByTestId('combat-enter').waitFor({ state: 'visible', timeout })
+    await page.waitForFunction(() => {
+        const btn = document.querySelector('[data-testid="combat-enter"]')
+        const reveal = document.querySelector('[data-testid="combat-reveal"]')
+        if (!btn || !reveal) return false
+        for (let n = btn; n; n = n.parentElement) if (getComputedStyle(n).opacity !== '1') return false
+        const idle = reveal.getAnimations({ subtree: true }).every((a) =>
+            a.playState !== 'running' || a.effect?.getComputedTiming().endTime === Infinity)
+        const stable = idle && globalThis.__axmRevealIdle === true
+        globalThis.__axmRevealIdle = idle
+        return stable
+    }, null, { timeout, polling: 100 })
+}
+
+/**
+ * From the reveal to the live board: waits for the reveal to settle, presses
+ * ENTER COMBAT and waits for `combat-board`. Throws when the board never shows.
+ * @param {import('playwright').Page} page
+ * @param {number} [timeout]
+ */
+export async function enterBoard(page, timeout = 15000) {
+    await revealSettled(page, timeout)
+    await page.getByTestId('combat-enter').click({ timeout })
+    await page.getByTestId('combat-board').waitFor({ state: 'visible', timeout })
 }

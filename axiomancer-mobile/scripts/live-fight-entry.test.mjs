@@ -43,10 +43,13 @@ test('with intoBoard on it presses ENTER COMBAT, waits for the board, the dice l
     await enterLiveFight(recordingPage(log), 'http://x', { seed: 16, intoBoard: true })
     const at = (entry) => log.indexOf(entry)
     assert.ok(at('waitFor combat-reveal visible') >= 0)
-    assert.ok(at('click combat-enter') > at('waitFor combat-reveal visible'))
+    // The reveal settles (ENTER COMBAT visible, then its entrance done) before the press.
+    assert.ok(at('waitFor combat-enter visible') > at('waitFor combat-reveal visible'))
+    assert.ok(log.indexOf('waitForFunction') > at('waitFor combat-enter visible'))
+    assert.ok(at('click combat-enter') > log.indexOf('waitForFunction'))
     assert.ok(at('waitFor combat-board visible') > at('click combat-enter'))
     assert.ok(at('waitFor combat-dice-skip detached') > at('waitFor combat-board visible'))
     // The animation settle and the ready wait come after the dice layer is gone.
-    assert.ok(log.indexOf('waitForFunction') > at('waitFor combat-dice-skip detached'))
+    assert.ok(log.lastIndexOf('waitForFunction') > at('waitFor combat-dice-skip detached'))
     assert.equal(log.at(-1), 'waitForFunction')
 })
