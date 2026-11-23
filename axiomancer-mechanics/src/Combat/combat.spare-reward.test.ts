@@ -8,7 +8,7 @@
 
 import { describe, it, expect } from 'vitest';
 
-import { rollSpareReward, spareRelicPool, transformResultPool, type SpareReward, type SpareResultKind } from './combat.spare-reward';
+import { questRewardRelicIds, rollSpareReward, spareRelicPool, transformResultPool, type SpareReward, type SpareResultKind } from './combat.spare-reward';
 import { MERCY_TUNING, fightWage, spareWage, spareTableFor } from './combat.mercy-check';
 import { createNewGameState, gameReducer } from '../Game/game.reducer';
 import { getCardById } from '../Cards/cards.library';
@@ -16,6 +16,8 @@ import { GREY_LANE } from '../Cards/card.lanes';
 import { equipmentLibrary, EQUIPMENT_LANE } from '../Items/equipment.library';
 import { relicLibrary } from '../Items/relic.library';
 import type { Character } from '../Character/types';
+import type { MapDefinition } from '../World/types';
+import type { Questline } from '../World/questline';
 
 function seededRng(seed: number): () => number {
     let state = seed % 2147483647 || 1;
@@ -201,5 +203,24 @@ describe('the spare relic pool', () => {
     it('leaves out a relic the player carries', () => {
         const ids = spareRelicPool(new Set(['relic-carapace-belt'])).map(r => r.id);
         expect(ids).not.toContain('relic-carapace-belt');
+    });
+});
+
+describe('the quest-paid relics', () => {
+    const [byLine, byMap, unpaid] = relicLibrary;
+
+    it('reads a questline step reward and a map quest reward, and nothing else', () => {
+        const questlines = [{ id: 'q', mapName: 'breakwater', steps: [{ step: 1, rewards: [byLine] }] }] as unknown as Questline[];
+        const maps = [{ name: 'm', quests: [{ name: 'mq', reward: byMap }] }] as unknown as MapDefinition[];
+        const ids = questRewardRelicIds(questlines, maps);
+        expect([...ids].sort()).toEqual([byLine!.id, byMap!.id].sort());
+        expect(ids.has(unpaid!.id)).toBe(false);
+    });
+
+    it('a map quest reward alone keeps its relic out of the pool', () => {
+        const maps = [{ name: 'm', quests: [{ name: 'mq', reward: byMap }] }] as unknown as MapDefinition[];
+        const pool = spareRelicPool(new Set(), relicLibrary, questRewardRelicIds([], maps)).map(r => r.id);
+        expect(pool).not.toContain(byMap!.id);
+        expect(pool).toContain(byLine!.id);
     });
 });

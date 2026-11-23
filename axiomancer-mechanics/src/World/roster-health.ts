@@ -361,7 +361,7 @@ export function eliteDropIds(src: RosterSources): string[] {
 export function orphanItems(src: RosterSources): RosterFinding[] {
     const granted = new Set<string>([
         ...src.startingItemIds, ...src.cacheItemIds, ...itemRefs(src).map(r => r.id), ...eliteDropIds(src),
-        ...spareRelicPool(new Set(), src.relics, questRewardRelicIds(src.questlines, src.maps)).map(r => r.id),
+        ...spareRelicPool(new Set(), src.relics, questRewardRelicIds(src.questlines ?? [], src.maps)).map(r => r.id),
     ]);
     const out: RosterFinding[] = [];
     for (const c of src.consumables) {
