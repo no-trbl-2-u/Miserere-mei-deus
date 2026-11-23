@@ -63,7 +63,6 @@
 - **A6** Event lines. Every approved hazard, rest, dream, travel, village and loot cache action line is in `content.ts`; each event screen shows its longest line unclipped.
 - **A7** Screen copy. Every approved defeat, withdraw, death return, game over, quest screen and village counter line, and each approved reward eyebrow, is in its copy file; each screen shows it unclipped.
 - **A9** No approved line is left as a placeholder, and no unapproved draft is in the game: a test reads the ledger's verdicts and the sources and fails on either.
-- **A20** Saint Beneath phase lines. When the boss crosses 75%, 50% and 25% VITAE and its DANGER phase opens, the fight shows a stage title and line in the float and the log (`‡ TITLE ‡ line`), once per phase. The lines are the random draws P-01b, P-02a and P-03b from the open ballot `plan/ballots/narrator-chapter1-5` (ledger, "In the game meanwhile", T 2026-11-23) until T's verdicts replace them.
 
 ## Open questions
 
@@ -75,7 +74,7 @@ None open. Settled by T on 2026-11-12: the word caps stay; the six `DRAFT (Claud
 
 ## Chunks
 
-Measure: 7 open · 13 closed · next A21
+Measure: 6 open · 14 closed · next A21
 
 - [ ] **177.3** T reviews the Chapter 1 drafts (attended) · S · closes A3 · needs — · alias: NV1c
   - T approved the 22 scenes, the quest names and lines, the four refusals and the two gate lines on 2026-11-12; they are in `plan/ballots/narrator-chapter1.md` and need no further review. What is left for this chunk is every other Chapter 1 surface, none of it drafted from the new story yet: the map blurbs, the arrival lines, the hazard, rest, dream, travel, village and loot lines, the screen copy and the enemy descriptions. They are drafted with `/narrate` from `axiomancer-mechanics/content/story/story-overview.md` once 177.11 has amended the voice rules, added to that ledger, and reviewed by T there (a review page is redrawn only if T asks for one); the session writes each verdict under `## Verdicts`.
@@ -94,8 +93,3 @@ Measure: 7 open · 13 closed · next A21
   - Mobile: `combat-summary.copy.ts`, `reveal.copy.ts`, `death-return.copy.ts`, `game-over.copy.ts`, `quest.copy.ts`, `village.copy.ts` (the three counter lines only), `relic-source.copy.ts`.
   - `VITAE` keeps its spelling in the defeat line. The four spoken lines keep their placeholders.
   - Measure: the verdicts test passes for these surfaces; one screenshot per screen is in the PR.
-- [ ] **177.19** Saint Beneath phase lines in the fight · S · closes A20 · needs — · alias: NV1s
-  - Mechanics: `EnemyPhase` (`axiomancer-mechanics/src/Enemy/types.ts`) gains an optional `entry?: { name: string; text: string }`. Where `combat.engine.ts` pushes `enemy-phase-entered` (a foe with HP phases moving to a higher phase), it also pushes the existing `stage-entered` event with that phase's `entry` when it has one. No new event kind, no change to how HP-phase foes move or to the `stages` path they skip.
-  - Content: the Saint Beneath's phases 2 to 4 in `enemy.library.ts` take P-01b (THE SEA REMEMBERS HIM), P-02a (THE ROWS STIR) and P-03b (WHAT HE BOUGHT), word for word from `plan/ballots/narrator-chapter1-5.ballot.html`, each with a comment naming the slot and the open ballot.
-  - Mobile: none expected. The presenter already renders `stage-entered` as the float and log line (`combat-encounter.engine.ts`); check the boss pane shows it.
-  - Measure: an engine test drives the Saint Beneath under 75%, 50% and 25% and sees one `stage-entered` per phase with the drawn lines, in order; a phase with no `entry` emits none; the mechanics and mobile suites pass; a phone-width screenshot of the boss float with the longest line is in the PR.

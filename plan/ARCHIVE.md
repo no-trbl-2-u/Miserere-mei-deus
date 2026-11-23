@@ -766,3 +766,4 @@
 - 2026-11-22 · 182 · spec complete: Chapter 1 ends on a chapter complete screen with the run's stats · axiomancer-mobile/state/e2e/chapter-complete-crossing.engine.test.ts · deleted in (this commit)
 - 2026-11-22 · 186.1 (alias: EP1a) · Foes at levels 1 to 3 take x1.5 VITAE, not x2 · 89912f98..f70b6f34 (#1696)
 - 2026-11-22 · 186 · spec complete: The opening fights end sooner: lower foe VITAE at levels 1 to 3 · axiomancer-mobile/lib/__tests__/fightRecorder.test.ts, axiomancer-mechanics/src/Combat/e2e/combat-pacing.sim.test.ts · deleted in (this commit)
+- 2026-11-23 · 177.19 (alias: NV1s) · The Saint Beneath speaks a line at each phase · d3f7d172..5aed2452 (#1710)
