@@ -136,6 +136,37 @@ describe('the boss lines (A4)', () => {
     });
 });
 
+describe('the phase lines are spoken (A20)', () => {
+    const LINES = [
+        [0.75, 'THE SEA REMEMBERS HIM', 'The tide comes up through the floor at his call, as it came for everything he was given.'],
+        [0.5, 'THE ROWS STIR', 'The drowned he kept laid out in rows turn their faces toward you.'],
+        [0.25, 'WHAT HE BOUGHT', 'He bought the light to keep it safe. He will not let it go, and he takes you down with it.'],
+    ] as const;
+    const stages = (events: CombatEvent[]): CombatEvent[] => events.filter(e => e.kind === 'stage-entered');
+
+    it('one stage-entered per phase, with the drawn lines, in order', () => {
+        let s = at('Communion');
+        for (const [line, name, text] of LINES) {
+            const crossed = foeTurn({ ...s, enemy: { ...s.enemy, health: Math.floor(s.enemy.maxHealth * line) } });
+            expect(stages(crossed.events)).toEqual([{ kind: 'stage-entered', enemyId: AUTHORED.id, name, text }]);
+            const kinds = crossed.events.map(e => e.kind);
+            expect(kinds.indexOf('stage-entered')).toBe(kinds.indexOf('enemy-phase-entered') + 1);
+            s = crossed.next;
+        }
+    });
+
+    it('a phase with no entry emits none', () => {
+        const mute: Enemy = {
+            ...AUTHORED,
+            phases: AUTHORED.phases!.map(({ entry: _entry, ...rest }) => rest),
+        };
+        const s = at('Communion', 0, mute);
+        const crossed = foeTurn({ ...s, enemy: { ...s.enemy, health: Math.floor(s.enemy.maxHealth * 0.75) } });
+        expect(crossed.events.some(e => e.kind === 'enemy-phase-entered')).toBe(true);
+        expect(stages(crossed.events)).toEqual([]);
+    });
+});
+
 describe('Communion counts the Curses you carry', () => {
     it('2 damage per Curse in your hand, draw pile and discard', () => {
         const s = at('Communion');

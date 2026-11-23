@@ -383,4 +383,6 @@ export type EnemyMoveRiderKind = EnemyMoveRider['kind'];
 export interface EnemyPhase {
     moves: EnemyMove[];
     danger?: EnemyMove;
+    /** A stage title and line spoken when the foe enters this phase (a `stage-entered` event). */
+    entry?: { name: string; text: string };
 }
