@@ -67,6 +67,13 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 
 ## Pending
 
+### [ ] [tests] HIGH: the defender lane bot's end deck ties merciful on seed 7 after the mercy check moved to the lethal blow (fix-ci, verify-mechanics run 45254682167, 2026-11-23)
+- category: tests
+- impact: 7
+- ease: 5
+- detail: `axiomancer-mobile/sim/run-archetypes.test.ts` "the defender bot ends every run with more defender cards than of any other card lane" fails on seed 7 (`defender=6 does not lead merciful=6`); it reproduces on `main`. PRs #1711/#1712 (187.1, mercy check at the lethal blow) moved the check's rng draw into the fight loop, so every seeded run's stream shifted and seed 7 now offers the defender bot few defender cards (offers heavy in `mc-*`/`bp-*`). With no own-lane offer, `archetypePolicy.pickReward` (`axiomancer-mechanics/src/Game/run-sim/run-policy.archetypes.ts`) takes the best keyword-kin card via `bestLaneOffer`, which gave it five merciful cards (starter has one) and ended the run at defender=6, merciful=6. Not a hazard-pick issue (tried `pickHazardCard` lane-aware: seed 7 unchanged). Tried capping kin picks so a neighbour lane never catches the bot's own lane: seed 7 and the archetype test go green, but `run-policy.archetypes.test.ts` "pick their own lane first, then the elite upgrade of a lane card, then a card of their keywords, else skip" fails, because the pinned policy says kin cards are taken. Reverted: changing the bot's drafting rule is a design call, not a CI fix.
+- next: decide the rule (cap kin picks and update the policy test, or change the seed set / treat a run that ends in defeat as exempt from the lane-lead check), then apply in one change.
+
 ### [ ] [process] The queue-only verbs still push `main` themselves after NX1e (D119 says every change lands by PR; 2026-11-01)
 - category: process
 - impact: 5

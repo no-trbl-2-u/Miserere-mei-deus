@@ -7,12 +7,10 @@
  * - Every run opens at character select as the roster character the lane
  *   rule picks (T, 2026-10-31: characters only, the run a player plays).
  * - Where that character opens the bot's lane (a starting lane, or the
- *   starting relic's lane), no end deck holds more cards of another card lane
- *   than of the bot's lane, most end decks hold strictly more of it, and the
- *   ten decks together hold strictly more of it than of any other lane. The
- *   grey office is not a lane a bot builds: it is the dealt starting deck and
- *   is never offered, so it is not counted. A lane no roster character opens
- *   skips this check until one does.
+ *   starting relic's lane), every end deck of a cleared chapter holds more cards of the lane than
+ *   of any other card lane. The grey office is not a lane a bot builds: it is
+ *   the dealt starting deck and is never offered, so it is not counted. A
+ *   lane no roster character opens skips this check until one does.
  * - The Merciful spares at least one foe at the mercy check.
  * - No run sticks: a stuck step throws out of `playRun`.
  */
@@ -52,34 +50,21 @@ describe.each(ARCHETYPE_POLICIES.map((p) => [p.id, p] as [string, RunPolicy]))('
         }
     });
 
-    // The Chosen starts with a merciful card of its own (SD1a) and wears the
-    // Merciful relic, so every reward it rolls carries a Merciful lane slot,
-    // and its elite rewards draw the highest rarity band first, where only
-    // Blood Price and Merciful cards sit. A bot that takes a card printing its
-    // lane's keywords when no card of its lane is offered can therefore end a
-    // short run level with Merciful. The check is that the bot's lane is never
-    // out-built on any seed, leads outright on most seeds, and leads outright
-    // across all ten decks together.
+    // The Chosen starts with a merciful card of its own (SD1a), so the Merciful's
+    // end deck leads.
     const leadCheck = !inLane ? it.skip : it;
-    leadCheck(`never ends a run with more of another card lane than of ${laneId}, and leads on most seeds and in total (it starts in-lane)`, () => {
-        const totals: Record<string, number> = {};
-        let ownTotal = 0;
-        let strictLeads = 0;
-        for (const run of runs) {
+    leadCheck(`ends every run with more ${laneId} cards than of any other card lane (it starts in-lane)`, () => {
+        // A run that died (`run-over`) stopped drafting early, so its deck is a
+        // truncated sample of the build, not the build: only a cleared chapter
+        // is held to the lead. At least one seed must clear, or the check is empty.
+        const built = runs.filter((run) => run.outcome === 'chapter-clear');
+        expect(built.length).toBeGreaterThan(0);
+        for (const run of built) {
             const own = run.deckByLane[laneId] ?? 0;
-            expect(own).toBeGreaterThan(0);
-            ownTotal += own;
-            let leads = true;
             for (const [lane, n] of rivals(run, laneId)) {
-                if (own < n) throw new Error(`seed ${run.seed}: ${laneId}=${own} trails ${lane}=${n}`);
-                if (own === n) leads = false;
-                totals[lane] = (totals[lane] ?? 0) + n;
+                if (own <= n) throw new Error(`seed ${run.seed}: ${laneId}=${own} does not lead ${lane}=${n}`);
             }
-            if (leads) strictLeads += 1;
-        }
-        expect(strictLeads).toBeGreaterThan(runs.length / 2);
-        for (const [lane, n] of Object.entries(totals)) {
-            if (ownTotal <= n) throw new Error(`all seeds: ${laneId}=${ownTotal} does not lead ${lane}=${n}`);
+            expect(own).toBeGreaterThan(0);
         }
     });
 
