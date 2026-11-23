@@ -237,10 +237,13 @@ export function applyHazardOutcome(
     // A won elite fight rolls its relic FIRST: on a drop the XP is withheld
     // and the card draft never opens; the shillings stand.
     const spared = outcome === 'victory' && finalState.mercyCheck === 'spared';
-    const relicOnly = outcome === 'victory' && settleEliteRelicAction(store, enemy, relics);
+    // A spared elite pays the Spare ending instead: no elite relic roll and no
+    // lane piece.
+    const killed = outcome === 'victory' && !spared;
+    const relicOnly = killed && settleEliteRelicAction(store, enemy, relics);
     // A beaten elite may also drop a lane piece: on top of the relic roll, never
     // the whole reward.
-    if (outcome === 'victory') settleEliteEquipmentAction(store, enemy);
+    if (killed) settleEliteEquipmentAction(store, enemy);
     const questsBefore = (store.getState() as unknown as GameState).quests;
     const playerBefore = (store.getState() as unknown as GameState).player;
     const report = store.getState().endCombat(mapHazardOutcomeToEndCombat(outcome), undefined, {
