@@ -101,6 +101,7 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 | 134 | The owner-led rebuild sessions (B-track) | [134-owner-led-rebuild-sessions.md](134-owner-led-rebuild-sessions.md) | planned | 8 left |
 | 146 | Arena plates: twelve engravings behind the foe, a default per region, a plate per node | [146-ap1-arena-plates.md](146-ap1-arena-plates.md) | planned | 1 left |
 | 187 | Mercy at the killing blow: normals and elites stop at 1 VITAE and ask | [187-mr6-mercy-at-the-blow.md](187-mr6-mercy-at-the-blow.md) | planned | 2 left |
+| 188 | Every card ranked by its text; rewards weigh rarity | [188-rk1-card-ranks.md](188-rk1-card-ranks.md) | planned | 2 left |
 
 ## How the loop reads this folder
 
