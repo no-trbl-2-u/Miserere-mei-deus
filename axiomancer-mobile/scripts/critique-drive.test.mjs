@@ -123,3 +123,22 @@ test('the settings screen is in the set, cold-enterable', async () => {
     assert.equal(settings.path, '/settings')
     assert.equal(settings.fixture, undefined)
 })
+
+test('the live-board screens press ENTER COMBAT only once the reveal settles, and a board that never shows is an error', async () => {
+    const { SCREENS } = await import('./critique-drive.mjs')
+    const { enterBoard, revealSettled } = await import('./live-fight-entry.mjs')
+    const byName = Object.fromEntries(SCREENS.map((s) => [s.name, s]))
+    assert.equal(byName['combat'].settle?.toString(), ((page) => revealSettled(page)).toString())
+    for (const name of ['combat-board', 'combat-dying']) {
+        assert.equal(byName[name].prepare?.toString(), ((page) => enterBoard(page)).toString(), name)
+    }
+    // A page whose board never mounts makes enterBoard reject, so the drive marks the entry.
+    const calls = []
+    const locator = (id) => ({
+        waitFor: async () => { calls.push(`wait ${id}`); if (id === 'combat-board') throw new Error('no board') },
+        click: async () => { calls.push(`click ${id}`) },
+    })
+    const page = { getByTestId: locator, waitForFunction: async () => { calls.push('settled') } }
+    await assert.rejects(enterBoard(page, 10), /no board/)
+    assert.deepEqual(calls, ['wait combat-enter', 'settled', 'click combat-enter', 'wait combat-board'])
+})
