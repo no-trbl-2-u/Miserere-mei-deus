@@ -34,7 +34,7 @@ import { createServer } from 'node:http'
 import { readFile, stat, mkdir, writeFile, rm } from 'node:fs/promises'
 import { resolve, dirname, join, extname } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
-import { enterLiveFight } from './live-fight-entry.mjs'
+import { enterBoard, enterLiveFight, revealSettled } from './live-fight-entry.mjs'
 import { injectMinigameSeeds } from './minigame-seed-injector.mjs'
 import { waitForReady } from './lib/page-ready.mjs'
 import { ensureWebExport } from './lib/web-export.mjs'
@@ -175,6 +175,7 @@ export const SCREENS = [
         why: "The game's core loop as actually played.",
         seed: COMBAT_SEED,
         liveFight: true,
+        settle: (page) => revealSettled(page),
     },
     {
         name: 'combat-board',
@@ -182,10 +183,7 @@ export const SCREENS = [
         why: 'The live board mid-fight — card hand + face copy (VITAE/DoT text) only render after ENTER COMBAT; the pre-fight preview alone cannot re-validate them unattended.',
         seed: COMBAT_SEED,
         liveFight: true,
-        prepare: async (page) => {
-            await page.getByTestId('combat-enter').click({ timeout: 8000, force: true }).catch(() => {})
-            await page.getByTestId('combat-board').waitFor({ state: 'visible', timeout: 15000 }).catch(() => {})
-        },
+        prepare: (page) => enterBoard(page),
         settle: diceSettled,
     },
     {
@@ -270,10 +268,7 @@ export const SCREENS = [
         fixture: 'wanderer-bw-fight-dying',
         waitForPath: '/combat-encounter',
         why: 'The combat panes as a dying player sees them — the skull portrait at 1 VITAE, one death from the end of the run.',
-        prepare: async (page) => {
-            await page.getByTestId('combat-enter').click({ timeout: 8000, force: true }).catch(() => {})
-            await page.getByTestId('combat-board').waitFor({ state: 'visible', timeout: 15000 }).catch(() => {})
-        },
+        prepare: (page) => enterBoard(page),
         settle: diceSettled,
     },
     {
