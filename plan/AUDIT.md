@@ -96,44 +96,6 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
   finish once Claude has started. File the choice as `[loop-call]` residue.
 - next: `/iterate` (measure, then the workflow change).
 
-### [content] Card-rules fence: 18 Blood Price cards pinned over the complexity budget (Phase CS1, 2026-10-13)
-- category: content
-- impact: 4
-- ease: 6
-- source: Phase CS1 (`axiomancer-mechanics/src/Cards/e2e/card-rules.engine.test.ts`, rule `complexity-budget`); pinned in `card-rules.exemptions.json`.
-- detail: every Blood Price card is rank 1 (Ash), and the budget T ratified (ballot §9) allows Ash 1 keyword beyond DEAL and GUARD and no condition; a Global's trigger counts as a condition. One item per pinned card:
-  - [ ] P-03a: 1 condition (at half VITAE), max 0.
-  - [ ] P-04c: 1 condition (at half VITAE), max 0.
-  - [ ] P-05b: 2 keywords (SACRIFICE, VULNERABLE), max 1.
-  - [ ] P-08d: 2 keywords (SACRIFICE, TETHER), max 1.
-  - [ ] P-09b: 2 keywords (SACRIFICE, VULNERABLE), max 1.
-  - [ ] P-10c: 1 condition (trigger: sac), max 0.
-  - [ ] E-02d: 2 keywords (SACRIFICE, TETHER), max 1.
-  - [ ] E-03d: 2 keywords (LEECH, SACRIFICE), max 1; 1 condition (trigger: turn), max 0.
-  - [ ] E-04c: 2 keywords (SACRIFICE, WAIVE), max 1.
-  - [ ] E-05n (Open Vein): 3 keywords (LEECH, SACRIFICE, TETHER), max 1.
-  - [ ] E-09n (Crimson Pact): 1 condition (trigger: sac), max 0.
-  - [ ] E-10d: 2 keywords (SACRIFICE, TETHER), max 1.
-  - [ ] M-01d: 2 keywords (HEAL, LEECH), max 1.
-  - [ ] M-03d: 1 condition (at half VITAE), max 0.
-  - [ ] M-04n (Transfusion): 2 keywords (HEAL, SACRIFICE), max 1.
-  - [ ] M-05b: 1 condition (at half VITAE), max 0.
-  - [ ] M-07a: 2 keywords (HEAL, VULNERABLE), max 1; 1 condition (each time), max 0.
-  - [ ] M-08d: 2 keywords (LEECH, SACRIFICE), max 1; 1 condition (trigger: sac), max 0.
-- next: T's next card session (D37). Ballot §3 ("rank follows complexity") points at re-ranking these cards rather than cutting keywords; either way the change is a card change. Re-seed the fixture after it (`docs/card-spec.md` §17). The loop does not touch these cards.
-
-### [content] Card-rules fence: 22 Elementalist cards pinned over the complexity budget, one over the Global template (Phase EL1c, 2026-10-24)
-- category: content
-- impact: 3
-- ease: 6
-- source: Phase EL1c (`axiomancer-mechanics/src/Cards/e2e/card-rules.engine.test.ts`); pinned in `card-rules.exemptions.json`.
-- detail: every Elementalist card is rank 1 (Ash), as Blood Price. Most print two or three weather keywords (BLIZZARD, DRAW, INFERNO, STORM, FROZEN, HEAL, VULNERABLE) where Ash allows 1, and the ⟳ Globals and the "if the foe is burning / FROZEN" lines carry a condition where Ash allows none:
-  - [ ] Over on keywords: P-06, P-08, P-09, E-03, E-05, E-07, E-08, E-10, M-01, M-02, M-03, M-04 (3), M-07, M-09.
-  - [ ] Over on conditions: P-01, M-06 (`if`); E-06 (trigger).
-  - [ ] Over on both: P-07, P-10, E-09, M-08, M-10.
-  - [ ] Global template: E-06 prints "(while in play)" in its body, a duration word (T's note's wording).
-- next: T's revisions (lane-creator step 7): re-rank or trim, as for Blood Price. Re-seed the fixture after it.
-
 ### [content] Card-rules fence: 5 atlas words pinned under the carrier rule or the admission bar (Phase CS1, 2026-10-13)
 - category: content
 - impact: 3
@@ -365,6 +327,44 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 - 2026-11-22: left open. The honest flag needs data the map builder does not read today (node kinds on the start maps and staged events, in `axiomancer-mechanics`), and the shell-gate test (`isShellGateEdge`) lives in `feature-map-render.mjs`, not in `feature-map.evidence.mjs` `reachability`. Flipping gate-only routes to `reachable: false` would change the committed map, the render and the drive report together, and would mark routes a player does reach (by gate) as unreachable. Not a modest change; wants a spec that says what `reachable` means (a gate exists, or a play path exists) before code.
 
 ## Done
+
+### [x] [content] Card-rules fence: 18 Blood Price cards pinned over the complexity budget (Phase CS1, 2026-10-13) — CLOSED 2026-11-23 (RK1a, #1712: every card is ranked by its text, so each card's rank now carries its keywords and conditions; all complexity-budget pins left `card-rules.exemptions.json`, and the fence passes on main)
+- category: content
+- impact: 4
+- ease: 6
+- source: Phase CS1 (`axiomancer-mechanics/src/Cards/e2e/card-rules.engine.test.ts`, rule `complexity-budget`); pinned in `card-rules.exemptions.json`.
+- detail: every Blood Price card is rank 1 (Ash), and the budget T ratified (ballot §9) allows Ash 1 keyword beyond DEAL and GUARD and no condition; a Global's trigger counts as a condition. One item per pinned card:
+  - [ ] P-03a: 1 condition (at half VITAE), max 0.
+  - [ ] P-04c: 1 condition (at half VITAE), max 0.
+  - [ ] P-05b: 2 keywords (SACRIFICE, VULNERABLE), max 1.
+  - [ ] P-08d: 2 keywords (SACRIFICE, TETHER), max 1.
+  - [ ] P-09b: 2 keywords (SACRIFICE, VULNERABLE), max 1.
+  - [ ] P-10c: 1 condition (trigger: sac), max 0.
+  - [ ] E-02d: 2 keywords (SACRIFICE, TETHER), max 1.
+  - [ ] E-03d: 2 keywords (LEECH, SACRIFICE), max 1; 1 condition (trigger: turn), max 0.
+  - [ ] E-04c: 2 keywords (SACRIFICE, WAIVE), max 1.
+  - [ ] E-05n (Open Vein): 3 keywords (LEECH, SACRIFICE, TETHER), max 1.
+  - [ ] E-09n (Crimson Pact): 1 condition (trigger: sac), max 0.
+  - [ ] E-10d: 2 keywords (SACRIFICE, TETHER), max 1.
+  - [ ] M-01d: 2 keywords (HEAL, LEECH), max 1.
+  - [ ] M-03d: 1 condition (at half VITAE), max 0.
+  - [ ] M-04n (Transfusion): 2 keywords (HEAL, SACRIFICE), max 1.
+  - [ ] M-05b: 1 condition (at half VITAE), max 0.
+  - [ ] M-07a: 2 keywords (HEAL, VULNERABLE), max 1; 1 condition (each time), max 0.
+  - [ ] M-08d: 2 keywords (LEECH, SACRIFICE), max 1; 1 condition (trigger: sac), max 0.
+- next: T's next card session (D37). Ballot §3 ("rank follows complexity") points at re-ranking these cards rather than cutting keywords; either way the change is a card change. Re-seed the fixture after it (`docs/card-spec.md` §17). The loop does not touch these cards.
+
+### [x] [content] Card-rules fence: 22 Elementalist cards pinned over the complexity budget, one over the Global template (Phase EL1c, 2026-10-24) — CLOSED 2026-11-23 (RK1a, #1712: the re-rank clears every complexity-budget pin; no Elementalist exemption of any rule remains in `card-rules.exemptions.json`, so the Global-template item passes too, and the fence passes on main)
+- category: content
+- impact: 3
+- ease: 6
+- source: Phase EL1c (`axiomancer-mechanics/src/Cards/e2e/card-rules.engine.test.ts`); pinned in `card-rules.exemptions.json`.
+- detail: every Elementalist card is rank 1 (Ash), as Blood Price. Most print two or three weather keywords (BLIZZARD, DRAW, INFERNO, STORM, FROZEN, HEAL, VULNERABLE) where Ash allows 1, and the ⟳ Globals and the "if the foe is burning / FROZEN" lines carry a condition where Ash allows none:
+  - [ ] Over on keywords: P-06, P-08, P-09, E-03, E-05, E-07, E-08, E-10, M-01, M-02, M-03, M-04 (3), M-07, M-09.
+  - [ ] Over on conditions: P-01, M-06 (`if`); E-06 (trigger).
+  - [ ] Over on both: P-07, P-10, E-09, M-08, M-10.
+  - [ ] Global template: E-06 prints "(while in play)" in its body, a duration word (T's note's wording).
+- next: T's revisions (lane-creator step 7): re-rank or trim, as for Blood Price. Re-seed the fixture after it.
 
 ### [x] [tooling] `guard.mjs` greps the whole command string, so quoted text trips its rules — CLOSED 2026-11-22 (T approved the attended rewrite via /oversight; this PR: argv matching)
 - category: tooling
