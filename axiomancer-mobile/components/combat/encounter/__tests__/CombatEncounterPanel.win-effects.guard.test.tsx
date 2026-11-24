@@ -155,28 +155,7 @@ const STOPS_SHORT: Record<string, { why: string; holds: (code: string) => boolea
         why: 'ends the fight at whichever end screen shows first, the prompt included',
         holds: (code) => /const terminal = async[\s\S]{0,200}getByTestId\('combat-mercy'\)/.test(code),
     },
-    // Its win path waits on the old aftermath panel, which no screen mounts,
-    // so it can never reach a lethal blow to be asked.
-    'audit-capture.mjs': {
-        why: 'waits on combat-victory-panel, which no screen mounts',
-        holds: () => !mountsVictoryPanel(),
-    },
 };
-
-/** Whether any app screen or component mounts the old aftermath panel. */
-function mountsVictoryPanel(): boolean {
-    const roots = ['app', 'components'].map((d) => path.resolve(SCRIPTS, '..', d));
-    const files: string[] = [];
-    const walk = (dir: string): void => {
-        for (const entry of readdirSync(dir, { withFileTypes: true })) {
-            const full = path.join(dir, entry.name);
-            if (entry.isDirectory()) { if (entry.name !== '__tests__') walk(full); }
-            else if (/\.tsx?$/.test(entry.name)) files.push(full);
-        }
-    };
-    roots.forEach(walk);
-    return files.some((file) => /<CombatVictoryPanel\b/.test(stripComments(readFileSync(file, 'utf8'))));
-}
 
 function stripComments(text: string): string {
     return text.replace(/\/\*[\s\S]*?\*\//g, '').replace(/(^|[^:])\/\/[^\n]*/g, '$1');
