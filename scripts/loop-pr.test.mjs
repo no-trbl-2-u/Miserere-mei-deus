@@ -305,6 +305,16 @@ test('the fixer is a separate run from the reviewer: writes and pushes once, nev
   assert.doesNotMatch((skill.match(/```[\s\S]*?```/g) ?? []).join('\n'), /gh pr (comment|edit|merge|close)/)
 })
 
+// T, 2026-11-24: a pass merges as reviewed. Chasing its MEDs on the PR raced
+// the merge job and once removed a tap the next review showed was needed.
+test('a pass verdict is final: AGENTS.md, march.lanes and review-fix say its MEDs go to plan/AUDIT.md, never onto the PR', () => {
+  for (const f of ['AGENTS.md', 'skills/march.lanes.md', 'skills/review-fix.md']) {
+    const text = read(f).replace(/\s+/g, ' ')
+    assert.match(text, /MED and LOW findings are never fixed on the passed PR/, `${f} says a pass verdict's MED and LOW findings are never fixed on the passed PR`)
+    assert.match(text, /MEDs are filed to `plan\/AUDIT\.md` after the merge/, `${f} says the MEDs are filed to plan/AUDIT.md after the merge`)
+  }
+})
+
 test('pr-review.mjs never imports pr-merge.mjs: the cycle deadlocked fix-wanted (exit 13 on #679)', async () => {
   assert.doesNotMatch(code(read('scripts/pr-review.mjs')), /pr-merge\.mjs/)
   assert.match(code(read('scripts/pr-review.mjs')), /from '\.\/pr-policy\.mjs'/)
