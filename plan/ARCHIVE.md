@@ -774,3 +774,4 @@
 - 2026-11-23 · 187 · spec complete: Mercy at the killing blow: normals and elites stop at 1 VITAE and ask · D196, pinned by combat.spare-reward.test.ts and Game/e2e/spare-elite-table.engine.test.ts · deleted in (this commit)
 - 2026-11-23 · 188 · spec complete: Every card ranked by its text; rewards weigh rarity · D197, D198, pinned by card-rules.test.ts, card-rules.engine.test.ts and reward-rarity.engine.test.ts · deleted in (this commit)
 - 2026-11-24 · 99.11 · win-effects-before-the-check is guarded · bcdf85f9..541afb10 (#1741)
+- 2026-11-24 · 189.1 (alias: RQ1a) · A pass verdict is final; its MEDs go to AUDIT · 0f48262f..0f48262f (#1749)

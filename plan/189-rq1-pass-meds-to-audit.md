@@ -44,7 +44,6 @@
 
 ## Acceptance
 
-- **A1** `AGENTS.md`, `skills/march.lanes.md` and `skills/review-fix.md` each say that a `pass` verdict's MED and LOW findings are never fixed on the passed PR, and that MEDs are filed to `plan/AUDIT.md` after the merge. A lint (`scripts/loop-pr.test.mjs`) pins the three places.
 - **A2** After the merge job merges a PR on `pass`, each MED row of that verdict's findings table becomes one `## Pending` row in `plan/AUDIT.md` on `main`, with its title, category, impact 5, ease 5, its `file:line`, the finding text, a link to the verdict and the `/iterate` next line. A test feeds a verdict comment with HIGH, MED and LOW rows to the parser and gets exactly the MED rows.
 - **A3** A verdict with no MED files nothing; a MED already filed is not filed again; LOW rows are never filed. Each is a test case.
 - **A4** A failed filing (a push rejected twice, an unparsable table) logs to the job summary and leaves the merge job green. A test pins that the filing step cannot fail the job.
@@ -55,7 +54,6 @@ none
 
 ## Chunks
 
-Measure: 4 open · 0 closed · next A5
+Measure: 3 open · 1 closed · next A5
 
-- [ ] **189.1** The rule: a pass verdict's MEDs are never fixed on the passed PR · S · closes A1 · needs — · alias: RQ1a
-- [ ] **189.2** The merge job files a passed PR's MED findings to plan/AUDIT.md · M · closes A2, A3, A4 · needs 189.1 · alias: RQ1b
+- [ ] **189.2** The merge job files a passed PR's MED findings to plan/AUDIT.md · M · closes A2, A3, A4 · needs — · alias: RQ1b
