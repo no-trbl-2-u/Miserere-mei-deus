@@ -179,7 +179,9 @@ export function decide({ cache, pause, kind, max, now }) {
     return { skip: true, reason: `the last run hit the weekly quota; it resets ${resets}`, close };
   }
   const u = typeof cache?.utilization === 'number' ? cache.utilization : null;
-  const fresh = !(cache?.status === 'rejected' && resets && t >= Date.parse(resets));
+  // Miserere: a reading is stale once its window has reset, whatever its status. The kit aged only a `rejected` one,
+  // so an `allowed_warning` reading over the cap skipped every scheduled run, and no run came to replace it.
+  const fresh = !(resets && t >= Date.parse(resets));
   if (fresh && u !== null && u >= HARD_MAX) {
     return { skip: true, reason: `seven_day utilization ${u} is at or above the hard ceiling ${HARD_MAX} (every run, a ${kind} one included)`, close };
   }
