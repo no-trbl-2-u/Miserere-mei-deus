@@ -344,6 +344,10 @@ gh pr checks "loop/<verb>-<slug>" --repo "$GH_REPO" --required --watch --fail-fa
   findings, one `## Review verdict` comment, and a `risk:*` raise with
   a reason. On a `pass` the `merge` job merges any PR but a `plot` PR
   (D95, D101); a `not-pass`, a `plot` PR or a hold label leaves it to T.
+  A `pass` is final (T, 2026-11-24): its MED and LOW findings are never
+  fixed on the passed PR, by this tick or any session watching it; the
+  MEDs are filed to `plan/AUDIT.md` after the merge (AGENTS.md "Pull
+  requests").
 - **Never** merge the PR, close it, or force-push its branch yourself
   (D86): the `merge` job merges it on a green review, T merges the rest
   (D95).
