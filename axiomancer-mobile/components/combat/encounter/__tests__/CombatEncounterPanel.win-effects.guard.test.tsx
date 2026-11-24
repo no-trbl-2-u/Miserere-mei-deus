@@ -134,8 +134,8 @@ const SCRIPTS = path.resolve(__dirname, '..', '..', '..', '..', 'scripts');
 
 /** A quoted win-screen testID, or the old aftermath panel's. */
 const WINS_A_FIGHT = /['"`](?:combat-victory(?:-continue|-panel)?|combat-rewards|combat-reward-(?:skip|confirm))['"`]/;
-/** The check's prompt or either of its buttons, quoted or built from a template. */
-const ANSWERS_THE_CHECK = /combat-mercy/;
+/** A tap on either of the check's buttons, quoted or built from a template. */
+const ANSWERS_THE_CHECK = /combat-mercy-(?:finish|spare|\$\{)/;
 
 /**
  * Scripts that name a win-screen testID without winning a fight. Each names
@@ -144,6 +144,39 @@ const ANSWERS_THE_CHECK = /combat-mercy/;
 const NEVER_FIGHTS: Record<string, { why: string; holds: RegExp }> = {
     'smoke-screens.mjs': { why: 'reads the win screens off the dev route /devvictory', holds: /\/devvictory/ },
 };
+
+/**
+ * Scripts that drive a fight but never answer the check, each for a reason
+ * the test checks still holds.
+ */
+const STOPS_SHORT: Record<string, { why: string; holds: (code: string) => boolean }> = {
+    // A frame-rate probe: the prompt is one of the end screens it stops on.
+    'perf-web.mjs': {
+        why: 'ends the fight at whichever end screen shows first, the prompt included',
+        holds: (code) => /const terminal = async[\s\S]{0,200}getByTestId\('combat-mercy'\)/.test(code),
+    },
+    // Its win path waits on the old aftermath panel, which no screen mounts,
+    // so it can never reach a lethal blow to be asked.
+    'audit-capture.mjs': {
+        why: 'waits on combat-victory-panel, which no screen mounts',
+        holds: () => !mountsVictoryPanel(),
+    },
+};
+
+/** Whether any app screen or component mounts the old aftermath panel. */
+function mountsVictoryPanel(): boolean {
+    const roots = ['app', 'components'].map((d) => path.resolve(SCRIPTS, '..', d));
+    const files: string[] = [];
+    const walk = (dir: string): void => {
+        for (const entry of readdirSync(dir, { withFileTypes: true })) {
+            const full = path.join(dir, entry.name);
+            if (entry.isDirectory()) { if (entry.name !== '__tests__') walk(full); }
+            else if (/\.tsx?$/.test(entry.name)) files.push(full);
+        }
+    };
+    roots.forEach(walk);
+    return files.some((file) => /<CombatVictoryPanel\b/.test(stripComments(readFileSync(file, 'utf8'))));
+}
 
 function stripComments(text: string): string {
     return text.replace(/\/\*[\s\S]*?\*\//g, '').replace(/(^|[^:])\/\/[^\n]*/g, '$1');
@@ -160,17 +193,25 @@ describe('the e2e walkers answer the check', () => {
         expect(WINS_A_FIGHT.test("page.getByTestId('combat-victory').count()")).toBe(true);
         expect(WINS_A_FIGHT.test("page.getByTestId('combat-victory-headline')")).toBe(false);
         expect(ANSWERS_THE_CHECK.test('page.getByTestId(`combat-mercy-${MERCY_CHECK}`)')).toBe(true);
+        expect(ANSWERS_THE_CHECK.test("await tap(page, 'combat-mercy-finish')")).toBe(true);
+        expect(ANSWERS_THE_CHECK.test("page.getByTestId('combat-mercy')")).toBe(false);
     });
 
     it('every script that waits on the win screen names the mercy prompt', () => {
         const hanging = walkers().filter((file) => {
-            if (NEVER_FIGHTS[file]) return false;
+            if (NEVER_FIGHTS[file] || STOPS_SHORT[file]) return false;
             const code = stripComments(readFileSync(path.join(SCRIPTS, file), 'utf8'));
             return WINS_A_FIGHT.test(code) && !ANSWERS_THE_CHECK.test(code);
         });
         // A walker listed here can meet the check's prompt and never tap
         // `combat-mercy-finish` or `combat-mercy-spare`.
         expect(hanging).toEqual([]);
+    });
+
+    it('every script that stops short still has its reason', () => {
+        for (const [file, { holds }] of Object.entries(STOPS_SHORT)) {
+            expect([file, holds(readFileSync(path.join(SCRIPTS, file), 'utf8'))]).toEqual([file, true]);
+        }
     });
 
     it('every script excused still never fights', () => {
