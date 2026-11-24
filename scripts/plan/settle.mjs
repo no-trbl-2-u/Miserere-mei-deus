@@ -52,7 +52,9 @@ const specNum = (id) => id.split('.')[0];
  * `## Acceptance` heading either: an empty one is never written; ladderChunk adds it with the first A-ID.
  */
 export function ladderSpec(n, cfg = DEFAULTS) {
-  return [fill(cfg.ladder.heading, cfg.ladder), '', ...cfg.ladder.why.map((l) => fill(l, cfg.ladder)), '', '## Chunks', `Measure: 0 open · 0 closed · next A${n}`, ''].join('\n');
+  // Miserere: a reopened ladder carries its A-IDs on from `n`, so the n - 1 before it count as closed (plan-check:
+  // open + closed = next - 1, IDs never reused); the kit wrote 0 closed and every reopen failed the settle.
+  return [fill(cfg.ladder.heading, cfg.ladder), '', ...cfg.ladder.why.map((l) => fill(l, cfg.ladder)), '', '## Chunks', `Measure: 0 open · ${Math.max(n - 1, 0)} closed · next A${n}`, ''].join('\n');
 }
 
 /** The next free ladder chunk number: past every id `taken` (the archive's) and every one a spec lists. */
