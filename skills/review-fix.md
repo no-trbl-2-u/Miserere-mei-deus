@@ -18,6 +18,10 @@ non-plan, non-pipeline PR whose latest trusted verdict for its head is
 yet). The prompt names the PR, the branch and the head the verdict is
 for: "fix the not-pass on PR #<n>, branch <branch>, head <sha>."
 
+A `pass` verdict is never your input (T, 2026-11-24): its MED and LOW
+findings are never fixed on the passed PR, and its MEDs are filed to
+`plan/AUDIT.md` after the merge, not pushed to the PR.
+
 The job's `pre_run` copies `main`'s `skills/review-fix.md` to
 `.review-tooling/` and restores `.claude/`, `CLAUDE.md`, `AGENTS.md`
 and `.mcp.json` from `main`, so a PR cannot rewrite the instructions

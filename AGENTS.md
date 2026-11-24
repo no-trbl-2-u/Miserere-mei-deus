@@ -190,6 +190,16 @@ sits after the kill switch and the plot and pipeline holds.
 a red `loop:pr` PR green and `pr-resolve` keeps it mergeable (D87); at
 most 5 are open at once (D85).
 
+**A `pass` verdict is final for its PR** (T, 2026-11-24; spec 189). Its
+MED and LOW findings are never fixed on the passed PR: no agent pushes to
+it for them, not a loop tick, not a session watching the PR, not
+`review-fix`. The MEDs are filed to `plan/AUDIT.md` after the merge, one
+row per real finding, for `/iterate` to fix in its own PR (spec 189's
+189.2 files them from the merge job; until it ships, the agent that
+watched the PR files them by hand). A HIGH makes the verdict `not-pass`
+and the fixer runs as before. An owner who wants a finding fixed before
+the merge holds the PR with a hold label.
+
 ## Per-package guides
 
 Each package keeps its own `AGENTS.md` / `CLAUDE.md` with domain specifics
