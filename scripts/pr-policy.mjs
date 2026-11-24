@@ -69,6 +69,8 @@ export const PIPELINE_PATHS = Object.freeze([
   '.github/workflows/pr-review.yml', '.github/workflows/_claude-skill.yml', '.github/workflows/pr-autofix.yml', '.github/workflows/pr-resolve.yml',
   'scripts/pr-merge.mjs', 'scripts/pr-review.mjs', 'scripts/pr-partition.mjs', 'scripts/pr-risk.mjs', 'scripts/pr-gate.mjs', 'scripts/pr-acceptance.mjs', 'scripts/pr-resolve.mjs',
   'scripts/pr-policy.mjs', 'scripts/pr-settle.mjs', 'scripts/pr-files.mjs',
+  // writes main from pr-resolve's scan, like the settle
+  'scripts/pr-file-meds.mjs',
   // pr-resolve imports it, and pr-merge imports pr-resolve: the merge job runs it.
   'scripts/audit-merge.mjs',
   'skills/review.md', 'skills/review-fix.md', 'skills/fix-ci.md',
