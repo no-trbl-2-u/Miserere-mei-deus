@@ -184,6 +184,10 @@ describe('hermeticity guard: isolation (no disk in tests)', () => {
         // stakes VM source to pin which VM fields the card draws; a source
         // fact, unprovable by rendering.
         'components/hazard/__tests__/StakesCard.vm-drawn.test.ts',
+        // The win-effects guard's walker half reads the committed e2e scripts to
+        // prove every one that drives a fight to a win answers the mercy check;
+        // a script added later is swept with no edit to the test.
+        'components/combat/encounter/__tests__/CombatEncounterPanel.win-effects.guard.test.tsx',
     ]);
 
     const FS_PATTERN =
