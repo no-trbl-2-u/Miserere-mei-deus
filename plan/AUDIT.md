@@ -67,6 +67,13 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 
 ## Pending
 
+### [ ] [finding] `audit-capture.mjs` cannot win a fight: its round loop targets testIDs no screen renders (PR #1744 review, 2026-11-24)
+- category: finding
+- impact: 4
+- ease: 6
+- detail: two MED findings from the `pass` verdict on #1744 (https://github.com/no-trbl-2-u/Miserere-mei-deus/pull/1744#issuecomment-7142778106), filed under T's rule of 2026-11-24 (a pass merges as-is, its MEDs go here; spec 189). (1) `axiomancer-mobile/scripts/audit-capture.mjs:101`: `playRound` (line ~218) taps `combat-resolve-continue` with no visibility guard, and no file in `app/` or `components/` renders that testID, so the first round waits 12 s and throws before a lethal blow; the mercy finish tap below it is unreachable. (2) `audit-capture.mjs:94`: the loop breaks on `combat-victory-panel`, which only the unmounted `CombatVictoryPanel` renders; the live win screen is `combat-victory` / `combat-rewards`, so after a finish tap the loop would call `playRound` on the win screen. Both predate #1742. Also LOW: the win-effects guard's `WINS_A_FIGHT` still accepts `combat-victory-panel`, and its header still says the walker half fails on this script.
+- next: `/iterate`: bring `playRound` and the loop's exit in line with the current combat screen (the board's END PHASE flow, break on `combat-victory`), run `node scripts/audit-capture.mjs` once to show the aftermath capture lands, and drop `combat-victory-panel` from `WINS_A_FIGHT`; or retire the script if nothing reads its captures.
+
 ### [ ] [process] The queue-only verbs still push `main` themselves after NX1e (D119 says every change lands by PR; 2026-11-01)
 - category: process
 - impact: 5
