@@ -92,6 +92,12 @@ const SCREENS = [
             // Play rounds until the victory panel surfaces (rat dies in ~2).
             for (let i = 0; i < 6; i++) {
                 if (await isVisible(p, 'combat-victory-panel')) break
+                // A normal foe may ask spare or finish at the lethal blow; finish it.
+                if (await isVisible(p, 'combat-mercy')) {
+                    await tap(p, 'combat-mercy-finish')
+                    await settle(p, 500)
+                    continue
+                }
                 await playRound(p)
             }
             await settle(p, 800)
