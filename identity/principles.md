@@ -22,6 +22,6 @@ Format: `- **P# · Short title.** One or two sentences, ≤ 40 words.`
   blows that would kill a normal or elite foe it stands at 1 VITAE instead and
   asks spare or finish: finish is the kill, spare is a win that leaves it at 1
   VITAE. The check gives neither side a turn or an effect; a boss never asks.
-  *(D47, D63, spec 144, D?mercy-at-the-blow)*
+  *(D47, D63, spec 144, D195)*
 - **P3 · The cut terms stay cut.** RELENT and CONDEMN are cut (R7 deletes
   their engine code); never reintroduce them or Pressure Tracks.

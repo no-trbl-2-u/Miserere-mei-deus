@@ -323,7 +323,7 @@ ambiguity.)
   in `docs/game-model.md`.
 - **Win condition:** VITAE is the one bar and emptying it wins (D47, D63,
   spec 144). The mercy check fires on the lethal blow, not after the win
-  (D?mercy-at-the-blow, spec 187): on 15% of the blows that would kill a
+  (D195, spec 187): on 15% of the blows that would kill a
   normal or elite foe, it stands at 1 VITAE and asks spare or finish. Finish
   is the kill; spare is a win that leaves it at 1 VITAE. The check gives
   neither side a turn or an effect, and a boss never asks. Never reintroduce

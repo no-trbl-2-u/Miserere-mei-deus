@@ -40,6 +40,7 @@ needs are done):
 
 
 - **163.3** · TK1c: preview builds refuse the owner token, and a release can carry its APK (T, `/plot asap`, 2026-11-09; needs 163.2)
+- **99.11** · automate footgun `win-effects-before-the-check` (seen 2×), spec 99's ladder chunk.
 
 
 
@@ -100,8 +101,7 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 | 133 | Miserere on nexus v2, and kept current with it | [133-nx1-nexus-v2.md](133-nx1-nexus-v2.md) | planned | 1 left |
 | 134 | The owner-led rebuild sessions (B-track) | [134-owner-led-rebuild-sessions.md](134-owner-led-rebuild-sessions.md) | planned | 8 left |
 | 146 | Arena plates: twelve engravings behind the foe, a default per region, a plate per node | [146-ap1-arena-plates.md](146-ap1-arena-plates.md) | planned | 1 left |
-| 187 | Mercy at the killing blow: normals and elites stop at 1 VITAE and ask | [187-mr6-mercy-at-the-blow.md](187-mr6-mercy-at-the-blow.md) | planned | 2 left |
-| 188 | Every card ranked by its text; rewards weigh rarity | [188-rk1-card-ranks.md](188-rk1-card-ranks.md) | planned | 2 left |
+| 99 | Guard the traps: an open footgun seen twice becomes a test, a hook or a lint | [99-guard-the-traps.md](99-guard-the-traps.md) | planned (**Asap**: each chunk) | 1 left |
 
 ## How the loop reads this folder
 
