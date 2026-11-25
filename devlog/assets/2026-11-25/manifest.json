@@ -1,0 +1,18 @@
+{
+  "generated_by": "scripts/devlog-shots.mjs",
+  "date": "2026-11-25",
+  "since": "775bd207f",
+  "sinceDate": "2026-11-14",
+  "shots": [
+    {
+      "screen": "cache-card",
+      "before": true,
+      "ratio": 0.04427026370154332
+    },
+    {
+      "screen": "chapter-complete",
+      "before": false,
+      "ratio": null
+    }
+  ]
+}
