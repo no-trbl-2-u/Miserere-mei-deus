@@ -67,6 +67,48 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 
 ## Pending
 
+### [ ] [finding] `pr-file-meds.mjs:283`: `pushedPrs` reads only the push's own range, and the `pr-resolve` group keeps one pending run, so a… (PR #1751 review, 2026-11-25)
+- category: finding
+- impact: 5
+- ease: 5
+- detail: MED from the `pass` verdict on #1751 (https://github.com/no-trbl-2-u/Miserere-mei-deus/pull/1751#issuecomment-7144302405). `scripts/pr-file-meds.mjs:283`: [a1:logic][a1:seams] `pushedPrs` reads only the push's own range, and the `pr-resolve` group keeps one pending run, so a cancelled run's merge is never re-scanned and its MEDs are never filed, with no warning.
+- next: `/iterate`: verify the finding on `main`, fix it or close it as not reproduced.
+
+### [ ] [finding] `pr-file-meds.mjs:54`: `cells()` splits on every unescaped pipe and `skills/review.md` never says to escape one, so a MED… (PR #1751 review, 2026-11-25)
+- category: finding
+- impact: 5
+- ease: 5
+- detail: MED from the `pass` verdict on #1751 (https://github.com/no-trbl-2-u/Miserere-mei-deus/pull/1751#issuecomment-7144302405). `scripts/pr-file-meds.mjs:54`: [a1:logic] `cells()` splits on every unescaped pipe and `skills/review.md` never says to escape one, so a MED quoting `a \|\| b` makes the table unparsable and all of that PR's MEDs are dropped.
+- next: `/iterate`: verify the finding on `main`, fix it or close it as not reproduced.
+
+### [ ] [process] `pr-policy.mjs:73`: `check-plan-queues.mjs` and `eval/ledger-lib.mjs`, which the main-writing script imports and… (PR #1751 review, 2026-11-25)
+- category: process
+- impact: 5
+- ease: 5
+- detail: MED from the `pass` verdict on #1751 (https://github.com/no-trbl-2-u/Miserere-mei-deus/pull/1751#issuecomment-7144302405). `scripts/pr-policy.mjs:73`: [control] `check-plan-queues.mjs` and `eval/ledger-lib.mjs`, which the main-writing script imports and trusts, are not in PIPELINE_PATHS.
+- next: `/iterate`: verify the finding on `main`, fix it or close it as not reproduced.
+
+### [ ] [tests] `pr-file-meds.test.mjs:178`: `run()` has no happy-path test asserting the arguments handed to `write`; the "rejected twice" test… (PR #1751 review, 2026-11-25)
+- category: tests
+- impact: 5
+- ease: 5
+- detail: MED from the `pass` verdict on #1751 (https://github.com/no-trbl-2-u/Miserere-mei-deus/pull/1751#issuecomment-7144302405). `scripts/pr-file-meds.test.mjs:178`: [tests] `run()` has no happy-path test asserting the arguments handed to `write`; the "rejected twice" test mocks `write` so it proves no retry.
+- next: `/iterate`: verify the finding on `main`, fix it or close it as not reproduced.
+
+### [ ] [tests] `pr-file-meds.test.mjs:290`: The lint-red `refused` guard has no test. (PR #1751 review, 2026-11-25)
+- category: tests
+- impact: 5
+- ease: 5
+- detail: MED from the `pass` verdict on #1751 (https://github.com/no-trbl-2-u/Miserere-mei-deus/pull/1751#issuecomment-7144302405). `scripts/pr-file-meds.test.mjs:290`: [tests] The lint-red `refused` guard has no test.
+- next: `/iterate`: verify the finding on `main`, fix it or close it as not reproduced.
+
+### [ ] [tests] `pr-file-meds.test.mjs:11`: `pushedPrs` range logic and the `gh pr view` wrapper are never exercised. (PR #1751 review, 2026-11-25)
+- category: tests
+- impact: 5
+- ease: 5
+- detail: MED from the `pass` verdict on #1751 (https://github.com/no-trbl-2-u/Miserere-mei-deus/pull/1751#issuecomment-7144302405). `scripts/pr-file-meds.test.mjs:11`: [tests] `pushedPrs` range logic and the `gh pr view` wrapper are never exercised.
+- next: `/iterate`: verify the finding on `main`, fix it or close it as not reproduced.
+
 ### [ ] [finding] `audit-capture.mjs` cannot win a fight: its round loop targets testIDs no screen renders (PR #1744 review, 2026-11-24)
 - category: finding
 - impact: 4
