@@ -89,9 +89,9 @@ const SCREENS = [
     {
         id: 'combat-aftermath', file: '11-combat-aftermath.png', drive: async (p) => {
             await enterFight(p)
-            // Play rounds until the victory panel surfaces (rat dies in ~2).
+            // Play rounds until the win screen surfaces (rat dies in ~2).
             for (let i = 0; i < 6; i++) {
-                if (await isVisible(p, 'combat-victory-panel')) break
+                if (await isVisible(p, 'combat-victory') || await isVisible(p, 'combat-rewards')) break
                 // A normal foe may ask spare or finish at the lethal blow; finish it.
                 if (await isVisible(p, 'combat-mercy')) {
                     await tap(p, 'combat-mercy-finish')
@@ -215,7 +215,11 @@ async function playRound(page) {
     if (await isVisible(page, 'combat-action-attack')) {
         await tap(page, 'combat-action-attack')
     }
-    await tap(page, 'combat-resolve-continue')
+    // No screen renders `combat-resolve-continue` any more: tap it only if
+    // one does, rather than wait 12 s and throw before a lethal blow.
+    if (await isVisible(page, 'combat-resolve-continue')) {
+        await tap(page, 'combat-resolve-continue')
+    }
     await settle(page, 700)
 }
 
