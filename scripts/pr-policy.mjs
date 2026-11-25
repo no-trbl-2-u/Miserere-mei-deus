@@ -71,6 +71,8 @@ export const PIPELINE_PATHS = Object.freeze([
   'scripts/pr-policy.mjs', 'scripts/pr-settle.mjs', 'scripts/pr-files.mjs',
   // writes main from pr-resolve's scan, like the settle
   'scripts/pr-file-meds.mjs',
+  // pr-file-meds imports and trusts both: its lint and its verdict regex decide what it writes to main
+  'scripts/check-plan-queues.mjs', 'scripts/eval/ledger-lib.mjs',
   // pr-resolve imports it, and pr-merge imports pr-resolve: the merge job runs it.
   'scripts/audit-merge.mjs',
   'skills/review.md', 'skills/review-fix.md', 'skills/fix-ci.md',
