@@ -775,3 +775,5 @@
 - 2026-11-23 · 188 · spec complete: Every card ranked by its text; rewards weigh rarity · D197, D198, pinned by card-rules.test.ts, card-rules.engine.test.ts and reward-rarity.engine.test.ts · deleted in (this commit)
 - 2026-11-24 · 99.11 · win-effects-before-the-check is guarded · bcdf85f9..541afb10 (#1741)
 - 2026-11-24 · 189.1 (alias: RQ1a) · A pass verdict is final; its MEDs go to AUDIT · 0f48262f..0f48262f (#1749)
+- 2026-11-24 · 189.2 (alias: RQ1b) · A passed PR's MEDs file themselves to AUDIT · ead89d09..ead89d09 (#1751)
+- 2026-11-24 · 189 · spec complete: A passing review's MED findings go to the audit queue, not onto the PR · AGENTS.md "Pull requests" (a pass is final, its MEDs go to plan/AUDIT.md), pinned by loop-pr.test.mjs and pr-file-meds.test.mjs · deleted in (this commit)

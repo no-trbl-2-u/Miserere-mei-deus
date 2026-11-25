@@ -575,3 +575,5 @@ The first five fights of a fresh run now take a median of 26 foe turns over wand
 Defaults taken (heads down, T accepted both calls at the plot's merge): early multiplier 1.5, last early level 3. `ENCOUNTER_ENEMY_HP_MULTIPLIER` is kept as the base value and `encounterEnemyHpMultiplier(level)` added beside it in `axiomancer-mobile/state/actions.ts`. `sim/run-driver.test.ts`'s boss-damage test raised its boss to level 50: the lighter opening lets the merciful seed-1 run clear a level-30 boss.
 
 Left as they are: `docs/reports/chapter1-enemies.md` (a generated report, re-recorded by its own run) and `lane-pacing.cli.ts`'s level 1 and 3 rows, which still play at the base x2 unless `--hp=1.5` is passed (the spec keeps the CLIs on the base value).
+
+- The filing runs in `pr-resolve.yml`'s `scan` job on the push to main a merge makes, not in the `merge` job the spec names: that job only arms GitHub auto-merge, so the PR is not merged yet when it runs.

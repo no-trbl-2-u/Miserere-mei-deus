@@ -100,7 +100,6 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 | 133 | Miserere on nexus v2, and kept current with it | [133-nx1-nexus-v2.md](133-nx1-nexus-v2.md) | planned | 1 left |
 | 134 | The owner-led rebuild sessions (B-track) | [134-owner-led-rebuild-sessions.md](134-owner-led-rebuild-sessions.md) | planned | 8 left |
 | 146 | Arena plates: twelve engravings behind the foe, a default per region, a plate per node | [146-ap1-arena-plates.md](146-ap1-arena-plates.md) | planned | 1 left |
-| 189 | A passing review's MED findings go to the audit queue, not onto the PR | [189-rq1-pass-meds-to-audit.md](189-rq1-pass-meds-to-audit.md) | planned | 1 left |
 
 ## How the loop reads this folder
 
