@@ -132,8 +132,8 @@ describe.each(['normal', 'elite'] as const)('a %s foe struck down with the check
 
 const SCRIPTS = path.resolve(__dirname, '..', '..', '..', '..', 'scripts');
 
-/** A quoted win-screen testID, or the old aftermath panel's. */
-const WINS_A_FIGHT = /['"`](?:combat-victory(?:-continue|-panel)?|combat-rewards|combat-reward-(?:skip|confirm))['"`]/;
+/** A quoted win-screen testID. */
+const WINS_A_FIGHT = /['"`](?:combat-victory(?:-continue)?|combat-rewards|combat-reward-(?:skip|confirm))['"`]/;
 /** A tap on either of the check's buttons, quoted or built from a template. */
 const ANSWERS_THE_CHECK = /combat-mercy-(?:finish|spare|\$\{)/;
 
