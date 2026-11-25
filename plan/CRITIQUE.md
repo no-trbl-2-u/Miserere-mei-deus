@@ -1,13 +1,23 @@
 # Critique log
 
-> Last pass: 2026-11-23 at commit cd66b6276
-> Pass count: 120
+> Last pass: 2026-11-25 at commit 88714df38
+> Pass count: 121
 
 > External-observer feedback for Axiomancer. Populated by
 > `/critique` (which drives the local expo-web build with the
 > `playtester` agent — there is no hosted URL), drained by
 > `/iterate`. See `skills/critique.md` for the contract and
 > `plan/bearings.md` § Surface for the local-build adaptation.
+
+> **[critique pass 121, 2026-11-25, commit 88714df38] Unattended `/march`
+> tick.** `critique:drive` (§3.5), mobile 375x812, 19 screens, 0 nav
+> trouble, 0 console/page errors. Read the satchel, combat-board and
+> rest captures plus every screen's text. Only already-filed items
+> reconfirmed and not re-filed: the satchel filter tabs clipping
+> "PHIALS"/"SEALED" (pass 119, still Pending) and the hand-card
+> DEAL/GUARD/VULNERABLE text cut off at hand width. The `[content]`
+> lines on the rest, village, cache and death screens are fixture
+> placeholders, not findings. Zero fresh findings this pass.
 
 > **[critique pass 51, 2026-09-25, commit e073bb6e] Unattended `/march`
 > tick.** Used the non-MCP `critique:drive` transport (§3.5,
