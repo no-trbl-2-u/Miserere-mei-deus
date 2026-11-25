@@ -34,6 +34,15 @@
 - call: show the goods before the pick rather than rewrite the copy to say "sight unseen". RW1b (A8) treated a blind TAKE A CARD as a defect (CRITIQUE RC2 item 11) and left TAKE THE GOODS untouched without ruling it hidden; the goods are rolled at session creation, so the reveal is presentation only and makes the one-way pick symmetric.
 - reversible by T: drop the offer's `goods` chips in `cache.engine.ts` and the copy can say the box is blind.
 
+### [x] [loop-call] 2026-11-25 — the R11 watch is over: final counts, 2026-10-31 to 2026-11-25 — CLOSED via /oversight 2026-11-25
+- call: T chose "measure, then remove". `skills/oversight.md` §3 item 10 and §5 "Standing question R11" are deleted (due 2026-11-11), with their row in `docs/nexus-deviations.md`. This row keeps the window's result.
+- ticks that picked nothing: 1 of 35 `/march` ticks in `npm run telemetry -- --since 2026-10-31`. The `march` workflow is active on its 2-hourly cron (run 1085 on 2026-11-25), so telemetry may not hold every cloud tick.
+- PRs stuck: 7 of 342 `loop:pr` PRs carried `loop:pr-stuck`; 341 merged, 0 open. `pr-autofix.yml` has 3919 runs in all, not split by window.
+- shadow reviews: `pr-review.yml` has 2558 runs in all, not split by window; `not-pass` verdicts not counted.
+- intake used: 14 `/plot` and 2 `/messy` skill calls in telemetry; 9 `phases: plot` commits and 1 `plan(<topic>):` commit.
+- retros that fired: 8 `lessons: retro` commits, the last on 2026-11-06, against 181 `plan: close` and 32 `plan: phase X shipped` commits. The prefix is no longer what closers write (see the open `[process]` Retro row below), so this count does not say retros stopped. `plan/lessons.md`: 23 entries at `seen 2×` or more, 40 `guarded by` lines.
+- reversible by T: restore both sections from `git show 3d41ec1c:skills/oversight.md`.
+
 # Site audit — 2026-10-25
 
 ## Top 5 findings (scored)
@@ -121,7 +130,8 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 - impact: 5
 - ease: 5
 - detail: NX1e moved `/next`'s close and `/plot`'s rows onto `plan/pending/` files in the PR, settled on main by the merge job (`scripts/pr-settle.mjs`). The bookkeeping commits of `skills/critique.md`, `triage.md`, `expand.md`, `oversight.md`, `consolidate.md`, `digest.md` and `iterate.lanes.md`'s plan-only fix still `git push origin main` (D84). Each as a `loop:pr` PR would count toward the cap of 5 (D85) and wait on the review, so the move needs its own call: a `review:plan-only` PR outside the cap, or a batched bookkeeping PR. AGENTS.md rule 1 names the gap.
-- next: a `[loop-call]` for T before NX1i turns the loop on: decide the PR shape for queue-only commits, then move those verbs onto `scripts/loop-land.mjs` (or the pending files where they edit `plan/README.md` or a spec).
+- decided (T, via /oversight 2026-11-25): each queue-only commit lands as a `review:plan-only` PR that does not count toward the cap of 5 (D85); not a batched bookkeeping PR, not a D119 exception.
+- next (`/iterate`): move those verbs onto `scripts/loop-land.mjs` (or the pending files where they edit `plan/README.md` or a spec) in that shape, and keep the plan-only PR outside the cap count.
 
 ### [content] Card-rules fence: 5 atlas words pinned under the carrier rule or the admission bar (Phase CS1, 2026-10-13)
 - category: content

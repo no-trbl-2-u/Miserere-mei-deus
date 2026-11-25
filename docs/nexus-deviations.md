@@ -93,7 +93,6 @@ The dry run is green, but run as-is it would:
 | heads-down | Parallel waves, one worker per row in its own worktree, model per worker, callout bus, push-once during review, one plot PR merging at a time, PR screenshots | `8a6a07e41` (2026-10-28) | none (v2's same name loops `/next` serially) | KEEP, renamed `/pilot` (NX1g) |
 | heads-down | Claims, ledger, resume | HW1 (copied from v2) | v2-better | TAKE |
 | oversight | `[loop-call]` ratify sweep; NEEDS_T leads Q0; asking-well | OPEN GATE (2026-08-28), D94 | partial | MERGE |
-| oversight | R11 watch counts | `a68039899` | none | drop after 2026-11-11 |
 | oversight | `audit` mode removed | `ba658cba9`, reason unknown | v2-better | TAKE |
 | iterate | Content gaps filed, never fixed | D88, D99 | none (v2 builds content) | KEEP (lane) |
 | iterate | Defect found in-tick fixed in its own commit | D90 | none | MERGE |
