@@ -70,7 +70,9 @@ export function parseFindings(body) {
   if (!SEPARATOR.test(lines[at + 1] ?? '')) return { ok: false, reason: 'unparsable findings: the table header has no separator row' }
   const rows = []
   for (let i = at + 2; i < lines.length && lines[i].trim().startsWith('|'); i++) {
-    const c = cells(lines[i])
+    let c = cells(lines[i])
+    // An unescaped `|` in the Finding prose (`a || b`) splits it: the last cell is prose, so the overflow rejoins it.
+    if (c.length > 3) c = [c[0], c[1], lines[i].trim().split(/(?<!\\)\|/).slice(3, -1).join('|').trim()]
     if (c.length !== 3) return { ok: false, reason: `unparsable findings: table row ${i - at - 1} has ${c.length} cells, not 3` }
     const severity = c[0].replace(/\*/g, '').trim().toUpperCase()
     if (!['HIGH', 'MED', 'LOW'].includes(severity)) return { ok: false, reason: `unparsable findings: table row ${i - at - 1} has severity '${c[0]}'` }

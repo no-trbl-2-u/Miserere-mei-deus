@@ -74,6 +74,13 @@ describe('parseFindings / medRows', () => {
     assert.deepEqual(medRows(verdict(noMed)), [])
   })
 
+  it('an unescaped pipe in the Finding prose rejoins its cell instead of dropping the table', () => {
+    const piped = `${TABLE}\n| MED | \`a.mjs:1\` | [logic] \`a || b\` is wrong |`
+    const r = parseFindings(verdict(piped))
+    assert.equal(r.ok, true)
+    assert.equal(r.rows.at(-1).text, '[logic] `a || b` is wrong')
+  })
+
   it('an unparsable table is a failure, not an empty list', () => {
     assert.equal(parseFindings(verdict('Some prose and no table.')).ok, false)
     const bad = `${TABLE}\n| MEDIUM | \`a:1\` | text |`
