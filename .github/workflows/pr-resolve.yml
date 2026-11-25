@@ -73,6 +73,17 @@ jobs:
       - name: Merge main into conflicting loop PRs
         id: scan
         run: node scripts/pr-resolve.mjs scan
+      # A merged PR's pass verdict lists MED findings: file them to plan/AUDIT.md on main for
+      # /iterate (scripts/pr-file-meds.mjs). Here, not in pr-review.yml's merge job, because that
+      # job only turns on auto-merge; this push is the merge. After a red settle too, and it can
+      # never turn the run red: the PR is merged, so a failed filing is a warning in the summary.
+      - name: File the merged PRs' MED findings to plan/AUDIT.md
+        if: ${{ !cancelled() && github.event_name == 'push' }}
+        continue-on-error: true
+        env:
+          BEFORE: ${{ github.event.before }}
+          AFTER: ${{ github.sha }}
+        run: node scripts/pr-file-meds.mjs --before "$BEFORE" --after "$AFTER"
       # One dispatched run per conflicted PR: workflow_dispatch is an event
       # claude-code-action accepts, and a dispatch made with GITHUB_TOKEN
       # still starts a run (it is exempt from the no-recursion rule). A refused settle fails the
