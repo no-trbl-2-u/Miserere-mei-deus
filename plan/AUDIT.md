@@ -62,13 +62,13 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 - ease: 10
 - next: shipped on `loop/iterate-rest-tense`
 
-### [2.4] CRITIQUE pass 100 [LOW]: the critique-drive hazard capture is unseeded
+### [x] [2.4] CRITIQUE pass 100 [LOW]: the critique-drive hazard capture is unseeded (shipped db0dc4f6, `openScreenContext` injects the shared seeds)
 - category: external-critique
 - impact: 3
 - ease: 8
 - next: `/iterate`: inject a fixed seed with `minigame-seed-injector.mjs`
 
-### [2.1] CRITIQUE [LOW]: the opening hand never reaches the fight's event stream (BE2f)
+### [x] [2.1] CRITIQUE [LOW]: the opening hand never reaches the fight's event stream (BE2f) (shipped 13312468d, `fightRecorder.ts` stamps one `hand-drawn`)
 - category: external-critique
 - impact: 3
 - ease: 7
@@ -132,7 +132,7 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 - detail: MED from the `pass` verdict on #1751 (https://github.com/no-trbl-2-u/Miserere-mei-deus/pull/1751#issuecomment-7144302405). `scripts/pr-file-meds.test.mjs:11`: [tests] `pushedPrs` range logic and the `gh pr view` wrapper are never exercised.
 - next: `/iterate`: verify the finding on `main`, fix it or close it as not reproduced.
 
-### [ ] [finding] `audit-capture.mjs` cannot win a fight: its round loop targets testIDs no screen renders (PR #1744 review, 2026-11-24)
+### [x] [finding] `audit-capture.mjs` cannot win a fight: its round loop targets testIDs no screen renders (PR #1744 review, 2026-11-24) — closed 2026-11-26 (PR #1755: the loop breaks on `combat-victory`/`combat-rewards`, the continue tap is guarded, `WINS_A_FIGHT` dropped `-panel`; pinned in PR #1757)
 - category: finding
 - impact: 4
 - ease: 6
