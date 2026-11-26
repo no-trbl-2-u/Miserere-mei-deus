@@ -176,6 +176,17 @@ describe('the e2e walkers answer the check', () => {
         expect(ANSWERS_THE_CHECK.test("page.getByTestId('combat-mercy')")).toBe(false);
     });
 
+    it('the pattern no longer counts the retired aftermath panel', () => {
+        expect(WINS_A_FIGHT.test("page.getByTestId('combat-victory-panel')")).toBe(false);
+    });
+
+    it('audit-capture stops on the live win screen and taps the resolve button only when shown', () => {
+        const code = stripComments(readFileSync(path.join(SCRIPTS, 'audit-capture.mjs'), 'utf8'));
+        expect(code).toMatch(/isVisible\(p, 'combat-victory'\)\s*\|\|\s*await isVisible\(p, 'combat-rewards'\)\)\s*break/);
+        expect(code).not.toMatch(/combat-victory-panel/);
+        expect(code).toMatch(/if \(await isVisible\(page, 'combat-resolve-continue'\)\) \{\s*await tap\(page, 'combat-resolve-continue'\)/);
+    });
+
     it('every script that waits on the win screen names the mercy prompt', () => {
         const hanging = walkers().filter((file) => {
             if (NEVER_FIGHTS[file] || STOPS_SHORT[file]) return false;
