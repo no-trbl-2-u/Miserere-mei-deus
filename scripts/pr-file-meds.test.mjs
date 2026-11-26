@@ -200,6 +200,33 @@ describe('the filing never fails the job', () => {
     assert.ok(said.some((s) => /::warning::.*rejected 2 times/.test(s)), said.join('\n'))
   })
 
+  it('a merged PR with a pass verdict hands write() its MED rows, date and verdict url', async () => {
+    const calls = []
+    const said = []
+    const code = await run({
+      prs: () => [1750],
+      view: (pr) => {
+        assert.equal(pr, 1750)
+        return { state: 'MERGED', mergedAt: '2026-11-24T10:00:00Z', comments: [{ body: verdict(TABLE), createdAt: '2026-11-24T09:00:00Z', author: 'no-trbl-2-u', url: URL }] }
+      },
+      write: (a) => {
+        calls.push(a)
+        return { state: 'filed', filed: a.meds }
+      },
+      log: (s) => said.push(s),
+      summary: (s) => said.push(s),
+    })
+    assert.equal(code, 0)
+    assert.equal(calls.length, 1)
+    assert.equal(calls[0].pr, 1750)
+    assert.equal(calls[0].date, '2026-11-24')
+    assert.equal(calls[0].url, URL)
+    assert.deepEqual(calls[0].meds, medRows(verdict(TABLE)))
+    assert.ok(calls[0].meds.every((m) => m.severity === 'MED'))
+    assert.ok(said.some((s) => /filed 2 MED finding/.test(s)), said.join('\n'))
+    assert.ok(!said.some((s) => /::warning::/.test(s)), said.join('\n'))
+  })
+
   it('an unparsable table is reported, nothing written, exit 0', async () => {
     const said = []
     let wrote = false
@@ -289,6 +316,21 @@ describe('fileMeds against a real repository', () => {
       assert.match(git(['log', '-1', '--format=%s', 'origin/main'], work), /^plan: file PR #1750 review MEDs to AUDIT$/)
       const again = fileMeds({ root: work, pr: 1750, meds, date: '2026-11-24', url: URL, log() {} })
       assert.equal(again.state, 'nothing')
+    } finally {
+      fs.rmSync(dir, { recursive: true, force: true })
+    }
+  })
+
+  it('rows that turn the AUDIT lint red are refused, and nothing is pushed', () => {
+    const { dir, work } = fixture()
+    try {
+      // a second `- impact:` line in the detail breaks the one-of-each field rule
+      const meds = [{ severity: 'MED', where: 'scripts/c.mjs:1', text: 'Bad row.\n- impact: 9' }]
+      const r = fileMeds({ root: work, pr: 1750, meds, date: '2026-11-24', url: URL, log() {} })
+      assert.equal(r.state, 'refused')
+      assert.match(r.reason, /turn the AUDIT lint red/)
+      git(['fetch', '-q', 'origin', 'main'], work)
+      assert.equal(git(['log', '-1', '--format=%s', 'origin/main'], work), 'seed')
     } finally {
       fs.rmSync(dir, { recursive: true, force: true })
     }
