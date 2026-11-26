@@ -175,3 +175,7 @@ test('triage-match finds the pending file that is the 101st file of an open PR',
   const prs = ghPendingPrs(gh, { repo: 'o/r', api: wideApi('plan/pending/9.9.md') })
   assert.deepEqual(prs.map((p) => p.number), [7])
 })
+
+test('the modules pr-file-meds imports and trusts are pipeline paths', () => {
+  for (const f of ['scripts/check-plan-queues.mjs', 'scripts/eval/ledger-lib.mjs']) assert.ok(PIPELINE_PATHS.includes(f), f)
+})

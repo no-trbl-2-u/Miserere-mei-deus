@@ -104,13 +104,6 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 - detail: MED from the `pass` verdict on #1751 (https://github.com/no-trbl-2-u/Miserere-mei-deus/pull/1751#issuecomment-7144302405). `scripts/pr-file-meds.mjs:54`: [a1:logic] `cells()` splits on every unescaped pipe and `skills/review.md` never says to escape one, so a MED quoting `a \|\| b` makes the table unparsable and all of that PR's MEDs are dropped.
 - next: `/iterate`: verify the finding on `main`, fix it or close it as not reproduced.
 
-### [ ] [process] `pr-policy.mjs:73`: `check-plan-queues.mjs` and `eval/ledger-lib.mjs`, which the main-writing script imports and… (PR #1751 review, 2026-11-25)
-- category: process
-- impact: 5
-- ease: 5
-- detail: MED from the `pass` verdict on #1751 (https://github.com/no-trbl-2-u/Miserere-mei-deus/pull/1751#issuecomment-7144302405). `scripts/pr-policy.mjs:73`: [control] `check-plan-queues.mjs` and `eval/ledger-lib.mjs`, which the main-writing script imports and trusts, are not in PIPELINE_PATHS.
-- next: `/iterate`: verify the finding on `main`, fix it or close it as not reproduced.
-
 ### [ ] [tests] `pr-file-meds.test.mjs:178`: `run()` has no happy-path test asserting the arguments handed to `write`; the "rejected twice" test… (PR #1751 review, 2026-11-25)
 - category: tests
 - impact: 5
