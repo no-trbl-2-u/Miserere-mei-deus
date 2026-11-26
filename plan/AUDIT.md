@@ -97,7 +97,7 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 - detail: MED from the `pass` verdict on #1751 (https://github.com/no-trbl-2-u/Miserere-mei-deus/pull/1751#issuecomment-7144302405). `scripts/pr-file-meds.mjs:283`: [a1:logic][a1:seams] `pushedPrs` reads only the push's own range, and the `pr-resolve` group keeps one pending run, so a cancelled run's merge is never re-scanned and its MEDs are never filed, with no warning.
 - next: `/iterate`: verify the finding on `main`, fix it or close it as not reproduced.
 
-### [ ] [finding] `pr-file-meds.mjs:54`: `cells()` splits on every unescaped pipe and `skills/review.md` never says to escape one, so a MED… (PR #1751 review, 2026-11-25)
+### [x] [finding] `pr-file-meds.mjs:54`: `cells()` splits on every unescaped pipe and `skills/review.md` never says to escape one, so a MED… (PR #1751 review, 2026-11-25)
 - category: finding
 - impact: 5
 - ease: 5
