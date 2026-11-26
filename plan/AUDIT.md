@@ -76,14 +76,14 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 
 ## Pending
 
-### [ ] [tests] `CombatEncounterPanel.win-effects.guard.test.tsx:136`: could-not-fail: the only test change loosens `WINS_A_FIGHT` by dropping `-panel` and passes against… (PR #1755 review, 2026-11-25)
+### [x] [tests] `CombatEncounterPanel.win-effects.guard.test.tsx:136`: could-not-fail: the only test change loosens `WINS_A_FIGHT` by dropping `-panel` and passes against… (PR #1755 review, 2026-11-25)
 - category: tests
 - impact: 5
 - ease: 5
 - detail: MED from the `pass` verdict on #1755 (https://github.com/no-trbl-2-u/Miserere-mei-deus/pull/1755#issuecomment-7174487891). `axiomancer-mobile/components/combat/encounter/__tests__/CombatEncounterPanel.win-effects.guard.test.tsx:136`: [tests] could-not-fail: the only test change loosens `WINS_A_FIGHT` by dropping `-panel` and passes against the parent code too
 - next: `/iterate`: verify the finding on `main`, fix it or close it as not reproduced.
 
-### [ ] [tests] `audit-capture.mjs:94`: the new loop break on `combat-victory`/`combat-rewards` and the guarded `combat-resolve-continue`… (PR #1755 review, 2026-11-25)
+### [x] [tests] `audit-capture.mjs:94`: the new loop break on `combat-victory`/`combat-rewards` and the guarded `combat-resolve-continue`… (PR #1755 review, 2026-11-25)
 - category: tests
 - impact: 5
 - ease: 5
