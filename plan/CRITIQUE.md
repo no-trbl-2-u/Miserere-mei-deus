@@ -1,7 +1,7 @@
 # Critique log
 
-> Last pass: 2026-11-26 at commit 72eb9bae9
-> Pass count: 122
+> Last pass: 2026-11-27 at commit e62b0bc64
+> Pass count: 123
 
 > External-observer feedback for Axiomancer. Populated by
 > `/critique` (which drives the local expo-web build with the
@@ -1023,6 +1023,12 @@
 > Anvil label twice (its desktop row still sits under the pinned TAKE THE
 > ROAD bar), the rest "full" twice, the cache's repeated potion chips,
 > the hub's "tap a trodden one", the quest pay's two cases.
+
+> **Pass 123 (2026-11-27, commit e62b0bc64, mobile, `critique:drive`).** All 19
+> screens captured, 0 console and 0 page errors. Filed nothing new. Reconfirmed
+> and not re-filed: the covered hand-fan card text on the live board ("DEAL",
+> "VUL" clipped; BT2b rewrites the fan), the "[content]" host line in the
+> village fixture (placeholder content, D88).
 
 ## Pending
 
