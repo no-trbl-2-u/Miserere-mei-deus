@@ -90,7 +90,7 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 - detail: MED from the `pass` verdict on #1755 (https://github.com/no-trbl-2-u/Miserere-mei-deus/pull/1755#issuecomment-7174487891). `axiomancer-mobile/scripts/audit-capture.mjs:94`: [tests] the new loop break on `combat-victory`/`combat-rewards` and the guarded `combat-resolve-continue` tap are not pinned by any test
 - next: `/iterate`: verify the finding on `main`, fix it or close it as not reproduced.
 
-### [ ] [finding] `pr-file-meds.mjs:283`: `pushedPrs` reads only the push's own range, and the `pr-resolve` group keeps one pending run, so a… (PR #1751 review, 2026-11-25)
+### [x] [finding] `pr-file-meds.mjs:283`: `pushedPrs` reads only the push's own range, and the `pr-resolve` group keeps one pending run, so a… (PR #1751 review, 2026-11-25) — closed 2026-11-27 (CLI scans 30 commits back; filing is idempotent)
 - category: finding
 - impact: 5
 - ease: 5
