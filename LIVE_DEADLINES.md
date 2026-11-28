@@ -1,13 +1,13 @@
 # Live deadlines — the queue
 
-> Generated 2026-11-27 by `node scripts/deadlines.mjs --write` from `plan/deadlines.md` (the whole plan) and the
+> Generated 2026-11-28 by `node scripts/deadlines.mjs --write` from `plan/deadlines.md` (the whole plan) and the
 > build plan. Do not edit by hand: change `plan/deadlines.md`. An act has no date of its own: it serves a
 > milestone, and the queue's order is its priority. The forecast assumes 10 h a week.
 
 ## Milestones
 
-- **2026-11-30** — Mon, Nov 30 (in 3 days): 31 acts open (11.5 h), 11.5 h queued up to it, 4.3 h available: over by 7.2 h; at this pace the queue reaches it Sun, Dec 6.
-- **2026-12-26** — Sat, Dec 26 (in 29 days): 25 acts open (31.5 h), 43 h queued up to it, 41.4 h available: over by 1.6 h; at this pace the queue reaches it Mon, Dec 28.
+- **2026-11-30** — Mon, Nov 30 (in 2 days): 31 acts open (11.5 h), 11.5 h queued up to it, 2.9 h available: over by 8.6 h; at this pace the queue reaches it Mon, Dec 7.
+- **2026-12-26** — Sat, Dec 26 (in 28 days): 25 acts open (31.5 h), 43 h queued up to it, 40 h available: over by 3 h; at this pace the queue reaches it Tue, Dec 29.
 
 ## This week (10 h)
 
