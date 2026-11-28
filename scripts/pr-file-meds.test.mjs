@@ -8,7 +8,7 @@ import { describe, it } from 'node:test'
 import { fileURLToPath } from 'node:url'
 
 import { lintQueue } from './check-plan-queues.mjs'
-import { alreadyFiled, auditRow, categoryOf, fileMeds, fileRows, medRows, mergedPrs, parseFindings, passVerdict, run } from './pr-file-meds.mjs'
+import { alreadyFiled, auditRow, categoryOf, fileMeds, fileRows, medRows, mergedPrs, parseFindings, passVerdict, pushedPrs, run } from './pr-file-meds.mjs'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const HEAD = '541afb10b6c85bf50d501945bb5f748f6c505478'
@@ -344,6 +344,31 @@ describe('fileMeds against a real repository', () => {
       const r = fileMeds({ root: work, pr: 1750, meds: medRows(verdict(TABLE)), date: '2026-11-24', url: URL, log: (s) => said.push(s) })
       assert.equal(r.state, 'lost')
       assert.equal(said.filter((s) => /push rejected/.test(s)).length, 2)
+    } finally {
+      fs.rmSync(dir, { recursive: true, force: true })
+    }
+  })
+})
+
+describe('pushedPrs reads the push range from a real repository', () => {
+  const git = (args, cwd) => execFileSync('git', args, { cwd, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim()
+  const commit = (cwd, msg) => {
+    git(['-c', 'user.name=t', '-c', 'user.email=t@e', 'commit', '-q', '--allow-empty', '-m', msg], cwd)
+    return git(['rev-parse', 'HEAD'], cwd)
+  }
+
+  it('lists only the PRs merged inside before..after, and falls back to the tip for a missing, zero or unknown before', () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'pushed-prs-'))
+    try {
+      git(['init', '-q', '-b', 'main'], dir)
+      commit(dir, 'Merge pull request #10 from a/b')
+      const before = commit(dir, 'Merge pull request #11 from a/b')
+      commit(dir, 'feat: a squash (#12)')
+      const after = commit(dir, 'Merge pull request #13 from a/b')
+      assert.deepEqual(pushedPrs(before, after, dir), [13, 12])
+      assert.deepEqual(pushedPrs(undefined, after, dir), [13])
+      assert.deepEqual(pushedPrs('0'.repeat(40), after, dir), [13])
+      assert.deepEqual(pushedPrs('f'.repeat(40), after, dir), [13])
     } finally {
       fs.rmSync(dir, { recursive: true, force: true })
     }

@@ -118,7 +118,7 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 - detail: MED from the `pass` verdict on #1751 (https://github.com/no-trbl-2-u/Miserere-mei-deus/pull/1751#issuecomment-7144302405). `scripts/pr-file-meds.test.mjs:290`: [tests] The lint-red `refused` guard has no test.
 - next: `/iterate`: verify the finding on `main`, fix it or close it as not reproduced.
 
-### [ ] [tests] `pr-file-meds.test.mjs:11`: `pushedPrs` range logic and the `gh pr view` wrapper are never exercised. (PR #1751 review, 2026-11-25)
+### [x] [tests] `pr-file-meds.test.mjs:11`: `pushedPrs` range logic and the `gh pr view` wrapper are never exercised. (PR #1751 review, 2026-11-25) — closed 2026-11-26 (`pushedPrs` is exported and pinned against a real repo: range, missing, zero and unknown `before`; the `gh pr view` mapping stays in `cli()`, untested)
 - category: tests
 - impact: 5
 - ease: 5

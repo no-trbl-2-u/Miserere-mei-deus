@@ -273,19 +273,20 @@ function arg(name) {
   return i > 0 ? process.argv[i + 1] : undefined
 }
 
-function isCommit(sha) {
+function isCommit(sha, root = ROOT) {
   try {
-    git(['cat-file', '-e', `${sha}^{commit}`], ROOT)
+    git(['cat-file', '-e', `${sha}^{commit}`], root)
     return true
   } catch {
     return false
   }
 }
 
-function pushedPrs(before, after) {
-  const known = Boolean(before) && !/^0+$/.test(before) && isCommit(before)
+/** The PRs a push merged: its own `before..after` range, or just `after` when `before` is absent, all zeros or unknown. */
+export function pushedPrs(before, after, root = ROOT) {
+  const known = Boolean(before) && !/^0+$/.test(before) && isCommit(before, root)
   const range = known ? `${before}..${after}` : `${after}^..${after}`
-  return mergedPrs(git(['log', '--first-parent', '--format=%s', range], ROOT).split('\n').filter(Boolean))
+  return mergedPrs(git(['log', '--first-parent', '--format=%s', range], root).split('\n').filter(Boolean))
 }
 
 async function cli() {
