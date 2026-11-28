@@ -288,13 +288,27 @@ function pushedPrs(before, after) {
   return mergedPrs(git(['log', '--first-parent', '--format=%s', range], ROOT).split('\n').filter(Boolean))
 }
 
+const LOOKBACK = 30
+
+/** The older of `before` and `after~LOOKBACK` (first-parent), so a cancelled run's merge is re-scanned. */
+function lookbackBase(before, after) {
+  try {
+    const back = git(['rev-parse', '--verify', '--quiet', `${after}~${LOOKBACK}`], ROOT).trim()
+    return back || before
+  } catch {
+    return before
+  }
+}
+
 async function cli() {
   const after = arg('--after') ?? 'HEAD'
   const before = arg('--before')
   const repo = process.env.GH_REPO || 'no-trbl-2-u/Miserere-mei-deus'
   const envTrusted = (process.env.TRUSTED_VERDICT_AUTHORS ?? '').split(',').map((s) => s.trim()).filter(Boolean)
   process.exitCode = await run({
-    prs: () => pushedPrs(before, after),
+    // The pr-resolve group keeps one pending run, so a push's run can be cancelled and its merge
+    // never scanned. Look back LOOKBACK first-parent commits as well; filing is idempotent.
+    prs: () => pushedPrs(lookbackBase(before, after), after),
     view: (pr) => {
       const v = JSON.parse(execFileSync('gh', ['pr', 'view', String(pr), '--repo', repo, '--json', 'state,mergedAt,comments'], { cwd: ROOT, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 }))
       return { ...v, comments: (v.comments ?? []).map((c) => ({ body: c.body ?? '', createdAt: c.createdAt, author: c.author?.login ?? '', url: c.url })) }
